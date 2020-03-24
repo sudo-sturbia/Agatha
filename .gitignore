@@ -1,0 +1,9 @@
+# Config and cache files
+.gradle
+.idea
+
+# Build output
+build
+
+# Temporary files
+temp
