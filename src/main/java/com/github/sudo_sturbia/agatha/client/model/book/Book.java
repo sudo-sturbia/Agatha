@@ -9,14 +9,20 @@ import java.util.List;
  * A Book must be part of a library, each library is attached
  * to one user, so a Book must be attached to only one user.
  *
+ * Each Book should have an ID string. Each ID should be unique
+ * to all other books existing in the database.
+ *
  * A Book can be in one of three states: read, currently reading,
  * or interested. Book's state can be updated by the user or updated
  * internally by itself.
  *
  * Each book contains a set of notes, each note is attached to a
- * page in the book, each page can have one note at most.
+ * page in the book. Each page, including book cover, can have one
+ * note at most. A book with n pages has at most n+1 notes (one for
+ * each page + cover). Book cover is considered page number 0.
  */
-public interface Book {
+public interface Book
+{
     /**
      * Get book's name.
      *
@@ -139,7 +145,7 @@ public interface Book {
      * @param noteText string containing note's text.
      * @param pageNumber number of page to add note to.
      * @throws IllegalArgumentException if pageNumber is invalid
-     * or page contains a note.
+     *         or page contains a note.
      */
     public void addNote(String noteText, int pageNumber) throws IllegalArgumentException;
 
