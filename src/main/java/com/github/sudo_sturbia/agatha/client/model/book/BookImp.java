@@ -28,11 +28,12 @@ public class BookImp implements Book {
     private Map<Integer, Note> notes;
 
     /**
-     * BookImpl's constructor.
+     * BookImpl's constructor. The constructor creates a BookImp
+     * object with state "interested". To update state use
+     * updateState method.
      *
      * @param name book's name.
      * @param ID book's ID. Unique for every book in the database.
-     * @param state book's current state.
      * @param pages number of book's pages.
      * @param coverPath path to cover image (optional, can e null).
      * @throws IllegalArgumentException if name, ID, or State are
@@ -40,7 +41,6 @@ public class BookImp implements Book {
      */
     public BookImp(String name,
                    String ID,
-                   BookState state,
                    int pages,
                    String coverPath) throws IllegalArgumentException
     {
@@ -52,10 +52,6 @@ public class BookImp implements Book {
         {
             throw new IllegalArgumentException("No ID is given.");
         }
-        else if (state == null)
-        {
-            throw new IllegalArgumentException("No state is given.");
-        }
         else if (pages <= 0)
         {
             throw new IllegalArgumentException("Invalid number of pages.");
@@ -63,9 +59,10 @@ public class BookImp implements Book {
 
         this.name = name;
         this.ID = ID;
-        this.state = state;
         this.pages = pages;
         this.coverPath = coverPath;
+
+        this.state = new InterestedState(this);
 
         this.notes = new HashMap<>();
     }
