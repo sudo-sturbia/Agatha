@@ -12,9 +12,6 @@ public class BookImp implements Book {
     /** Book's name. */
     private String name;
 
-    /** Book's ID. Unique for every book in the database. */
-    private String ID;
-
     /** Book's current state. */
     private BookState state;
 
@@ -37,24 +34,16 @@ public class BookImp implements Book {
      * used instead.
      *
      * @param name book's name.
-     * @param ID book's ID. Unique for every book in the database.
      * @param pages number of book's pages.
      * @param coverPath path to cover image (optional, can e null).
-     * @throws IllegalArgumentException if name, ID, or State are
-     *         null, or pages <= zero.
+     * @throws IllegalArgumentException if name, or State are null,
+     *         or pages <= zero.
      */
-    BookImp(String name,
-            String ID,
-            int pages,
-            String coverPath) throws IllegalArgumentException
+    BookImp(String name, int pages, String coverPath) throws IllegalArgumentException
     {
         if (name == null)
         {
             throw new IllegalArgumentException("No name is given.");
-        }
-        else if (ID == null)
-        {
-            throw new IllegalArgumentException("No ID is given.");
         }
         else if (pages <= 0)
         {
@@ -62,7 +51,6 @@ public class BookImp implements Book {
         }
 
         this.name = name;
-        this.ID = ID;
         this.pages = pages;
         this.coverPath = coverPath;
 
@@ -75,12 +63,6 @@ public class BookImp implements Book {
     public String getName()
     {
         return this.name;
-    }
-
-    @Override
-    public String getID()
-    {
-        return this.ID;
     }
 
     @Override

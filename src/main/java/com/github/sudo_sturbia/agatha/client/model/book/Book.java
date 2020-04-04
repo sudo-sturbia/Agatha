@@ -9,9 +9,6 @@ import java.util.List;
  * A Book must be part of a library, each library is attached
  * to one user, so a Book must be attached to only one user.
  *
- * Each Book should have an ID string. Each ID should be unique
- * to all other books existing in the database.
- *
  * A Book can be in one of three states: read, currently reading,
  * or interested. Book's state can be updated by the user or updated
  * internally by itself.
@@ -29,13 +26,6 @@ public interface Book
      * @return A string containing book's name.
      */
     public String getName();
-
-    /**
-     * Get book's ID.
-     *
-     * @return A string containing book's ID.
-     */
-    public String getID();
 
     /**
      * Get book's current state.
