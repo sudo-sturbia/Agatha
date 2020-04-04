@@ -14,7 +14,7 @@ public class InterestedState implements BookState
      * @param book book containing state.
      * @throws IllegalArgumentException if book is null.
      */
-    public InterestedState(Book book) throws IllegalArgumentException
+    InterestedState(Book book) throws IllegalArgumentException
     {
         if (book == null)
         {

@@ -32,6 +32,10 @@ public class BookImp implements Book {
      * object with state "interested". To update state use
      * updateState method.
      *
+     * The constructor is package-private as it is not meant to
+     * be used outside of the package, BookBuilder should be
+     * used instead.
+     *
      * @param name book's name.
      * @param ID book's ID. Unique for every book in the database.
      * @param pages number of book's pages.
@@ -39,10 +43,10 @@ public class BookImp implements Book {
      * @throws IllegalArgumentException if name, ID, or State are
      *         null, or pages <= zero.
      */
-    public BookImp(String name,
-                   String ID,
-                   int pages,
-                   String coverPath) throws IllegalArgumentException
+    BookImp(String name,
+            String ID,
+            int pages,
+            String coverPath) throws IllegalArgumentException
     {
         if (name == null)
         {

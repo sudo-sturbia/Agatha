@@ -14,7 +14,7 @@ public class ReadState implements BookState
      * @param book the book containing the state.
      * @throws IllegalArgumentException if Book is null.
      */
-    public ReadState(Book book) throws IllegalArgumentException
+    ReadState(Book book) throws IllegalArgumentException
     {
         if (book == null)
         {

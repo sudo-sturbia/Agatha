@@ -19,7 +19,7 @@ public class ReadingState implements BookState
      * @throws IllegalArgumentException if book is null or
      *         readPages >= number of book's pages of < 0.
      */
-    public ReadingState(Book book, int readPages) throws IllegalArgumentException
+    ReadingState(Book book, int readPages) throws IllegalArgumentException
     {
         if (book == null)
         {
