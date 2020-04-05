@@ -45,8 +45,9 @@ public interface Book
      * Update book's state.
      *
      * @param state enum representing book's new state.
+     * @throws IllegalArgumentException if state is null.
      */
-    public void updateState(BookState.State state);
+    public void updateState(BookState.State state) throws IllegalArgumentException;
 
     /**
      * Get number of pages in the book.

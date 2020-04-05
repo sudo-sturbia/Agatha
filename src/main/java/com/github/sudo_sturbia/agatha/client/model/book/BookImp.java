@@ -78,8 +78,13 @@ public class BookImp implements Book {
     }
 
     @Override
-    public void updateState(BookState.State state)
+    public void updateState(BookState.State state) throws IllegalArgumentException
     {
+        if (state == null)
+        {
+            throw new IllegalArgumentException("No state given.");
+        }
+
         switch (state)
         {
             case READ:
