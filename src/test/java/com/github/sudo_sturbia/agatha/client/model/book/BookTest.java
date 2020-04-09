@@ -81,18 +81,18 @@ class BookTest
                 "Wrong number of read pages for interested state.");
 
         // Update state to read
-        book.updateState(BookState.State.READ);
+        book.setState(BookState.State.READ);
         assertEquals(100, book.getNumberOfReadPages(),
                 "Wrong number of read pages for read state.");
 
         // Update state to interested
-        book.updateState(BookState.State.INTERESTED);
+        book.setState(BookState.State.INTERESTED);
         assertEquals(0, book.getNumberOfReadPages(),
                 "Wrong number of read pages for interested state.");
 
         // Update number of read pages
         // New state should be currently reading
-        book.updateNumberOfReadPages(15);
+        book.setNumberOfReadPages(15);
         assertEquals(15, book.getNumberOfReadPages(),
                 "Wrong number of read pages.");
 
@@ -101,7 +101,7 @@ class BookTest
 
         // Update number of read pages
         // State should remain as currently reading
-        book.updateNumberOfReadPages(30);
+        book.setNumberOfReadPages(30);
         assertEquals(30, book.getNumberOfReadPages(),
                 "Wrong number of read pages.");
 
@@ -110,7 +110,7 @@ class BookTest
 
         // Update number of read pages
         // New state should be read
-        book.updateNumberOfReadPages(100);
+        book.setNumberOfReadPages(100);
         assertEquals(100, book.getNumberOfReadPages(),
                 "Wrong number of read pages.");
 
@@ -118,7 +118,7 @@ class BookTest
         assertEquals("read", book.getStateToString(), "Wrong state string.");
 
         // Update state to currently reading
-        book.updateState(BookState.State.CURRENTLY_READING);
+        book.setState(BookState.State.CURRENTLY_READING);
         assertEquals(0, book.getNumberOfReadPages(),
                 "Wrong number of read pages for reading state.");
     }
@@ -132,16 +132,16 @@ class BookTest
         assertEquals(0, book.getNumberOfReadPages(),
                 "Wrong number of read pages for interested state.");
 
-        book.updateNumberOfReadPages(10);
+        book.setNumberOfReadPages(10);
         book.incrementNumberOfReadPages(13);
 
         assertEquals(23, book.getNumberOfReadPages(), "Wrong number after increment.");
 
         // Should throw exception
-        assertThrows(IllegalArgumentException.class, () -> book.updateNumberOfReadPages(-1),
+        assertThrows(IllegalArgumentException.class, () -> book.setNumberOfReadPages(-1),
                 "-ve number of read pages.");
 
-        assertThrows(IllegalArgumentException.class, () -> book.updateNumberOfReadPages(101),
+        assertThrows(IllegalArgumentException.class, () -> book.setNumberOfReadPages(101),
                 "Number of read pages > number of book's pages.");
 
         assertThrows(IllegalArgumentException.class, () -> book.incrementNumberOfReadPages(-32),

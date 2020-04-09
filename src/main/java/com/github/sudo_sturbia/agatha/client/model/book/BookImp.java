@@ -12,6 +12,9 @@ public class BookImp implements Book {
     /** Book's name. */
     private String name;
 
+    /** Name of Book's author. */
+    private String author;
+
     /** Book's current state. */
     private BookState state;
 
@@ -66,6 +69,18 @@ public class BookImp implements Book {
     }
 
     @Override
+    public String getAuthor()
+    {
+        return this.author;
+    }
+
+    @Override
+    public void setAuthor(String author)
+    {
+        this.author = author;
+    }
+
+    @Override
     public BookState.State getState()
     {
         return this.state.getState();
@@ -78,7 +93,7 @@ public class BookImp implements Book {
     }
 
     @Override
-    public void updateState(BookState.State state) throws IllegalArgumentException
+    public void setState(BookState.State state) throws IllegalArgumentException
     {
         if (state == null)
         {
@@ -112,7 +127,7 @@ public class BookImp implements Book {
     }
 
     @Override
-    public void updateNumberOfReadPages(int newNumber) throws IllegalArgumentException
+    public void setNumberOfReadPages(int newNumber) throws IllegalArgumentException
     {
         this.state = this.state.updateNumberOfReadPages(newNumber);
     }
@@ -120,7 +135,7 @@ public class BookImp implements Book {
     @Override
     public void incrementNumberOfReadPages(int increment) throws IllegalArgumentException
     {
-        this.updateNumberOfReadPages(this.state.getNumberOfReadPages() + increment);
+        this.setNumberOfReadPages(this.state.getNumberOfReadPages() + increment);
     }
 
     @Override

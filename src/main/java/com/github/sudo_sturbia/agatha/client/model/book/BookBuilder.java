@@ -63,7 +63,7 @@ public class BookBuilder
     {
         // Create a Book object and update it's state
         Book book = new BookImp(name, pages, coverPath);
-        book.updateState(state);
+        book.setState(state);
 
         return book;
     }

@@ -28,6 +28,20 @@ public interface Book
     public String getName();
 
     /**
+     * Get the name of book's author.
+     *
+     * @return author's name.
+     */
+    public String getAuthor();
+
+    /**
+     * Set the name of book's author.
+     *
+     * @param author author's name.
+     */
+    public void setAuthor(String author);
+
+    /**
      * Get book's current state.
      *
      * @return an enum representing book's state.
@@ -47,7 +61,7 @@ public interface Book
      * @param state enum representing book's new state.
      * @throws IllegalArgumentException if state is null.
      */
-    public void updateState(BookState.State state) throws IllegalArgumentException;
+    public void setState(BookState.State state) throws IllegalArgumentException;
 
     /**
      * Get number of pages in the book.
@@ -74,7 +88,7 @@ public interface Book
      * @throws IllegalArgumentException if given value is >= number
      * of pages or < zero.
      */
-    public void updateNumberOfReadPages(int newNumber) throws IllegalArgumentException;
+    public void setNumberOfReadPages(int newNumber) throws IllegalArgumentException;
 
     /**
      * Increment number of read pages by given increment. If
