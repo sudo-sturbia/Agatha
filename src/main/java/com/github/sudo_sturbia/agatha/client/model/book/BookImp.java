@@ -28,21 +28,16 @@ public class BookImp implements Book {
     private Map<Integer, Note> notes;
 
     /**
-     * BookImpl's constructor. The constructor creates a BookImp
-     * object with state "interested". To update state use
-     * updateState method.
-     *
-     * The constructor is package-private as it is not meant to
-     * be used outside of the package, BookBuilder should be
-     * used instead.
+     * BookImpl's constructor. The constructor is package-private
+     * as it is not meant to be used outside of <code>book</code>
+     * package.
      *
      * @param name book's name.
      * @param pages number of book's pages.
-     * @param coverPath path to cover image (optional, can e null).
      * @throws IllegalArgumentException if name, or State are null,
      *         or pages <= zero.
      */
-    BookImp(String name, int pages, String coverPath) throws IllegalArgumentException
+    BookImp(String name, int pages) throws IllegalArgumentException
     {
         if (name == null)
         {
@@ -55,9 +50,6 @@ public class BookImp implements Book {
 
         this.name = name;
         this.pages = pages;
-        this.coverPath = coverPath;
-
-        this.state = new InterestedState(this);
 
         this.notes = new HashMap<>();
     }

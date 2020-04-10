@@ -15,7 +15,10 @@ class NoteTest
     @Test
     void create()
     {
-        Book book = BookBuilder.build("Book", 100);
+        Book book = BookBuilder.newBook()
+                               .name("Book")
+                               .numberOfPages(100)
+                               .build();
 
         // Should throw exception
         assertThrows(IllegalArgumentException.class, () -> new NoteImp(null, "Note", 10),
@@ -40,7 +43,11 @@ class NoteTest
     @Test
     void updatePageNumber()
     {
-        Book book = BookBuilder.build("Book", 100);
+        Book book = BookBuilder.newBook()
+                               .name("Book")
+                               .numberOfPages(100)
+                               .build();
+
         Note note = new NoteImp(book, "Note", 10);
 
         // Correct update
@@ -63,7 +70,11 @@ class NoteTest
     @Test
     void updateNote()
     {
-        Book book = BookBuilder.build("Book", 100);
+        Book book = BookBuilder.newBook()
+                               .name("Book")
+                               .numberOfPages(100)
+                               .build();
+
         Note note = new NoteImp(book, "Note", 10);
 
         // Correct update

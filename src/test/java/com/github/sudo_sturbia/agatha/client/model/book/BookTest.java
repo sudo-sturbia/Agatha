@@ -11,42 +11,18 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * BookTest tests Book, BookImp, and BookBuilder.
+ * BookTest tests Book, BookImp.
  */
 class BookTest
 {
-    @DisplayName("Test BookBuilder.build methods.")
-    @Test
-    void create()
-    {
-        // Correct creation
-        assertNotNull(BookBuilder.build("Book", 10));
-        assertNotNull(BookBuilder.build("Book", 10, "path"));
-        assertNotNull(BookBuilder.build("Book", BookState.State.READ, 10));
-        assertNotNull(BookBuilder.build("Book", BookState.State.READ, 10, "path"));
-
-        // Should throw exception
-        assertThrows(IllegalArgumentException.class, () -> BookBuilder.build(null, 10),
-                "Book without a name.");
-
-        assertThrows(IllegalArgumentException.class, () -> BookBuilder.build("Book", -1),
-                "Book with -ve number of pages.");
-
-        assertThrows(IllegalArgumentException.class, () -> BookBuilder.build("Book", -100, "path"),
-                "Book with -ve number of pages.");
-
-        assertThrows(IllegalArgumentException.class, () -> BookBuilder.build("Book", null, 10),
-                "Book with null State");
-
-        assertThrows(IllegalArgumentException.class, () -> BookBuilder.build(null, BookState.State.READ, 10),
-                "Book without a name.");
-    }
-
     @DisplayName("Test Book's getters.")
     @Test
     void get()
     {
-        Book book_1 = BookBuilder.build("Book", 100);
+        Book book_1 = BookBuilder.newBook()
+                                 .name("Book")
+                                 .numberOfPages(100)
+                                 .build();
 
         assertEquals("Book", book_1.getName(), "Wrong name.");
         assertEquals(100, book_1.getNumberOfPages(), "Wrong number of pages.");
@@ -56,7 +32,12 @@ class BookTest
         assertNull(book_1.getCoverImagePath(), "No cover path.");
         assertEquals(0, book_1.getNotes().size(), "No notes created.");
 
-        Book book_2 = BookBuilder.build("Book", BookState.State.READ, 150, "coverPath");
+        Book book_2 = BookBuilder.newBook()
+                                 .name("Book")
+                                 .numberOfPages(150)
+                                 .state(BookState.State.READ)
+                                 .coverPath("coverPath")
+                                 .build();
 
         assertEquals("Book", book_2.getName(), "Wrong name.");
         assertEquals(150, book_2.getNumberOfPages(), "Wrong number of pages.");
@@ -72,7 +53,10 @@ class BookTest
     void state()
     {
         // In default state (InterestedState).
-        Book book = BookBuilder.build("Test Book", 100);
+        Book book = BookBuilder.newBook()
+                               .name("Test Book")
+                               .numberOfPages(100)
+                               .build();
 
         assertEquals(BookState.State.INTERESTED, book.getState(), "Wrong default state.");
         assertEquals("interested", book.getStateToString(), "Wrong state string.");
@@ -127,7 +111,10 @@ class BookTest
     @Test
     void readPages()
     {
-        Book book = BookBuilder.build("Test Book.", 100);
+        Book book = BookBuilder.newBook()
+                               .name("Test Book")
+                               .numberOfPages(100)
+                               .build();
 
         assertEquals(0, book.getNumberOfReadPages(),
                 "Wrong number of read pages for interested state.");
@@ -155,7 +142,10 @@ class BookTest
     @Test
     void note()
     {
-        Book book = BookBuilder.build("Book", 100);
+        Book book = BookBuilder.newBook()
+                               .name("Book")
+                               .numberOfPages(100)
+                               .build();
 
         assertEquals(0, book.getNotes().size(), "No notes created.");
         assertNull(book.getNoteAtPage(1), "No note exists.");
@@ -178,7 +168,10 @@ class BookTest
     @Test
     void noteCollection()
     {
-        Book book = BookBuilder.build("Book", 10000);
+        Book book = BookBuilder.newBook()
+                               .name("Book")
+                               .numberOfPages(10000)
+                               .build();
 
         assertEquals(0, book.getNotes().size(), "No notes created.");
 
