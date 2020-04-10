@@ -10,7 +10,7 @@ public interface Note
     /**
      * Get text note.
      *
-     * @return a string containing text note.
+     * @return A string containing text note.
      */
     public String getNote();
 
@@ -25,7 +25,7 @@ public interface Note
     /**
      * Get note's page number.
      *
-     * @return page number to which note is attached.
+     * @return Page number to which note is attached.
      */
     public int getPageNumber();
 
@@ -36,8 +36,8 @@ public interface Note
      *
      * @param newPage number of new page.
      * @throws IllegalArgumentException if the book already has
-     *         a note in given page, or if newPage > number of
-     *         book's pages or < 0.
+     *         a note in given page, or if newPage &gt; number of
+     *         book's pages or &lt; 0.
      */
     public void updatePageNumber(int newPage) throws IllegalArgumentException;
 }

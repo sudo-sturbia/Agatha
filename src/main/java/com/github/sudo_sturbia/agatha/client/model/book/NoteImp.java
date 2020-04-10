@@ -26,7 +26,7 @@ public class NoteImp implements Note
      * @param pageNumber the number of the page to which the
      *                   note is attached.
      * @throws IllegalArgumentException if book or note are null,
-     *         or page number is > number of book's pages or < 0
+     *         or page number is &gt; number of book's pages or &lt; 0
      *         or if page already contains a note.
      */
     public NoteImp(Book book, String note, int pageNumber) throws IllegalArgumentException

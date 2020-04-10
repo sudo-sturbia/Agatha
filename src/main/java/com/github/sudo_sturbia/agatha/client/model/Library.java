@@ -8,25 +8,25 @@ import java.util.List;
 /**
  * Library represents an application client. It's a container
  * for a collection of books.
- *
+ * <p>
  * A Library manages the client's entry in application's database
  * and provides a collection of CRUD operations that deal with
  * individual books, different collections of books, or the entire
  * library. It's also meant to be the point of interaction between
  * the application's gui and the server.
- *
+ * <p>
  * The main jop of a Library is to manage communication with
  * the application Server.
- *
+ * <p>
  * Each client must have a username unique to all others in the
  * application's database and a password. Each Book contained in
  * a client's Library must have an ID unique to all other books in
  * the Library.
- *
+ * <p>
  * Each Library arranges books according to labels. A label is a
  * simple string created by the user. A Book can have any number of
  * labels.
- *
+ * <p>
  * Each Library must have at least three labels representing Book's
  * three states. States are the only mutually exclusive labels.
  */
@@ -35,7 +35,7 @@ public interface Library
     /**
      * Get user name of the client who owns the library.
      *
-     * @return username of client attached to library.
+     * @return Username of client attached to library.
      */
     public String getUsername();
 
@@ -43,7 +43,7 @@ public interface Library
      * Get all books in the library that have the given name.
      *
      * @param name name to search for.
-     * @return a list of books that have the name.
+     * @return A list of books that have the name.
      */
     public List<Book> getBooksWithName(String name);
 
@@ -51,7 +51,7 @@ public interface Library
      * Get all books in the library that have the given label.
      *
      * @param label name of the label to search for.
-     * @return a list of books that have the label.
+     * @return A list of books that have the label.
      */
     public List<Book> getBooksWithLabel(String label);
 
