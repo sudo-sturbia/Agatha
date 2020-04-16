@@ -20,7 +20,7 @@ public interface Note
      * @param newNote string to replace current text.
      * @throws IllegalArgumentException if newNote is null.
      */
-    public void updateNote(String newNote) throws IllegalArgumentException;
+    public void setNote(String newNote) throws IllegalArgumentException;
 
     /**
      * Get note's page number.
@@ -39,5 +39,5 @@ public interface Note
      *         a note in given page, or if newPage &gt; number of
      *         book's pages or &lt; 0.
      */
-    public void updatePageNumber(int newPage) throws IllegalArgumentException;
+    public void setPageNumber(int newPage) throws IllegalArgumentException;
 }

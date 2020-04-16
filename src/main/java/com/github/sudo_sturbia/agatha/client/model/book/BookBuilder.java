@@ -1,7 +1,7 @@
 package com.github.sudo_sturbia.agatha.client.model.book;
 
 /**
- * BookBuilder is used to create Book objects.
+ * BookBuilder is used to create Book objects!
  * <p>
  * BookBuilder provides a number of methods that allow specification
  * of properties of Book object to be created. Each BookBuilder
@@ -11,10 +11,13 @@ package com.github.sudo_sturbia.agatha.client.model.book;
  * <p>
  * Usage:
  * <pre>
- * Book book = BookBuilder.get("Book's name", 100)
+ * Book book = BookBuilder.newBook()
+ *                        .name("Book's name")
+ *                        .numberOfPages(100)
  *                        .state(BookState.State.READ)
  *                        .author("Author's name")
- *                        .coverPath("/path/to/cover");
+ *                        .coverPath("/path/to/cover")
+ *                        .build();
  * </pre>
  */
 public class BookBuilder

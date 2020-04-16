@@ -53,7 +53,7 @@ public class ReadingState implements BookState
     }
 
     @Override
-    public BookState updateNumberOfReadPages(int newNumber) throws IllegalArgumentException
+    public BookState setNumberOfReadPages(int newNumber) throws IllegalArgumentException
     {
         if (newNumber < 0 || newNumber > this.book.getNumberOfPages())
         {

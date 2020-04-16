@@ -51,18 +51,18 @@ class NoteTest
         Note note = new NoteImp(book, "Note", 10);
 
         // Correct update
-        note.updatePageNumber(30);
+        note.setPageNumber(30);
         assertEquals(30, note.getPageNumber(), "Wrong page number after update.");
 
         // Should throw exception
-        assertThrows(IllegalArgumentException.class, () -> note.updatePageNumber(-1),
+        assertThrows(IllegalArgumentException.class, () -> note.setPageNumber(-1),
                 "Updated page number is -ve.");
 
-        assertThrows(IllegalArgumentException.class, () -> note.updatePageNumber(101),
+        assertThrows(IllegalArgumentException.class, () -> note.setPageNumber(101),
                 "Updated page number > Book's number of pages.");
 
         book.addNote(new NoteImp(book, "Note", 15));
-        assertThrows(IllegalArgumentException.class, () -> note.updatePageNumber(15),
+        assertThrows(IllegalArgumentException.class, () -> note.setPageNumber(15),
                 "Two notes at the same page.");
     }
 
@@ -78,11 +78,11 @@ class NoteTest
         Note note = new NoteImp(book, "Note", 10);
 
         // Correct update
-        note.updateNote("Updated note");
+        note.setNote("Updated note");
         assertEquals("Updated note", note.getNote(), "Wrong text after update.");
 
         // Should throw exception
-        assertThrows(IllegalArgumentException.class, () -> note.updateNote(null),
+        assertThrows(IllegalArgumentException.class, () -> note.setNote(null),
                 "No message given.");
     }
 }

@@ -47,5 +47,5 @@ public interface BookState
      * @throws IllegalArgumentException if given number is &gt;
      *         number of book's pages or &lt; zero.
      */
-    public BookState updateNumberOfReadPages(int newNumber) throws IllegalArgumentException;
+    public BookState setNumberOfReadPages(int newNumber) throws IllegalArgumentException;
 }

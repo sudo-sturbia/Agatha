@@ -8,9 +8,10 @@ import java.util.Map;
 /**
  * BookImp is an implementation of the Book interface.
  */
-public class BookImp implements Book {
+public class BookImp implements Book
+{
     /** Book's name. */
-    private String name;
+    private final String name;
 
     /** Name of Book's author. */
     private String author;
@@ -19,13 +20,13 @@ public class BookImp implements Book {
     private BookState state;
 
     /** Number of book's pages. */
-    private int pages;
+    private final int pages;
 
     /** Path to book's cover image. */
     private String coverPath;
 
     /** Map containing book's notes. Maps pages' numbers to notes. */
-    private Map<Integer, Note> notes;
+    private final Map<Integer, Note> notes;
 
     /**
      * BookImpl's constructor. The constructor is package-private
@@ -37,7 +38,7 @@ public class BookImp implements Book {
      * @throws IllegalArgumentException if name, or State are null,
      *         or pages <= zero.
      */
-    BookImp(String name, int pages) throws IllegalArgumentException
+    BookImp(final String name, final int pages) throws IllegalArgumentException
     {
         if (name == null)
         {
@@ -121,7 +122,7 @@ public class BookImp implements Book {
     @Override
     public void setNumberOfReadPages(int newNumber) throws IllegalArgumentException
     {
-        this.state = this.state.updateNumberOfReadPages(newNumber);
+        this.state = this.state.setNumberOfReadPages(newNumber);
     }
 
     @Override

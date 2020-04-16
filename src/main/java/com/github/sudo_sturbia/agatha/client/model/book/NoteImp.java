@@ -10,7 +10,7 @@ package com.github.sudo_sturbia.agatha.client.model.book;
 public class NoteImp implements Note
 {
     /** Containing book. */
-    private Book book;
+    private final Book book;
 
     /** Text note. */
     private String note;
@@ -61,7 +61,7 @@ public class NoteImp implements Note
     }
 
     @Override
-    public void updateNote(String newNote) throws IllegalArgumentException
+    public void setNote(String newNote) throws IllegalArgumentException
     {
         if (newNote == null)
         {
@@ -77,7 +77,7 @@ public class NoteImp implements Note
     }
 
     @Override
-    public void updatePageNumber(int newPage) throws IllegalArgumentException
+    public void setPageNumber(int newPage) throws IllegalArgumentException
     {
         if (pageNumber < 0 || pageNumber > book.getNumberOfPages())
         {
