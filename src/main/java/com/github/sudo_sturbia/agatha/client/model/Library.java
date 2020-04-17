@@ -41,7 +41,15 @@ public interface Library
      *
      * @return A list containing names of user's books.
      */
-    public List<String> getBooksNames();
+    public List<String> getNamesOfBooks();
+
+    /**
+     * Get a list of name of books with given label.
+     *
+     * @param label label to search for.
+     * @return A list containing name of books that have the label.
+     */
+    public List<String> getNamesOfBooksWithLabel(String label);
 
     /**
      * Get Book with given name.
@@ -51,14 +59,6 @@ public interface Library
      *         name doesn't exist.
      */
     public Book getBookWithName(String name);
-
-    /**
-     * Get all books in the library that have the given label.
-     *
-     * @param label name of the label to search for.
-     * @return A list of books that have the label.
-     */
-    public List<Book> getBooksWithLabel(String label);
 
     /**
      * Add a book to the collection.
