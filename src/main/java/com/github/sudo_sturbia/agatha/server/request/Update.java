@@ -18,7 +18,17 @@ import java.util.regex.Pattern;
 public class Update implements Request
 {
     /** String representing request. */
-    private String request;
+    private final String request;
+
+    /**
+     * Update's constructor. Used only by RequestBuilder.
+     *
+     * @param request request to handle.
+     */
+    Update(final String request)
+    {
+        this.request = request;
+    }
 
     @Override
     public String handle()

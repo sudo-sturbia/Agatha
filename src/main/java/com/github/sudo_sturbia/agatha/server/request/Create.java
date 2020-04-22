@@ -16,7 +16,17 @@ import java.util.regex.Pattern;
 public class Create implements Request
 {
     /** String representing request. */
-    private String request;
+    private final String request;
+
+    /**
+     * Create's constructor. Used only by RequestBuilder.
+     *
+     * @param request request to handle.
+     */
+    Create(final String request)
+    {
+        this.request = request;
+    }
 
     @Override
     public String handle()

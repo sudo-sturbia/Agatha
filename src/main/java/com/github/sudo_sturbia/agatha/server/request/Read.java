@@ -17,7 +17,17 @@ import java.util.regex.Pattern;
 public class Read implements Request
 {
     /** String representing request. */
-    private String request;
+    private final String request;
+
+    /**
+     * Read's constructor. Used only by RequestBuilder.
+     *
+     * @param request request to handle.
+     */
+    Read(final String request)
+    {
+        this.request = request;
+    }
 
     @Override
     public String handle()
