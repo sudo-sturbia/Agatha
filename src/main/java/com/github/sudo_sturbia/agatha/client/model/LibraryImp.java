@@ -74,4 +74,9 @@ public class LibraryImp implements Library
     public void deleteLabel(String label) {
 
     }
+
+    @Override
+    public void deleteLabelFromBook(String bookName, String label) {
+
+    }
 }

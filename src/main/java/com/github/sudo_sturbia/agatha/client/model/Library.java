@@ -134,4 +134,12 @@ public interface Library
      * @param label name of the label to delete.
      */
     public void deleteLabel(String label);
+
+    /**
+     * Delete label from book.
+     *
+     * @param bookName name of book to delete label from.
+     * @param label name of label to delete.
+     */
+    public void deleteLabelFromBook(String bookName, String label);
 }
