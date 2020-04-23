@@ -1,5 +1,8 @@
 package com.github.sudo_sturbia.agatha.server;
 
+import com.github.sudo_sturbia.agatha.server.request.Request;
+import com.github.sudo_sturbia.agatha.server.request.RequestBuilder;
+
 /**
  * Protocol is server-side handler of client's requests.
  * <p>
@@ -9,8 +12,8 @@ package com.github.sudo_sturbia.agatha.server;
  * the four CRUD functions for communication with the server, each
  * represented by a key word.
  * <p>
- * Client requests are defined as by the following format:
  *
+ * Client requests are defined as by the following format:
  * <code>
  *     FUNCTION username:password/object
  * </code>
@@ -25,23 +28,32 @@ package com.github.sudo_sturbia.agatha.server;
  * password shouldn't contain a : or /<br/>
  * object shouldn't contain any unnecessary / (other than specified.)
  * <p>
- * A password can be sanitized by the client program before sending,
+ * A password can be sanitized by the client application before sending,
  * but sanitizing should be avoided otherwise so names can be correctly
  * displayed.
  */
-public interface Protocol
+public class Protocol
 {
     /**
      * Handle given request string, and produce a response.
      * <p>
-     * If request uses an undefined function or wrong syntax/structure,
-     * response is "1", otherwise the response is either a JSON object,
-     * or an integer representing the state of execution. Responses
-     * of each function are documented in its implementing class.
+     * If given request is correct a JSON object is returned by the
+     * protocol, or "0" indicating correct execution in case of operations
+     * that shouldn't return JSON.
+     * Otherwise if request is wrong an error code is returned.
      *
-     * @param request a string request.
-     * @return A response, either a JSON object, or an integer based
-     *         on the request.
+     * @param requestString a string request.
+     * @return A response, either a JSON object, or an error code
+     *         indicating the state of execution.
      */
-    public String handle(String request);
+    public String handle(String requestString)
+    {
+        Request request = RequestBuilder.build(requestString);
+        if (request != null)
+        {
+            return request.handle();
+        }
+
+        return "1"; // Wrong syntax
+    }
 }
