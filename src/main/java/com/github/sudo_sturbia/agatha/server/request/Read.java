@@ -9,10 +9,12 @@ import java.util.regex.Pattern;
  * <P>
  * A READ request can be one of the following:
  * <P>
- * READ username:password // Verify client's credentials.<br/>
- * READ username:password/b/bookName // Get book.<br/>
- * READ username:password/b/* // Get a list of names all user's books.<br/>
- * READ username:password/l/labelName // Get a list of names all books with label.
+ * <pre>
+ *     READ username:password             // Verify client's credentials.
+ *     READ username:password/b/bookName  // Get book.
+ *     READ username:password/b/*         // Get a list of names all user's books.
+ *     READ username:password/l/labelName // Get a list of names all books with label.
+ * </pre>
  */
 public class Read implements Request
 {
@@ -29,9 +31,23 @@ public class Read implements Request
         this.request = request;
     }
 
+    /**
+     * Handles the request and returns a JSON object.
+     *
+     * @return Requested JSON object if request is correct, an error
+     *         code otherwise.<br/>
+     *          "1" - Wrong syntax/structure.<br/>
+     *          "2" - Incorrect credentials.<br/>
+     *          "3" - Operation failed.
+     */
     @Override
     public String handle()
     {
+        if (!this.isCorrect())
+        {
+            return "1"; // Wrong syntax
+        }
+
         return null;
     }
 

@@ -8,13 +8,15 @@ import java.util.regex.Pattern;
  * <P>
  * A DELETE request can be one of the following:
  * <P>
- * DELETE username:password // Delete client from database.<br/>
- * DELETE username:password/b/bookName // Delete book.<br/>
- * DELETE username:password/b/* // Delete all books.<br/>
- * DELETE username:password/l/labelName // Delete label.<br/>
- * DELETE username:password/l/* // Delete all labels.<br/>
- * DELETE username:password/b/bookName/n/page // Delete note at page.<br/>
- * DELETE username:password/b/bookName/n/* // Delete all book's notes.
+ * <pre>
+ *     DELETE username:password                   // Delete client from database.
+ *     DELETE username:password/b/bookName        // Delete book.
+ *     DELETE username:password/b/*               // Delete all books.
+ *     DELETE username:password/l/labelName       // Delete label.
+ *     DELETE username:password/l/*               // Delete all labels.
+ *     DELETE username:password/b/bookName/n/page // Delete note at page.
+ *     DELETE username:password/b/bookName/n/*    // Delete all book's notes.
+ * </pre>
  */
 public class Delete implements Request
 {
@@ -31,9 +33,24 @@ public class Delete implements Request
         this.request = request;
     }
 
+    /**
+     * Handles the request and returns a integer response
+     * representing the state of execution.
+     *
+     * @return A integer representing state of execution,<br/>
+     *          "0" - Operation performed correctly.<br/>
+     *          "1" - Wrong syntax/structure.<br/>
+     *          "2" - Incorrect credentials.<br/>
+     *          "3" - Operation failed.
+     */
     @Override
     public String handle()
     {
+        if (!this.isCorrect())
+        {
+            return "1"; // Wrong syntax
+        }
+
         return null;
     }
 

@@ -7,11 +7,12 @@ import java.util.regex.Pattern;
  * create users, books, labels, or notes.
  * <P>
  * A CREATE request can be one of the following:
- * <P>
- * CREATE username:password // Creates a new application user.<br/>
- * CREATE username:password/b/{JSON} // Creates a new book from the given JSON object.<br/>
- * CREATE username:password/b/bookName/n/{JSON} // Creates a new note from the given JSON object.<br/>
- * CREATE username:password/l/labelName // Creates a new label with no books.
+ * <pre>
+ *     CREATE username:password                     // Creates a new application user.
+ *     CREATE username:password/b/{JSON}            // Creates a new book from the given JSON object.
+ *     CREATE username:password/b/bookName/n/{JSON} // Creates a new note from the given JSON object.
+ *     CREATE username:password/l/labelName         // Creates a new label with no books.
+ * </pre>
  */
 public class Create implements Request
 {
@@ -28,9 +29,24 @@ public class Create implements Request
         this.request = request;
     }
 
+    /**
+     * Handles the request and returns a integer response
+     * representing the state of execution.
+     *
+     * @return A integer representing state of execution,<br/>
+     *          "0" - Operation performed correctly.<br/>
+     *          "1" - Wrong syntax/structure.<br/>
+     *          "2" - Incorrect credentials.<br/>
+     *          "3" - Operation failed.
+     */
     @Override
     public String handle()
     {
+        if (!this.isCorrect())
+        {
+            return "1"; // Wrong syntax
+        }
+
         return null;
     }
 

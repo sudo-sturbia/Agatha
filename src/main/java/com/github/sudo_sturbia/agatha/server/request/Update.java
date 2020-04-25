@@ -8,12 +8,14 @@ import java.util.regex.Pattern;
  * <P>
  * An UPDATE request can be one of the following:
  * <P>
- * UPDATE username:password/b/bookName/{JSON} // Replace book with given JSON object.<br/>
- * UPDATE username:password/b/bookName/field=updated // Update one of book's fields.<br/>
- * UPDATE username:password/b/bookName/n/page/{JSON} // Replace note at page.<br/>
- * UPDATE username:password/b/bookName/n/page/field=updated // Update one of note's fields.<br/>
- * UPDATE username:password/l/labelName/add/b/bookName // Add label to book.<br/>
- * UPDATE username:password/l/labelName/remove/b/bookName // Remove label from book.
+ * <pre>
+ *     UPDATE username:password/b/bookName/{JSON}               // Replace book with given JSON object.
+ *     UPDATE username:password/b/bookName/field=updated        // Update one of book's fields.
+ *     UPDATE username:password/b/bookName/n/page/{JSON}        // Replace note at page.
+ *     UPDATE username:password/b/bookName/n/page/field=updated // Update one of note's fields.
+ *     UPDATE username:password/l/labelName/add/b/bookName      // Add label to book.
+ *     UPDATE username:password/l/labelName/remove/b/bookName   // Remove label from book.
+ * </pre>
  */
 public class Update implements Request
 {
@@ -30,9 +32,24 @@ public class Update implements Request
         this.request = request;
     }
 
+    /**
+     * Handles the request and returns a integer response
+     * representing the state of execution.
+     *
+     * @return A integer representing state of execution,<br/>
+     *          "0" - Operation performed correctly.<br/>
+     *          "1" - Wrong syntax/structure.<br/>
+     *          "2" - Incorrect credentials.<br/>
+     *          "3" - Operation failed.
+     */
     @Override
     public String handle()
     {
+        if (!this.isCorrect())
+        {
+            return "1"; // Wrong syntax
+        }
+
         return null;
     }
 
