@@ -16,7 +16,7 @@ import com.github.sudo_sturbia.agatha.server.request.RequestBuilder;
  * Client requests are defined as by the following format:
  * <code>
  *     FUNCTION username:password/object
- * </code>
+ * </code><br/>
  *
  * FUNCTION can be any of the CRUD operations, each of which is
  * represented by a class implementing Request interface. Each
@@ -31,6 +31,8 @@ import com.github.sudo_sturbia.agatha.server.request.RequestBuilder;
  * A password can be sanitized by the client application before sending,
  * but sanitizing should be avoided otherwise so names can be correctly
  * displayed.
+ *
+ * @see com.github.sudo_sturbia.agatha.server.request
  */
 public class Protocol
 {
@@ -46,7 +48,7 @@ public class Protocol
      * @return A response, either a JSON object, or an error code
      *         indicating the state of execution.
      */
-    public String handle(String requestString)
+    public static String handle(String requestString)
     {
         Request request = RequestBuilder.build(requestString);
         if (request != null)
