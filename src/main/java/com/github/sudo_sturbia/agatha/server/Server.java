@@ -1,7 +1,5 @@
 package com.github.sudo_sturbia.agatha.server;
 
-import java.sql.SQLException;
-
 /**
  * Server is Agatha's server.
  * <p>
@@ -14,8 +12,8 @@ public interface Server
     /**
      * Run the Agatha server.
      *
-     * @throws SQLException if server can't get a connection to
-     *         application's database or can't perform initial setup.
+     * @throws ServerSetupException if a problem occurs while setting
+     *         up application's server (or database.)
      */
-    public void run() throws SQLException;
+    public void run() throws ServerSetupException;
 }
