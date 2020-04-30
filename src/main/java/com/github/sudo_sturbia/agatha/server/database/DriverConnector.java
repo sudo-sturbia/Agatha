@@ -40,15 +40,29 @@ public class DriverConnector implements Connector
     }
 
     @Override
-    public Connection get() throws SQLException
+    public Connection get()
     {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/" + this.dbName,
-                this.dbServerUsername, this.dbServerPass);
+        try
+        {
+            return DriverManager.getConnection("jdbc:mysql://localhost:3306/" + this.dbName,
+                    this.dbServerUsername, this.dbServerPass);
+        }
+        catch (SQLException e)
+        {
+            return null;
+        }
     }
 
     @Override
-    public void close(Connection connection) throws SQLException
+    public void close(Connection connection)
     {
-        connection.close();
+        try
+        {
+            connection.close();
+        }
+        catch (SQLException e)
+        {
+            // Couldn't close connection.
+        }
     }
 }

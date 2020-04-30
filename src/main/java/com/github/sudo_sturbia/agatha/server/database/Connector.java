@@ -24,15 +24,13 @@ public interface Connector
      * Get a database connection.
      *
      * @return A Connection object connected to application's database.
-     * @throws SQLException in case of a SQL error.
      */
-    public Connection get() throws SQLException;
+    public Connection get();
 
     /**
      * Close database connection.
      *
      * @param connection database connection to close.
-     * @throws SQLException in case of a SQL error.
      */
-    public void close(Connection connection) throws SQLException;
+    public void close(Connection connection);
 }

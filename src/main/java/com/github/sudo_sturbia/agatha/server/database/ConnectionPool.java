@@ -31,19 +31,20 @@ public class ConnectionPool implements Connector
         this.dbServerUsername = dbServerUsername;
         this.dbServerPass = dbServerPass;
     }
+
     @Override
     public void setup() throws SQLException
     {
     }
 
     @Override
-    public Connection get() throws SQLException
+    public Connection get()
     {
         return null;
     }
 
     @Override
-    public void close(Connection connection) throws SQLException
+    public void close(Connection connection)
     {
     }
 }
