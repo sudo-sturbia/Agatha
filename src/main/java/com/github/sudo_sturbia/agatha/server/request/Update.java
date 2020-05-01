@@ -1,5 +1,7 @@
 package com.github.sudo_sturbia.agatha.server.request;
 
+import com.google.gson.Gson;
+
 import java.util.regex.Pattern;
 
 /**
@@ -33,21 +35,17 @@ public class Update implements Request
     }
 
     /**
-     * Handles the request and returns a integer response
-     * representing the state of execution.
+     * Handles the request and returns an ExecutionState object
+     * in JSON.
      *
-     * @return A integer representing state of execution,<br/>
-     *          "0" - Operation performed correctly.<br/>
-     *          "1" - Wrong syntax/structure.<br/>
-     *          "2" - Incorrect credentials.<br/>
-     *          "3" - Operation failed.
+     * @return A JSON ExecutionState object.
      */
     @Override
     public String handle()
     {
         if (!this.isCorrect())
         {
-            return "1"; // Wrong syntax
+            return new Gson().toJson(new ExecutionState(1)); // Wrong syntax
         }
 
         return null;

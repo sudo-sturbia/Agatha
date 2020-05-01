@@ -1,16 +1,21 @@
 package com.github.sudo_sturbia.agatha.server;
 
+import com.github.sudo_sturbia.agatha.server.request.ExecutionState;
 import com.github.sudo_sturbia.agatha.server.request.Request;
 import com.github.sudo_sturbia.agatha.server.request.RequestBuilder;
+
+import com.google.gson.Gson;
 
 /**
  * Protocol is server-side handler of client's requests.
  * <p>
  * Protocol is a custom communication protocol used by Agatha for
- * client-server communication. The used protocol is stateless so
- * client's credentials are given with every request. It implements
- * the four CRUD functions for communication with the server, each
- * represented by a key word.
+ * client-server communication. Communication is done through requests
+ * and responses, Responses are in JSON.
+ * <p>
+ * The used protocol is stateless so client's credentials are given
+ * with every request. It implements the four CRUD functions for
+ * communication with the server, each represented by a key word.
  * <p>
  *
  * Client requests are defined as by the following format:
@@ -39,14 +44,11 @@ public class Protocol
     /**
      * Handle given request string, and produce a response.
      * <p>
-     * If given request is correct a JSON object is returned by the
-     * protocol, or "0" indicating correct execution in case of operations
-     * that shouldn't return JSON.
-     * Otherwise if request is wrong an error code is returned.
+     * Request's response is a JSON object. Either the requested object
+     * or an ExecutionState object.
      *
      * @param requestString a string request.
-     * @return A response, either a JSON object, or an error code
-     *         indicating the state of execution.
+     * @return A JSON response.
      */
     public static String handle(String requestString)
     {
@@ -56,6 +58,6 @@ public class Protocol
             return request.handle();
         }
 
-        return "1"; // Wrong syntax
+        return new Gson().toJson(new ExecutionState(1)); // Wrong syntax
     }
 }

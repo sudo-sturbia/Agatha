@@ -1,5 +1,7 @@
 package com.github.sudo_sturbia.agatha.server.request;
 
+import com.google.gson.Gson;
+
 import java.util.regex.Pattern;
 
 /**
@@ -34,18 +36,15 @@ public class Read implements Request
     /**
      * Handles the request and returns a JSON object.
      *
-     * @return Requested JSON object if request is correct, an error
-     *         code otherwise.<br/>
-     *          "1" - Wrong syntax/structure.<br/>
-     *          "2" - Incorrect credentials.<br/>
-     *          "3" - Operation failed.
+     * @return Requested JSON object if request is correct, an
+     *         ExecutionState object otherwise.
      */
     @Override
     public String handle()
     {
         if (!this.isCorrect())
         {
-            return "1"; // Wrong syntax
+            return new Gson().toJson(new ExecutionState(1)); // Wrong syntax
         }
 
         return null;
