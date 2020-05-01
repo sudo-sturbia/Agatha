@@ -1,7 +1,10 @@
 package com.github.sudo_sturbia.agatha.server;
 
 import com.github.sudo_sturbia.agatha.server.database.Connector;
+import com.github.sudo_sturbia.agatha.server.database.ConnectorBuilder;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -20,50 +23,48 @@ public class ServerImp implements Server
     /** Port to listen to. */
     private final int port;
 
-    /** Database connector. */
-    private final Connector connector;
-
     /**
      * ServerImp's constructor.
      *
      * @param dbName name of application's database.
      * @param port port to listen to.
-     * @param connector database connector.
      */
-    ServerImp(String dbName, int port, Connector connector)
+    ServerImp(String dbName, int port)
     {
         this.dbName = dbName;
         this.port = port;
-        this.connector = connector;
     }
 
 
     @Override
     public void run() throws ServerSetupException
     {
-        Connection connection;
+        // Setup database connector and server
+        Connector connector = ConnectorBuilder.get();
         try
         {
             connector.setup();
-            connection = connector.get();
         }
         catch (SQLException e)
         {
-            throw new ServerSetupException("Couldn't establish a database connection.");
+            throw new ServerSetupException("Connector can not be setup.");
         }
 
-        this.setup(connection);
+        this.setup(connector.get());
 
-        // TODO
-        //      Listen to port and handle requests ..
-
-        try
+        try (ServerSocket serverSocket = new ServerSocket(this.port))
         {
-            connection.close();
+            // Listen to requests
+            while (true)
+            {
+                // Accept a socket connection and get a database connection.
+                // Handle request in a thread
+                new ServerThread(serverSocket.accept()).start();
+            }
         }
-        catch (SQLException e)
+        catch (IOException e)
         {
-            throw new ServerSetupException("Couldn't close connection.");
+            throw new ServerSetupException("Couldn't open socket.");
         }
     }
 
@@ -75,6 +76,11 @@ public class ServerImp implements Server
      */
     private void setup(Connection connection) throws ServerSetupException
     {
+        if (connection == null)
+        {
+            throw new ServerSetupException("Couldn't perform initial database setup.");
+        }
+
         try (
             // Create database and users table
             PreparedStatement database = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS ?");
