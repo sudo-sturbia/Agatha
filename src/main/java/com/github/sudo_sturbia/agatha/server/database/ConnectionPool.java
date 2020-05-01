@@ -25,7 +25,7 @@ public class ConnectionPool implements Connector
      * @param dbServerUsername username for database server (MySQL.)
      * @param dbServerPass password for database server (MySQL.)
      */
-    public ConnectionPool(String dbName, String dbServerUsername, String dbServerPass)
+    ConnectionPool(String dbName, String dbServerUsername, String dbServerPass)
     {
         this.dbName = dbName;
         this.dbServerUsername = dbServerUsername;

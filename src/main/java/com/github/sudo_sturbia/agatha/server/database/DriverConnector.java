@@ -26,7 +26,7 @@ public class DriverConnector implements Connector
      * @param dbServerUsername username for database server (MySQL.)
      * @param dbServerPass password for database server (MySQL.)
      */
-    public DriverConnector(String dbName, String dbServerUsername, String dbServerPass)
+    DriverConnector(String dbName, String dbServerUsername, String dbServerPass)
     {
         this.dbName = dbName;
         this.dbServerUsername = dbServerUsername;

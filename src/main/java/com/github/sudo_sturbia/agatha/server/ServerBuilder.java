@@ -1,8 +1,6 @@
 package com.github.sudo_sturbia.agatha.server;
 
-import com.github.sudo_sturbia.agatha.server.database.ConnectionPool;
-import com.github.sudo_sturbia.agatha.server.database.Connector;
-import com.github.sudo_sturbia.agatha.server.database.DriverConnector;
+import com.github.sudo_sturbia.agatha.server.database.ConnectorBuilder;
 
 /**
  * ServerBuilder provides more configuration options when building
@@ -14,18 +12,12 @@ import com.github.sudo_sturbia.agatha.server.database.DriverConnector;
  *                                  .port(54321)
  *                                  .dbServerUsername("root")
  *                                  .dbServerPass("")
- *                                  .connector(ServerBuilder.ConnectorType.POOL)
+ *                                  .connector(ConnectorBuilder.ConnectorType.POOL)
  *                                  .build();
  * </pre>
  */
 public class ServerBuilder
 {
-    /** Available types of connectors. */
-    public enum ConnectorType
-    {
-        NORMAL, POOL
-    }
-
     /** Name of Application's database. */
     private String dbName;
 
@@ -39,7 +31,7 @@ public class ServerBuilder
     private String dbServerPass;
 
     /** Type of connector to use. */
-    private ConnectorType connector;
+    private ConnectorBuilder.ConnectorType connector;
 
     /** Private constructor. Sets values to default. */
     private ServerBuilder()
@@ -48,7 +40,7 @@ public class ServerBuilder
         this.port = 54321;
         this.dbServerUsername = "root";
         this.dbServerPass = "";
-        this.connector = ConnectorType.POOL;
+        this.connector = ConnectorBuilder.ConnectorType.POOL;
     }
 
     /**
@@ -101,27 +93,13 @@ public class ServerBuilder
 
         if (this.connector == null)
         {
-            this.connector = ConnectorType.POOL;
+            this.connector = ConnectorBuilder.ConnectorType.POOL;
         }
 
-        // Build Server
-        Connector connector;
-        switch (this.connector)
-        {
-            case NORMAL:
-                connector = new DriverConnector(this.dbName,
-                        this.dbServerUsername, this.dbServerPass);
-                break;
-            case POOL:
-                connector = new ConnectionPool(this.dbName,
-                        this.dbServerUsername, this.dbServerPass);
-                break;
-            default:
-                // CAN'T HAPPEN ..
-                connector = null;
-        }
+        // Setup connector
+        ConnectorBuilder.setup(this.connector, this.dbName, this.dbServerUsername, this.dbServerPass);
 
-        return new ServerImp(this.dbName, this.port, connector);
+        return new ServerImp(this.dbName, this.port);
     }
 
     /**
@@ -178,7 +156,7 @@ public class ServerBuilder
      * @param connector type of connector to use.
      * @return A ServerBuilder instance with connector set.
      */
-    public ServerBuilder connector(ConnectorType connector)
+    public ServerBuilder connector(ConnectorBuilder.ConnectorType connector)
     {
         this.connector = connector;
         return this;
