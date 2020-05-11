@@ -39,10 +39,11 @@ public class Delete implements Request
      * Handles the request and returns an ExecutionState object
      * in JSON.
      *
+     * @param dbName name of application's database.
      * @return A JSON ExecutionState object.
      */
     @Override
-    public String handle()
+    public String handle(String dbName)
     {
         if (!this.isCorrect())
         {

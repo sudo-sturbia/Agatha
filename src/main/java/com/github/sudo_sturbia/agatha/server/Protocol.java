@@ -48,14 +48,15 @@ public class Protocol
      * or an ExecutionState object.
      *
      * @param requestString a string request.
+     * @param dbName name of application's database.
      * @return A JSON response.
      */
-    public static String handle(String requestString)
+    public static String handle(String requestString, String dbName)
     {
         Request request = RequestBuilder.build(requestString);
         if (request != null)
         {
-            return request.handle();
+            return request.handle(dbName);
         }
 
         return new Gson().toJson(new ExecutionState(1)); // Wrong syntax

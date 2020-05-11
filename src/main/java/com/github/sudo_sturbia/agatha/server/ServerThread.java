@@ -14,15 +14,20 @@ public class ServerThread extends Thread
     /** A socket to use for communication. */
     private final Socket socket;
 
+    /** Name of Application's database. */
+    private final String dbName;
+
     /**
      * ServerThread's constructor.
      *
      * @param socket socket to use for communication.
+     * @param dbName name of application's database.
      */
-    public ServerThread(Socket socket)
+    public ServerThread(Socket socket, String dbName)
     {
         super("ServerThread");
         this.socket = socket;
+        this.dbName = dbName;
     }
 
     @Override
@@ -33,7 +38,7 @@ public class ServerThread extends Thread
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         ) {
             // Read request from socket, and handle it using Protocol
-            String response = Protocol.handle(in.readLine());
+            String response = Protocol.handle(in.readLine(), this.dbName);
 
             // Send response to client
             out.println(response);

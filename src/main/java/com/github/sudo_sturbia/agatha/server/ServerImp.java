@@ -59,7 +59,7 @@ public class ServerImp implements Server
             {
                 // Accept a socket connection and get a database connection.
                 // Handle request in a thread
-                new ServerThread(serverSocket.accept()).start();
+                new ServerThread(serverSocket.accept(), this.dbName).start();
             }
         }
         catch (IOException e)

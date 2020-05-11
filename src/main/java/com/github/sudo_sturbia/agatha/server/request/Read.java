@@ -36,11 +36,12 @@ public class Read implements Request
     /**
      * Handles the request and returns a JSON object.
      *
+     * @param dbName name of application's database.
      * @return Requested JSON object if request is correct, an
      *         ExecutionState object otherwise.
      */
     @Override
-    public String handle()
+    public String handle(String dbName)
     {
         if (!this.isCorrect())
         {
