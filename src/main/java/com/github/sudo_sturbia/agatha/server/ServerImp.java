@@ -1,6 +1,5 @@
 package com.github.sudo_sturbia.agatha.server;
 
-import com.github.sudo_sturbia.agatha.server.database.Connector;
 import com.github.sudo_sturbia.agatha.server.database.ConnectorBuilder;
 
 import java.io.IOException;
@@ -39,26 +38,25 @@ public class ServerImp implements Server
     @Override
     public void run() throws ServerSetupException
     {
-        // Setup database connector and server
-        Connector connector = ConnectorBuilder.get();
+        // Perform initial setup
         try
         {
-            connector.setup();
+            ConnectorBuilder.get().setup();
+            this.setup();
         }
         catch (SQLException e)
         {
             throw new ServerSetupException("Connector can not be setup.");
         }
 
-        this.setup(connector.get());
 
         try (ServerSocket serverSocket = new ServerSocket(this.port))
         {
             // Listen to requests
             while (true)
             {
-                // Accept a socket connection and get a database connection.
-                // Handle request in a thread
+                // Accept a socket connection, and Create a new
+                // thread to handle the request.
                 new ServerThread(serverSocket.accept(), this.dbName).start();
             }
         }
@@ -71,22 +69,17 @@ public class ServerImp implements Server
     /**
      * Perform initial database setup.
      *
-     * @param connection connection to application's database.
      * @throws ServerSetupException if setup statements can't be executed.
      */
-    private void setup(Connection connection) throws ServerSetupException
+    private void setup() throws ServerSetupException
     {
-        if (connection == null)
-        {
-            throw new ServerSetupException("Couldn't perform initial database setup.");
-        }
-
         try (
             // Create database and users table
-            PreparedStatement database = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS ?");
+            Connection connection = ConnectorBuilder.get().get();
+            PreparedStatement database = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS ?;");
             PreparedStatement usersTable = connection.prepareStatement(
                     "CREATE TABLE IF NOT EXISTS ?.Users " +
-                            "(username varchar(255) NOT NULL, password varchar(64) NOT NULL, PRIMARY KEY(username))")
+                            "(username varchar(255) NOT NULL, password varchar(64) NOT NULL, PRIMARY KEY(username));")
         ) {
             database.setString(1, this.dbName);
             usersTable.setString(1, this.dbName);

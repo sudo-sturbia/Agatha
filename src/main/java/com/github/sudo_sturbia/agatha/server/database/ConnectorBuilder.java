@@ -1,7 +1,5 @@
 package com.github.sudo_sturbia.agatha.server.database;
 
-import java.nio.channels.IllegalSelectorException;
-
 /**
  * ConnectorBuilder handles the creation of a Connector object
  * and insures that only one Connector exists at any time.

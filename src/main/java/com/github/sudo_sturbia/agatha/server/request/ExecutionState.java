@@ -32,7 +32,7 @@ public class ExecutionState
         switch (code)
         {
             case 0:
-                this.message = "Operation performed correctly.";
+                this.message = "Operation performed successfully.";
                 break;
             case 1:
                 this.message = "Wrong request syntax/structure.";
@@ -41,7 +41,7 @@ public class ExecutionState
                 this.message = "Incorrect login credentials.";
                 break;
             case 3:
-                this.message = "Operation failed - internal.";
+                this.message = "Operation failed.";
                 break;
             default:
                 throw new IllegalStateException("Invalid execution code.");
