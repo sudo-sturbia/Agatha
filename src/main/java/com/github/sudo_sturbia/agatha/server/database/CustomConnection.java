@@ -47,21 +47,11 @@ public class CustomConnection implements Connection
         this.connection = connection;
     }
 
-    /**
-     * Get internal connection without the wrapper.
-     *
-     * @return Connection object.
-     */
-    Connection getConnection()
-    {
-        return this.connection;
-    }
-
     @Override
     public void close() throws SQLException
     {
-        // Return connection to connector
-        ConnectorBuilder.get().close(this);
+        // Return connection without a wrapper
+        ConnectorBuilder.get().close(this.connection);
     }
 
     @Override

@@ -38,13 +38,14 @@ public class ConnectionPool implements Connector
     }
 
     @Override
-    public Connection get()
+    public Connection get() throws SQLException
     {
         return null;
     }
 
+
     @Override
-    public void close(Connection connection)
+    public void close(Connection connection) throws SQLException
     {
     }
 }
