@@ -100,15 +100,11 @@ public class Read implements Request
     private String readUser()
     {
         String[] list = this.request.split("^READ\\s+|:");
-        if (list.length != 2)
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
 
-        // Verify username and password
-        if (!UserManager.doesExist(this.dbName, list[0], list[1]))
+        String state;
+        if ((state = RequestUtil.verify(this.dbName, list, 2)) != null)
         {
-            return new Gson().toJson(new ExecutionState(2)); // Wrong credentials
+            return state;
         }
 
         return new Gson().toJson(new ExecutionState(0)); // Successful
@@ -137,15 +133,11 @@ public class Read implements Request
     private String readBook()
     {
         String[] list = this.request.split("^READ\\s+|:|/b/");
-        if (list.length != 3)
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
 
-        // Verify username and password
-        if (!UserManager.doesExist(this.dbName, list[0], list[1]))
+        String state;
+        if ((state = RequestUtil.verify(this.dbName, list, 3)) != null)
         {
-            return new Gson().toJson(new ExecutionState(2)); // Wrong credentials
+            return state;
         }
 
         return this.loadBook(list[2], list[0]);
@@ -174,15 +166,11 @@ public class Read implements Request
     private String readBooksNames()
     {
         String[] list = this.request.split("^READ\\s+|:|/b/\\*$");
-        if (list.length != 2)
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
 
-        // Verify username and password
-        if (!UserManager.doesExist(this.dbName, list[0], list[1]))
+        String state;
+        if ((state = RequestUtil.verify(this.dbName, list, 2)) != null)
         {
-            return new Gson().toJson(new ExecutionState(2)); // Wrong credentials
+            return state;
         }
 
         return this.loadBooksNames(list[0]);
@@ -211,15 +199,11 @@ public class Read implements Request
     private String readBooksWithLabel()
     {
         String[] list = this.request.split("^READ\\s+|:|/b/\\*$");
-        if (list.length != 3)
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
 
-        // Verify username and password
-        if (!UserManager.doesExist(this.dbName, list[0], list[1]))
+        String state;
+        if ((state = RequestUtil.verify(this.dbName, list, 3)) != null)
         {
-            return new Gson().toJson(new ExecutionState(2)); // Wrong credentials
+            return state;
         }
 
         return this.loadBooksNamesWithLabel(list[2], list[0]);

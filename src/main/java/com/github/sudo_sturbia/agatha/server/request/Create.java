@@ -102,15 +102,10 @@ public class Create implements Request
         // Break statement into username and password
         String[] list = this.request.split("^CREATE\\s+|:");
 
-        if (list.length != 2)
+        String state;
+        if ((state = RequestUtil.verify(this.dbName, list, 2)) != null)
         {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        // Verify that username doesn't already exist
-        if (UserManager.doesExist(this.dbName, list[0]))
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
+            return state;
         }
 
         if (!this.writeUser(list[0], DigestUtils.sha256Hex(list[1])))
@@ -146,15 +141,11 @@ public class Create implements Request
         Gson gson = new Gson();
 
         String[] list = this.request.split("^CREATE\\s+|:|/b/");
-        if (list.length != 3)
-        {
-            return gson.toJson(new ExecutionState(3)); // Operation failed
-        }
 
-        // Verify username and password
-        if (!UserManager.doesExist(this.dbName, list[0], list[1]))
+        String state;
+        if ((state = RequestUtil.verify(this.dbName, list, 3)) != null)
         {
-            return gson.toJson(new ExecutionState(2)); // Wrong credentials
+            return state;
         }
 
         Book book;
@@ -201,15 +192,11 @@ public class Create implements Request
         Gson gson = new Gson();
 
         String[] list = this.request.split("^CREATE\\s+|:|/b/|/n/");
-        if (list.length != 4)
-        {
-            return gson.toJson(new ExecutionState(3)); // Operation failed
-        }
 
-        // Verify username and password
-        if (!UserManager.doesExist(this.dbName, list[0], list[1]))
+        String state;
+        if ((state = RequestUtil.verify(this.dbName, list, 4)) != null)
         {
-            return gson.toJson(new ExecutionState(2)); // Wrong credentials
+            return state;
         }
 
         Note note;
@@ -253,15 +240,11 @@ public class Create implements Request
     private String createLabel()
     {
         String[] list = this.request.split("^CREATE\\s+|:|/l/");
-        if (list.length != 3)
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
 
-        // Verify username and password
-        if (!UserManager.doesExist(this.dbName, list[0], list[1]))
+        String state;
+        if ((state = RequestUtil.verify(this.dbName, list, 3)) != null)
         {
-            return new Gson().toJson(new ExecutionState(2)); // Wrong credentials
+            return state;
         }
 
         // Add a new boolean column to user's books table.
