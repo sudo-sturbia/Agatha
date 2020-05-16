@@ -74,10 +74,8 @@ public class Create implements Request
         {
             return this.createLabel();
         }
-        else
-        {
-            return new Gson().toJson(new ExecutionState(1)); // Wrong syntax
-        }
+
+        return new Gson().toJson(new ExecutionState(1)); // Wrong syntax
     }
 
     /**
@@ -91,7 +89,7 @@ public class Create implements Request
     private boolean isCreateUser()
     {
         return Pattern.compile("^CREATE\\s+[^:]+:[^:/]+$", Pattern.CASE_INSENSITIVE)
-                .matcher(request).matches();
+                .matcher(this.request).matches();
     }
 
     /**
@@ -134,7 +132,7 @@ public class Create implements Request
     private boolean isCreateBook()
     {
         return Pattern.compile("^CREATE\\s+[^:]+:[^:/]+/b/\\{.+}$", Pattern.CASE_INSENSITIVE)
-                .matcher(request).matches();
+                .matcher(this.request).matches();
     }
 
     /**
@@ -189,7 +187,7 @@ public class Create implements Request
     private boolean isCreateNote()
     {
         return Pattern.compile("^CREATE\\s+[^:]+:[^:/]+/b/[^/]+/n/\\{.+}$", Pattern.CASE_INSENSITIVE)
-                .matcher(request).matches();
+                .matcher(this.request).matches();
     }
 
     /**
@@ -244,7 +242,7 @@ public class Create implements Request
     private boolean isCreateLabel()
     {
         return Pattern.compile("^CREATE\\s+[^:]+:[^:/]+/l/[^/]+$", Pattern.CASE_INSENSITIVE)
-                .matcher(request).matches();
+                .matcher(this.request).matches();
     }
 
     /**

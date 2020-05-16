@@ -73,21 +73,8 @@ public class Read implements Request
         {
             return this.readBooksWithLabel();
         }
-        else
-        {
-            return new Gson().toJson(new ExecutionState(1)); // Wrong syntax
-        }
-    }
 
-    /**
-     * Check if given request string is correct.
-     *
-     * @return True if request is correct, false otherwise.
-     */
-    private boolean isCorrect()
-    {
-        return Pattern.compile("^READ\\s+[^:]+:[^:/]+(/(b/([^/]+|\\*)|l/[^/]+)|)$",
-                Pattern.CASE_INSENSITIVE).matcher(request).matches();
+        return new Gson().toJson(new ExecutionState(1)); // Wrong syntax
     }
 
     /**
@@ -101,7 +88,7 @@ public class Read implements Request
     private boolean isReadUser()
     {
         return Pattern.compile("^READ\\s+[^:]+:[^:/]+$", Pattern.CASE_INSENSITIVE)
-                .matcher(request).matches();
+                .matcher(this.request).matches();
     }
 
     /**
@@ -138,7 +125,7 @@ public class Read implements Request
     private boolean isReadBook()
     {
         return Pattern.compile("^READ\\s+[^:]+:[^:/]+/b/[^/]+$", Pattern.CASE_INSENSITIVE)
-                .matcher(request).matches();
+                .matcher(this.request).matches();
     }
 
     /**
@@ -175,7 +162,7 @@ public class Read implements Request
     private boolean isReadBooksNames()
     {
         return Pattern.compile("^READ\\s+[^:]+:[^:/]+/b/\\*$", Pattern.CASE_INSENSITIVE)
-                .matcher(request).matches();
+                .matcher(this.request).matches();
     }
 
     /**
@@ -212,7 +199,7 @@ public class Read implements Request
     private boolean isReadBooksWithLabel()
     {
         return Pattern.compile("^READ\\s+[^:]+:[^:/]+/l/[^/]+$", Pattern.CASE_INSENSITIVE)
-                .matcher(request).matches();
+                .matcher(this.request).matches();
     }
 
     /**
