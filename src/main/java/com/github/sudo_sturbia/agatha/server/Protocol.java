@@ -53,10 +53,10 @@ public class Protocol
      */
     public static String handle(String requestString, String dbName)
     {
-        Request request = RequestBuilder.build(requestString);
+        Request request = RequestBuilder.build(requestString, dbName);
         if (request != null)
         {
-            return request.handle(dbName);
+            return request.handle();
         }
 
         return new Gson().toJson(new ExecutionState(1)); // Wrong syntax

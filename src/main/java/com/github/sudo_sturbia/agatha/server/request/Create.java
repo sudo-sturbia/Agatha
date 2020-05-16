@@ -33,42 +33,46 @@ public class Create implements Request
     /** String representing request. */
     private final String request;
 
+    /** Name of application's database. */
+    private final String dbName;
+
     /**
      * Create's constructor. Used only by RequestBuilder.
      *
      * @param request request to handle.
+     * @param dbName name of application's database.
      */
-    Create(final String request)
+    Create(final String request, final String dbName)
     {
         this.request = request;
+        this.dbName = dbName;
     }
 
     /**
      * Handles the request and returns an ExecutionState object
      * in JSON.
      *
-     * @param dbName name of application's database.
      * @return A JSON ExecutionState object.
      */
     @Override
-    public String handle(String dbName)
+    public String handle()
     {
         // Handle request based on it's type
         if (this.isCreateUser())
         {
-            return this.createUser(dbName);
+            return this.createUser();
         }
         else if (this.isCreateBook())
         {
-            return this.createBook(dbName);
+            return this.createBook();
         }
         else if (this.isCreateNote())
         {
-            return this.createNote(dbName);
+            return this.createNote();
         }
         else if (this.isCreateLabel())
         {
-            return this.createLabel(dbName);
+            return this.createLabel();
         }
         else
         {
@@ -93,10 +97,9 @@ public class Create implements Request
     /**
      * Creates a new application user.
      *
-     * @param dbName name of application's database.
      * @return A JSON response.
      */
-    private String createUser(String dbName)
+    private String createUser()
     {
         // Break statement into username and password
         String[] list = this.request.split("^CREATE\\s+|:");
@@ -107,12 +110,12 @@ public class Create implements Request
         }
 
         // Verify that username doesn't already exist
-        if (UserManager.doesExist(dbName, list[0]))
+        if (UserManager.doesExist(this.dbName, list[0]))
         {
             return new Gson().toJson(new ExecutionState(3)); // Operation failed
         }
 
-        if (!this.writeUser(list[0], DigestUtils.sha256Hex(list[1]), dbName))
+        if (!this.writeUser(list[0], DigestUtils.sha256Hex(list[1])))
         {
             return new Gson().toJson(new ExecutionState(3)); // Operation failed
         }
@@ -137,10 +140,9 @@ public class Create implements Request
     /**
      * Creates a new book for given user.
      *
-     * @param dbName name of application's database.
      * @return A JSON response.
      */
-    private String createBook(String dbName)
+    private String createBook()
     {
         // Used for unmarshalling of JSON
         Gson gson = new Gson();
@@ -152,7 +154,7 @@ public class Create implements Request
         }
 
         // Verify username and password
-        if (!UserManager.doesExist(dbName, list[0], list[1]))
+        if (!UserManager.doesExist(this.dbName, list[0], list[1]))
         {
             return gson.toJson(new ExecutionState(2)); // Wrong credentials
         }
@@ -168,7 +170,7 @@ public class Create implements Request
             return gson.toJson(new ExecutionState(3)); // Operation failed
         }
 
-        if (!this.writeBook(book, dbName, list[0]))
+        if (!this.writeBook(book, list[0]))
         {
             return gson.toJson(new ExecutionState(3)); // Operation failed
         }
@@ -193,10 +195,9 @@ public class Create implements Request
     /**
      * Creates a new note for given user.
      *
-     * @param dbName name of application's database.
      * @return A JSON response.
      */
-    private String createNote(String dbName)
+    private String createNote()
     {
         // Used for unmarshalling JSON
         Gson gson = new Gson();
@@ -208,7 +209,7 @@ public class Create implements Request
         }
 
         // Verify username and password
-        if (!UserManager.doesExist(dbName, list[0], list[1]))
+        if (!UserManager.doesExist(this.dbName, list[0], list[1]))
         {
             return gson.toJson(new ExecutionState(2)); // Wrong credentials
         }
@@ -224,7 +225,7 @@ public class Create implements Request
             return gson.toJson(new ExecutionState(3)); // Operation failed
         }
 
-        if (!this.writeNote(note, dbName, list[0], list[2]))
+        if (!this.writeNote(note, list[0], list[2]))
         {
             return gson.toJson(new ExecutionState(3)); // Operation failed
         }
@@ -249,10 +250,9 @@ public class Create implements Request
     /**
      * Creates a new empty label for given user.
      *
-     * @param dbName name of application's database.
      * @return A JSON response.
      */
-    private String createLabel(String dbName)
+    private String createLabel()
     {
         String[] list = this.request.split("^CREATE\\s+|:|/l/");
         if (list.length != 3)
@@ -261,7 +261,7 @@ public class Create implements Request
         }
 
         // Verify username and password
-        if (!UserManager.doesExist(dbName, list[0], list[1]))
+        if (!UserManager.doesExist(this.dbName, list[0], list[1]))
         {
             return new Gson().toJson(new ExecutionState(2)); // Wrong credentials
         }
@@ -277,7 +277,7 @@ public class Create implements Request
                         "ALTER TABLE ?.? ADD ? bool NOT NULL DEFAULT 0;"
                 );
         ) {
-            checkColumn.setString(1, dbName);
+            checkColumn.setString(1, this.dbName);
             checkColumn.setString(2, list[0]); // username
             checkColumn.setString(3, list[2]); // label
 
@@ -287,7 +287,7 @@ public class Create implements Request
                 return new Gson().toJson(new ExecutionState(3)); // Operation failed
             }
 
-            addColumn.setString(1, dbName);
+            addColumn.setString(1, this.dbName);
             addColumn.setString(2, list[0]); // username
             addColumn.setString(3, list[2]); // label
 
@@ -307,10 +307,9 @@ public class Create implements Request
      *
      * @param username user's username.
      * @param hashedPass user's password hashed using sha256.
-     * @param dbName name of application's database.
      * @return True if operation is performed successfully, false otherwise.
      */
-    private boolean writeUser(String username, String hashedPass, String dbName)
+    private boolean writeUser(String username, String hashedPass)
     {
         try (
                 Connection connection = ConnectorBuilder.get().get();
@@ -330,11 +329,11 @@ public class Create implements Request
                                 ");"
                 );
         ) {
-            addUser.setString(1, dbName);
+            addUser.setString(1, this.dbName);
             addUser.setString(2, username);
             addUser.setString(3, hashedPass);
 
-            createTable.setString(1, dbName);
+            createTable.setString(1, this.dbName);
             createTable.setString(2, username);
 
             addUser.executeUpdate();
@@ -354,11 +353,10 @@ public class Create implements Request
      * does exist.
      *
      * @param book book to write to table.
-     * @param dbName name of application's database.
      * @param username name of current user (also name of user's table.)
      * @return True if operation performed successfully, false otherwise.
      */
-    private boolean writeBook(Book book, String dbName, String username)
+    private boolean writeBook(Book book, String username)
     {
         // Verifies that book's name doesn't already exist.
         // Writes book's fields to user's table, and writes all
@@ -381,7 +379,7 @@ public class Create implements Request
                 )
         ) {
             // Verify that book's name doesn't already exist
-            checkBook.setString(1, dbName);
+            checkBook.setString(1, this.dbName);
             checkBook.setString(2, username);
             checkBook.setString(3, book.getName());
             try (ResultSet set = checkBook.executeQuery())
@@ -394,7 +392,7 @@ public class Create implements Request
             }
 
             // Insert book
-            addBook.setString(1, dbName);
+            addBook.setString(1, this.dbName);
             addBook.setString(2, username);
             addBook.setString(3, book.getName());
             addBook.setString(4, book.getAuthor());
@@ -407,12 +405,12 @@ public class Create implements Request
             addBook.executeUpdate();
 
             // Create notes table
-            createNotesTable.setString(1, dbName);
+            createNotesTable.setString(1, this.dbName);
             createNotesTable.setString(2, username + book.getName());
 
             createNotesTable.executeUpdate();
 
-            if (!this.writeNotes(book.getNotes(), dbName, username, book.getName()))
+            if (!this.writeNotes(book.getNotes(), username, book.getName()))
             {
                 return false;
             }
@@ -429,12 +427,11 @@ public class Create implements Request
      * Writes a list of notes to user's book's table.
      *
      * @param notes notes to write to table.
-     * @param dbName name of application's database.
      * @param username user's username.
      * @param bookName name of the book containing the note.
      * @return True if operation is performed successfully, false otherwise.
      */
-    private boolean writeNotes(List<Note> notes, String dbName, String username, String bookName)
+    private boolean writeNotes(List<Note> notes, String username, String bookName)
     {
         try (
                 Connection connection = ConnectorBuilder.get().get();
@@ -442,7 +439,7 @@ public class Create implements Request
                         "INSERT INTO ?.? VALUES ('?', ?);"
                 )
         ) {
-            insertNote.setString(1, dbName);
+            insertNote.setString(1, this.dbName);
             insertNote.setString(2, username + bookName);
 
             for (Note note : notes)
@@ -467,12 +464,11 @@ public class Create implements Request
      * returns false if it is.
      *
      * @param note note to write
-     * @param dbName name of application's database.
      * @param username user's username.
      * @param bookName name of the book containing the note.
      * @return True if operation is performed successfully, false otherwise.
      */
-    private boolean writeNote(Note note, String dbName, String username, String bookName)
+    private boolean writeNote(Note note, String username, String bookName)
     {
         try (
                 Connection connection = ConnectorBuilder.get().get();
@@ -486,7 +482,7 @@ public class Create implements Request
                         "INSERT INTO ?.? VALUES ('?', ?);"
                 )
         ) {
-            checkBookName.setString(1, dbName);
+            checkBookName.setString(1, this.dbName);
             checkBookName.setString(2, username);
             checkBookName.setString(3, bookName);
 
@@ -496,7 +492,7 @@ public class Create implements Request
                 return false;
             }
 
-            checkPage.setString(1, dbName);
+            checkPage.setString(1, this.dbName);
             checkPage.setString(2, username + bookName);
             checkPage.setInt(3, note.getPageNumber());
 
@@ -506,7 +502,7 @@ public class Create implements Request
                 return false;
             }
 
-            insertNote.setString(1, dbName);
+            insertNote.setString(1, this.dbName);
             insertNote.setString(2, username+bookName);
             insertNote.setString(3, note.getNote());
             insertNote.setInt(4, note.getPageNumber());

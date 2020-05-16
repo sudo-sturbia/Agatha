@@ -33,41 +33,45 @@ public class Read implements Request
     /** String representing request. */
     private final String request;
 
+    /** Name of application's database. */
+    private final String dbName;
+
     /**
      * Read's constructor. Used only by RequestBuilder.
      *
      * @param request request to handle.
+     * @param dbName name of application's database.
      */
-    Read(final String request)
+    Read(final String request, final String dbName)
     {
         this.request = request;
+        this.dbName = dbName;
     }
 
     /**
      * Handles the request and returns a JSON object.
      *
-     * @param dbName name of application's database.
      * @return Requested JSON object if request is correct, an
      *         ExecutionState object otherwise.
      */
     @Override
-    public String handle(String dbName)
+    public String handle()
     {
         if (this.isReadUser())
         {
-            return this.readUser(dbName);
+            return this.readUser();
         }
         else if (this.isReadBook())
         {
-            return this.readBook(dbName);
+            return this.readBook();
         }
         else if (this.isReadBooksNames())
         {
-            return this.readBooksNames(dbName);
+            return this.readBooksNames();
         }
         else if (this.isReadBooksWithLabel())
         {
-            return this.readBooksWithLabel(dbName);
+            return this.readBooksWithLabel();
         }
         else
         {
@@ -104,10 +108,9 @@ public class Read implements Request
      * Verifies a client's credentials. Returns an execution state
      * object depending on the credentials.
      *
-     * @param dbName name of application's database.
      * @return A JSON response.
      */
-    private String readUser(String dbName)
+    private String readUser()
     {
         String[] list = this.request.split("^READ\\s+|:");
         if (list.length != 2)
@@ -116,7 +119,7 @@ public class Read implements Request
         }
 
         // Verify username and password
-        if (!UserManager.doesExist(dbName, list[0], list[1]))
+        if (!UserManager.doesExist(this.dbName, list[0], list[1]))
         {
             return new Gson().toJson(new ExecutionState(2)); // Wrong credentials
         }
@@ -142,10 +145,9 @@ public class Read implements Request
      * Load a book from user's library. Returns a JSON
      * representation of the book.
      *
-     * @param dbName name of application's database.
      * @return A JSON response.
      */
-    private String readBook(String dbName)
+    private String readBook()
     {
         String[] list = this.request.split("^READ\\s+|:|/b/");
         if (list.length != 3)
@@ -154,12 +156,12 @@ public class Read implements Request
         }
 
         // Verify username and password
-        if (!UserManager.doesExist(dbName, list[0], list[1]))
+        if (!UserManager.doesExist(this.dbName, list[0], list[1]))
         {
             return new Gson().toJson(new ExecutionState(2)); // Wrong credentials
         }
 
-        return this.loadBook(list[2], dbName, list[0]);
+        return this.loadBook(list[2], list[0]);
     }
 
     /**
@@ -180,10 +182,9 @@ public class Read implements Request
      * Return a JSON list containing names of all books existing
      * in user's table.
      *
-     * @param dbName name of application's database.
      * @return A JSON response.
      */
-    private String readBooksNames(String dbName)
+    private String readBooksNames()
     {
         String[] list = this.request.split("^READ\\s+|:|/b/\\*$");
         if (list.length != 2)
@@ -192,12 +193,12 @@ public class Read implements Request
         }
 
         // Verify username and password
-        if (!UserManager.doesExist(dbName, list[0], list[1]))
+        if (!UserManager.doesExist(this.dbName, list[0], list[1]))
         {
             return new Gson().toJson(new ExecutionState(2)); // Wrong credentials
         }
 
-        return this.loadBooksNames(dbName, list[0]);
+        return this.loadBooksNames(list[0]);
     }
 
     /**
@@ -218,10 +219,9 @@ public class Read implements Request
      * Return a JSON list containing names of books with given
      * label.
      *
-     * @param dbName name of application's database.
      * @return A JSON response.
      */
-    private String readBooksWithLabel(String dbName)
+    private String readBooksWithLabel()
     {
         String[] list = this.request.split("^READ\\s+|:|/b/\\*$");
         if (list.length != 3)
@@ -230,23 +230,22 @@ public class Read implements Request
         }
 
         // Verify username and password
-        if (!UserManager.doesExist(dbName, list[0], list[1]))
+        if (!UserManager.doesExist(this.dbName, list[0], list[1]))
         {
             return new Gson().toJson(new ExecutionState(2)); // Wrong credentials
         }
 
-        return this.loadBooksNamesWithLabel(list[2], dbName, list[0]);
+        return this.loadBooksNamesWithLabel(list[2], list[0]);
     }
 
     /**
      * Load a book from user's table.
      *
      * @param bookName name of book to load.
-     * @param dbName name of application's database.
      * @param username user's username.
      * @return A JSON object (Book or ExecutionState).
      */
-    private String loadBook(String bookName, String dbName, String username)
+    private String loadBook(String bookName, String username)
     {
         try (
                 Connection connection = ConnectorBuilder.get().get();
@@ -257,7 +256,7 @@ public class Read implements Request
                         "SELECT * FROM ?.?"
                 );
         ) {
-            getBook.setString(1, dbName);
+            getBook.setString(1, this.dbName);
             getBook.setString(2, username);
             getBook.setString(3, bookName);
 
@@ -292,7 +291,7 @@ public class Read implements Request
                 // Load user's notes
                 if (set.getBoolean("hasNotes"))
                 {
-                    getNotes.setString(1, dbName);
+                    getNotes.setString(1, this.dbName);
                     getNotes.setString(2, username + bookName);
 
                     ResultSet noteSet = getNotes.executeQuery();
@@ -316,11 +315,10 @@ public class Read implements Request
     /**
      * Return a JSON list containing names of all user's books.
      *
-     * @param dbName name of application's database.
      * @param username user's username.
      * @return A JSON object.
      */
-    private String loadBooksNames(String dbName, String username)
+    private String loadBooksNames(String username)
     {
         try (
                 Connection connection = ConnectorBuilder.get().get();
@@ -328,7 +326,7 @@ public class Read implements Request
                         "SELECT bookName FROM ?.?"
                 );
         ) {
-            getNames.setString(1, dbName);
+            getNames.setString(1, this.dbName);
             getNames.setString(2, username);
 
             List<String> bookNames = new ArrayList<>();
@@ -354,11 +352,10 @@ public class Read implements Request
      * with given label.
      *
      * @param label name of label.
-     * @param dbName name of application's database.
      * @param username user's username.
      * @return A JSON list or ExecutionState in case of failure.
      */
-    private String loadBooksNamesWithLabel(String label, String dbName, String username)
+    private String loadBooksNamesWithLabel(String label, String username)
     {
         try (
                 Connection connection = ConnectorBuilder.get().get();
@@ -366,7 +363,7 @@ public class Read implements Request
                         "SELECT bookName FROM ?.? WHERE ? = 1"
                 );
         ) {
-            getNames.setString(1, dbName);
+            getNames.setString(1, this.dbName);
             getNames.setString(2, username);
             getNames.setString(3, label);
 

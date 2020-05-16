@@ -24,25 +24,29 @@ public class Update implements Request
     /** String representing request. */
     private final String request;
 
+    /** Name of application's database. */
+    private final String dbName;
+
     /**
      * Update's constructor. Used only by RequestBuilder.
      *
      * @param request request to handle.
+     * @param dbName name of application's database.
      */
-    Update(final String request)
+    Update(final String request, final String dbName)
     {
         this.request = request;
+        this.dbName = dbName;
     }
 
     /**
      * Handles the request and returns an ExecutionState object
      * in JSON.
      *
-     * @param dbName name of application's database.
      * @return A JSON ExecutionState object.
      */
     @Override
-    public String handle(String dbName)
+    public String handle()
     {
         if (!this.isCorrect())
         {

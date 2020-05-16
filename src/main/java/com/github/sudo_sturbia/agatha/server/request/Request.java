@@ -22,9 +22,8 @@ public interface Request
     /**
      * Handle client's request and generate a response string.
      *
-     * @param dbName name of application's database.
      * @return A JSON response to the request based on the function.
      *         Responses are documented in implementing classes.
      */
-    public String handle(String dbName);
+    public String handle();
 }
