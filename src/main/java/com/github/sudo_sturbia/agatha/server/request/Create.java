@@ -132,9 +132,6 @@ public class Create implements Request
      */
     private String createBook()
     {
-        // Used for unmarshalling of JSON
-        Gson gson = new Gson();
-
         String[] list = this.request.split("^CREATE\\s+|:|/b/");
 
         String state;
@@ -144,14 +141,12 @@ public class Create implements Request
         }
 
         Book book;
-        try
-        {
+        Gson gson = new Gson();
+        try {
             book = gson.fromJson(list[2], BookImp.class);
         }
-        catch (JsonSyntaxException e)
-        {
-            // JSON can't be unmarshalled
-            return gson.toJson(new ExecutionState(3)); // Operation failed
+        catch (JsonSyntaxException e) {
+            return gson.toJson(new ExecutionState(3)); // JSON can't be unmarshalled
         }
 
         if (!this.writeBook(book, list[0]))
@@ -183,9 +178,6 @@ public class Create implements Request
      */
     private String createNote()
     {
-        // Used for unmarshalling JSON
-        Gson gson = new Gson();
-
         String[] list = this.request.split("^CREATE\\s+|:|/b/|/n/");
 
         String state;
@@ -195,14 +187,12 @@ public class Create implements Request
         }
 
         Note note;
-        try
-        {
+        Gson gson = new Gson();
+        try {
             note = gson.fromJson(list[3], NoteImp.class);
         }
-        catch (JsonSyntaxException e)
-        {
-            // JSON can't be unmarshalled
-            return gson.toJson(new ExecutionState(3)); // Operation failed
+        catch (JsonSyntaxException e) {
+            return gson.toJson(new ExecutionState(3)); // JSON can't be unmarshalled
         }
 
         if (!this.writeNote(note, list[0], list[2]))
@@ -313,7 +303,7 @@ public class Create implements Request
         try (
                 Connection connection = ConnectorBuilder.get().get();
                 PreparedStatement checkBook = connection.prepareStatement(
-                        "SELECT * FROM ?.? WHERE bookName=?;"
+                        "SELECT * FROM ?.? WHERE bookName = '?';"
                 );
                 PreparedStatement addBook = connection.prepareStatement(
                         "INSERT INTO ?.? VALUES" +
@@ -385,7 +375,8 @@ public class Create implements Request
         try (
                 Connection connection = ConnectorBuilder.get().get();
                 PreparedStatement insertNote = connection.prepareStatement(
-                        "INSERT INTO ?.? VALUES ('?', ?);"
+                        "INSERT INTO ?.? " +
+                                "VALUES ('?', ?);"
                 )
         ) {
             insertNote.setString(1, this.dbName);
@@ -422,13 +413,14 @@ public class Create implements Request
         try (
                 Connection connection = ConnectorBuilder.get().get();
                 PreparedStatement checkBookName = connection.prepareStatement(
-                        "SELECT * FROM ?.? WHERE bookName=?;"
+                        "SELECT * FROM ?.? WHERE bookName='?';"
                 );
                 PreparedStatement checkPage = connection.prepareStatement(
                         "SELECT * FROM ?.? WHERE page=?;"
                 );
                 PreparedStatement insertNote = connection.prepareStatement(
-                        "INSERT INTO ?.? VALUES ('?', ?);"
+                        "INSERT INTO ?.? " +
+                                "VALUES ('?', ?);"
                 )
         ) {
             checkBookName.setString(1, this.dbName);
@@ -452,7 +444,7 @@ public class Create implements Request
             }
 
             insertNote.setString(1, this.dbName);
-            insertNote.setString(2, username+bookName);
+            insertNote.setString(2, username + bookName);
             insertNote.setString(3, note.getNote());
             insertNote.setInt(4, note.getPageNumber());
 

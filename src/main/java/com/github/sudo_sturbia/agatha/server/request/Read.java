@@ -221,7 +221,7 @@ public class Read implements Request
         try (
                 Connection connection = ConnectorBuilder.get().get();
                 PreparedStatement getBook = connection.prepareStatement(
-                        "SELECT * FROM ?.? WHERE bookName=?"
+                        "SELECT * FROM ?.? WHERE bookName='?'"
                 );
                 PreparedStatement getNotes = connection.prepareStatement(
                         "SELECT * FROM ?.?"
