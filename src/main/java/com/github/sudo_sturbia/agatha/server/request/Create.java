@@ -101,14 +101,9 @@ public class Create implements Request
     {
         // Break statement into username and password
         String[] list = this.request.split("^CREATE\\s+|:");
-
-        String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 2)) != null)
-        {
-            return state;
-        }
-
-        if (!this.writeUser(list[0], DigestUtils.sha256Hex(list[1])))
+        if (list.length != 2 ||
+                UserManager.doesExist(this.dbName, list[0]) ||
+                !this.writeUser(list[0], DigestUtils.sha256Hex(list[1])))
         {
             return new Gson().toJson(new ExecutionState(3)); // Operation failed
         }
