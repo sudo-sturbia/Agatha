@@ -242,34 +242,7 @@ public class Create implements Request
             return state;
         }
 
-        // Add a new boolean column to user's books table.
-        // Default value is false.
-        try (
-                Connection connection = ConnectorBuilder.get().get();
-                PreparedStatement checkColumn = connection.prepareStatement(
-                        "SHOW COLUMNS FROM ?.? like '?';"
-                );
-                PreparedStatement addColumn = connection.prepareStatement(
-                        "ALTER TABLE ?.? ADD ? bool NOT NULL DEFAULT 0;"
-                );
-        ) {
-            checkColumn.setString(1, this.dbName);
-            checkColumn.setString(2, list[0]); // username
-            checkColumn.setString(3, list[2]); // label
-
-            ResultSet set = checkColumn.executeQuery();
-            if (set.next()) // Column already exists
-            {
-                return new Gson().toJson(new ExecutionState(3)); // Operation failed
-            }
-
-            addColumn.setString(1, this.dbName);
-            addColumn.setString(2, list[0]); // username
-            addColumn.setString(3, list[2]); // label
-
-            addColumn.executeUpdate();
-        }
-        catch (SQLException e)
+        if (!this.writeLabel(list[0], list[2]))
         {
             return new Gson().toJson(new ExecutionState(3)); // Operation failed
         }
@@ -484,6 +457,37 @@ public class Create implements Request
             insertNote.setInt(4, note.getPageNumber());
 
             insertNote.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Create a new label in user's database.
+     *
+     * @param username user's username.
+     * @param label name of the label to add.
+     * @return True if operation is performed successfully, false otherwise.
+     */
+    private boolean writeLabel(String username, String label)
+    {
+        // Add a new boolean column to user's books table.
+        // Default value is false.
+        try (
+                Connection connection = ConnectorBuilder.get().get();
+                PreparedStatement addColumn = connection.prepareStatement(
+                        "ALTER TABLE ?.? ADD ? bool NOT NULL DEFAULT 0;"
+                );
+        ) {
+            addColumn.setString(1, this.dbName);
+            addColumn.setString(2, username);
+            addColumn.setString(3, label);
+
+            addColumn.executeUpdate();
         }
         catch (SQLException e)
         {
