@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 class BookBuilderTest
 {
-    @DisplayName("Test building correct Book objects.")
+    @DisplayName("Correct Book objects.")
     @Test
     void correctBuild()
     {
@@ -39,7 +39,7 @@ class BookBuilderTest
         assertEquals("path/to/cover", book.getCoverImagePath(), "Wrong path to cover.");
     }
 
-    @DisplayName("Test builds that should throw exceptions.")
+    @DisplayName("Builds that should throw exceptions.")
     @Test
     void throwsException()
     {
