@@ -6,6 +6,7 @@ import com.github.sudo_sturbia.agatha.client.model.book.Note;
 import com.github.sudo_sturbia.agatha.client.model.book.NoteImp;
 import com.github.sudo_sturbia.agatha.server.database.ConnectorBuilder;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -115,13 +116,21 @@ public class Update implements Request
             return state;
         }
 
-        Book book = new Gson().fromJson(list[3], BookImp.class);
-        if (!this.updateBook(book, list[0], list[2]))
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
+        Book book;
+        Gson gson = new Gson();
+        try {
+            book = gson.fromJson(list[3], BookImp.class);
+        }
+        catch (JsonSyntaxException e) {
+            return gson.toJson(new ExecutionState(3)); // JSON can't be unmarshalled
         }
 
-        return new Gson().toJson(new ExecutionState(0)); // Successful
+        if (!this.updateBook(book, list[0], list[2]))
+        {
+            return gson.toJson(new ExecutionState(3)); // Operation failed
+        }
+
+        return gson.toJson(new ExecutionState(0)); // Successful
     }
 
     /**
@@ -190,9 +199,15 @@ public class Update implements Request
             return state;
         }
 
+        Note note;
         Gson gson = new Gson();
+        try {
+            note = gson.fromJson(list[4], NoteImp.class);
+        }
+        catch (JsonSyntaxException e) {
+            return gson.toJson(new ExecutionState(3)); // JSON can't be unmarshalled
+        }
 
-        Note note = gson.fromJson(list[4], NoteImp.class);
         if (!this.updateNote(note, list[0], list[2], Integer.parseInt(list[3])))
         {
             return gson.toJson(new ExecutionState(3)); // Operation failed

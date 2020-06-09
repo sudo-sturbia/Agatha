@@ -4,8 +4,6 @@ import com.github.sudo_sturbia.agatha.server.database.ConnectorBuilder;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
@@ -42,7 +40,7 @@ public class ServerImp implements Server
         try
         {
             ConnectorBuilder.get().setup();
-            this.setup();
+            DatabaseSetupManager.setup(this.dbName);
         }
         catch (SQLException e)
         {
@@ -63,33 +61,6 @@ public class ServerImp implements Server
         catch (IOException e)
         {
             throw new ServerSetupException("Couldn't open socket.");
-        }
-    }
-
-    /**
-     * Perform initial database setup.
-     *
-     * @throws ServerSetupException if setup statements can't be executed.
-     */
-    private void setup() throws ServerSetupException
-    {
-        try (
-            // Create database and users table
-            Connection connection = ConnectorBuilder.get().get();
-            PreparedStatement database = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS ?;");
-            PreparedStatement usersTable = connection.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS ?.Users " +
-                            "(username varchar(255) NOT NULL, password varchar(64) NOT NULL, PRIMARY KEY(username));")
-        ) {
-            database.setString(1, this.dbName);
-            usersTable.setString(1, this.dbName);
-
-            database.executeUpdate();
-            usersTable.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            throw new ServerSetupException("Couldn't perform initial database setup.");
         }
     }
 }
