@@ -102,12 +102,9 @@ public class Read implements Request
         String[] list = this.request.split("^READ\\s+|:");
 
         String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 2)) != null)
-        {
-            return state;
-        }
-
-        return new Gson().toJson(new ExecutionState(0)); // Successful
+        return (state = RequestUtil.verify(this.dbName, list, 2)) != null ?
+                state :
+                new Gson().toJson(new ExecutionState(0)); // Successful
     }
 
     /**
@@ -135,12 +132,9 @@ public class Read implements Request
         String[] list = this.request.split("^READ\\s+|:|/b/");
 
         String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 3)) != null)
-        {
-            return state;
-        }
-
-        return this.loadBook(list[2], list[0]);
+        return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?
+                state :
+                this.loadBook(list[2], list[0]);
     }
 
     /**
@@ -168,12 +162,9 @@ public class Read implements Request
         String[] list = this.request.split("^READ\\s+|:|/b/\\*$");
 
         String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 2)) != null)
-        {
-            return state;
-        }
-
-        return this.loadBooksNames(list[0]);
+        return (state = RequestUtil.verify(this.dbName, list, 2)) != null ?
+                state :
+                this.loadBooksNames(list[0]);
     }
 
     /**
@@ -201,12 +192,9 @@ public class Read implements Request
         String[] list = this.request.split("^READ\\s+|:|/b/\\*$");
 
         String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 3)) != null)
-        {
-            return state;
-        }
-
-        return this.loadBooksNamesWithLabel(list[2], list[0]);
+        return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?
+                state :
+                this.loadBooksNamesWithLabel(list[2], list[0]);
     }
 
     /**

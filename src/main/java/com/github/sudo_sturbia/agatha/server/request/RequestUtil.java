@@ -24,17 +24,10 @@ public class RequestUtil
      */
     public static String verify(String dbName, String[] list, int size)
     {
-        if (list.length != size)
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        // Verify username and password
-        if (!UserManager.doesExist(dbName, list[0], list[1]))
-        {
-            return new Gson().toJson(new ExecutionState(2)); // Wrong credentials
-        }
-
-        return null;
+        return list.length != size ?
+                new Gson().toJson(new ExecutionState(3)) : // Operation failed
+                !UserManager.doesExist(dbName, list[0], list[1]) ? // Verify username and password
+                        new Gson().toJson(new ExecutionState(2)) : // Wrong credentials
+                        null;
     }
 }

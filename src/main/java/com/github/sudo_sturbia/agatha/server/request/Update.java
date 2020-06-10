@@ -125,12 +125,9 @@ public class Update implements Request
             return gson.toJson(new ExecutionState(3)); // JSON can't be unmarshalled
         }
 
-        if (!this.updateBook(book, list[0], list[2]))
-        {
-            return gson.toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return gson.toJson(new ExecutionState(0)); // Successful
+        return !this.updateBook(book, list[0], list[2]) ?
+                gson.toJson(new ExecutionState(3)) : // Operation failed
+                gson.toJson(new ExecutionState(0));  // Successful
     }
 
     /**
@@ -157,17 +154,11 @@ public class Update implements Request
         String[] list = this.request.split("^UPDATE\\s+|:|/b/|/|=");
 
         String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 5)) != null)
-        {
-            return state;
-        }
-
-        if (!this.updateBooksField(list[0], list[2], list[3], list[4]))
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return new Gson().toJson(new ExecutionState(0)); // Successful
+        return (state = RequestUtil.verify(this.dbName, list, 5)) != null ?
+                state :
+                !this.updateBooksField(list[0], list[2], list[3], list[4]) ?
+                        new Gson().toJson(new ExecutionState(3)) : // Operation failed
+                        new Gson().toJson(new ExecutionState(0));  // Successful
     }
 
     /**
@@ -208,12 +199,9 @@ public class Update implements Request
             return gson.toJson(new ExecutionState(3)); // JSON can't be unmarshalled
         }
 
-        if (!this.updateNote(note, list[0], list[2], Integer.parseInt(list[3])))
-        {
-            return gson.toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return gson.toJson(new ExecutionState(0)); // Successful
+        return !this.updateNote(note, list[0], list[2], Integer.parseInt(list[3])) ?
+                gson.toJson(new ExecutionState(3)) : // Operation failed
+                gson.toJson(new ExecutionState(0));  // Successful
     }
 
     /**
@@ -240,17 +228,11 @@ public class Update implements Request
         String[] list = this.request.split("^UPDATE\\s+|:|/b/|/n/|/|=");
 
         String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 6)) != null)
-        {
-            return state;
-        }
-
-        if (!this.updateNotesField(list[0], list[2], Integer.parseInt(list[3]), list[4], list[5]))
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return new Gson().toJson(new ExecutionState(0)); // Successful
+        return (state = RequestUtil.verify(this.dbName, list, 6)) != null ?
+                state :
+                !this.updateNotesField(list[0], list[2], Integer.parseInt(list[3]), list[4], list[5]) ?
+                        new Gson().toJson(new ExecutionState(3)) : // Operation failed
+                        new Gson().toJson(new ExecutionState(0));  // Successful
     }
 
     /**
@@ -278,17 +260,11 @@ public class Update implements Request
         String[] list = this.request.split("^UPDATE\\s+|:|/l/|/add/b/");
 
         String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 4)) != null)
-        {
-            return state;
-        }
-
-        if (!this.bookLabel(list[0], list[3], list[2], true))
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return new Gson().toJson(new ExecutionState(0)); // Successful
+        return (state = RequestUtil.verify(this.dbName, list, 4)) != null ?
+                state :
+                !this.bookLabel(list[0], list[3], list[2], true) ?
+                        new Gson().toJson(new ExecutionState(3)) : // Operation failed
+                        new Gson().toJson(new ExecutionState(0));  // Successful
     }
 
     /**
@@ -315,17 +291,11 @@ public class Update implements Request
         String[] list = this.request.split("^UPDATE\\s+|:|/l/|/remove/b/");
 
         String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 4)) != null)
-        {
-            return state;
-        }
-
-        if (!this.bookLabel(list[0], list[3], list[2], false))
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return new Gson().toJson(new ExecutionState(0)); // Successful
+        return (state = RequestUtil.verify(this.dbName, list, 4)) != null ?
+                state :
+                !this.bookLabel(list[0], list[3], list[2], false) ?
+                        new Gson().toJson(new ExecutionState(3)) : // Operation failed
+                        new Gson().toJson(new ExecutionState(0));  // Successful
     }
 
     /**
