@@ -4,7 +4,7 @@ import com.github.sudo_sturbia.agatha.client.model.book.Book;
 import com.github.sudo_sturbia.agatha.client.model.book.BookImp;
 import com.github.sudo_sturbia.agatha.client.model.book.Note;
 import com.github.sudo_sturbia.agatha.client.model.book.NoteImp;
-import com.github.sudo_sturbia.agatha.server.clients.UserManager;
+import com.github.sudo_sturbia.agatha.server.clients.ClientManager;
 import com.github.sudo_sturbia.agatha.server.database.ConnectorBuilder;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -103,7 +103,7 @@ public class Create implements Request
         // Break statement into username and password
         String[] list = this.request.split("^CREATE\\s+|:");
         if (list.length != 2 ||
-                UserManager.doesExist(this.dbName, list[0]) ||
+                ClientManager.get().doesExist(this.dbName, list[0]) ||
                 !this.writeUser(list[0], DigestUtils.sha256Hex(list[1])))
         {
             return new Gson().toJson(new ExecutionState(3)); // Operation failed
