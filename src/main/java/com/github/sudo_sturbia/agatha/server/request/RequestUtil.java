@@ -1,5 +1,6 @@
 package com.github.sudo_sturbia.agatha.server.request;
 
+import com.github.sudo_sturbia.agatha.server.clients.UserManager;
 import com.google.gson.Gson;
 
 /**

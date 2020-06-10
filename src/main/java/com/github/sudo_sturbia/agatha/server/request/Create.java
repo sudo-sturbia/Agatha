@@ -4,6 +4,7 @@ import com.github.sudo_sturbia.agatha.client.model.book.Book;
 import com.github.sudo_sturbia.agatha.client.model.book.BookImp;
 import com.github.sudo_sturbia.agatha.client.model.book.Note;
 import com.github.sudo_sturbia.agatha.client.model.book.NoteImp;
+import com.github.sudo_sturbia.agatha.server.clients.UserManager;
 import com.github.sudo_sturbia.agatha.server.database.ConnectorBuilder;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;

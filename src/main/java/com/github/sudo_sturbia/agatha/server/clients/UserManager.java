@@ -1,4 +1,4 @@
-package com.github.sudo_sturbia.agatha.server.request;
+package com.github.sudo_sturbia.agatha.server.clients;
 
 import com.github.sudo_sturbia.agatha.server.database.ConnectorBuilder;
 import org.apache.commons.codec.digest.DigestUtils;
