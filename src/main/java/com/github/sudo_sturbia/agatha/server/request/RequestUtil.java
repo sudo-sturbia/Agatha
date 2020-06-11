@@ -3,8 +3,8 @@ package com.github.sudo_sturbia.agatha.server.request;
 import com.google.gson.Gson;
 
 /**
- * RequestUtil contains utility methods used by classes implementing
- * Request.
+ * RequestUtil is a container for utility methods used by classes
+ * implementing Request interface.
  */
 public class RequestUtil
 {

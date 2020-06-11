@@ -4,8 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * Connector provides database connections to be used by
- * Agatha's server.
+ * Connector provides database connections to be used by Agatha's server.
  * <p>
  * The interface is meant to not be too specific so that it
  * can be implemented in different ways e.g. a connection pool or

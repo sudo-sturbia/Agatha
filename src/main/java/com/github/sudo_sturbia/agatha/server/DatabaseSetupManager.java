@@ -7,7 +7,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * DatabaseSetupManager performs initial configuration for a new database.
+ * DatabaseSetupManager creates a new database to be used by the
+ * server and performs initial configuration on it.
+ * <p>
+ * An Agatha database consists of a Users table, a table for each
+ * client containing client's books, and a table for each book containing
+ * book's notes. DatabaseSetupManager sets up the initial database
+ * with the Users table, the rest are left to be created on demand.
  */
 public class DatabaseSetupManager
 {

@@ -11,7 +11,7 @@ package com.github.sudo_sturbia.agatha.server.request;
  *     2 - Incorrect credentials
  *     3 - Operation failed
  * </pre>
- * Each code except 0 has a message.
+ * All codes are accompanied by a message.
  */
 public class ExecutionState
 {
@@ -44,7 +44,7 @@ public class ExecutionState
                 this.message = "Operation failed.";
                 break;
             default:
-                throw new IllegalStateException("Invalid execution code.");
+                throw new IllegalArgumentException("Invalid execution code.");
         }
 
         this.code = code;

@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
- * ServerThread handles a request
+ * ServerThread handles one request sent on a given socket.
  */
 public class ServerThread extends Thread
 {

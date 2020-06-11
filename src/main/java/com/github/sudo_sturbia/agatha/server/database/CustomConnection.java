@@ -20,9 +20,8 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 
 /**
- * PoolConnection is a wrapper around Connection object to
- * be used by the ConnectionPool database connector. Its purpose
- * is to facilitate closing of connections.
+ * CustomConnection is a wrapper around Connection object to be used
+ * by a Connector. Its purpose is to facilitate closing of connections.
  * <p>
  * All methods except <code>close</code> are simple delegations.
  */
