@@ -50,6 +50,9 @@ public class ClientManagerThread extends Thread
      * accounts in timedOut map and unlocks them if timeout has ended. */
     private final ScheduledExecutorService scheduler;
 
+    /** Timeout interval in minutes. */
+    private final int TIMEOUT = 30;
+
     public ClientManagerThread(BlockingQueue<ClientManager.LoginStatus> sender,
                                BlockingQueue<Credentials> receiver)
     {
@@ -64,9 +67,9 @@ public class ClientManagerThread extends Thread
                     synchronized (this)
                     {
                         ClientManagerThread.this.timedOut.entrySet()
-                                .removeIf(e -> (System.currentTimeMillis() - e.getValue()) / 1000 > 30);
+                                .removeIf(e -> (System.currentTimeMillis() - e.getValue()) / 1000 > this.TIMEOUT);
                     }
-                }, 0, 30, TimeUnit.MINUTES
+                }, 0, this.TIMEOUT, TimeUnit.MINUTES
         );
     }
 
@@ -84,7 +87,7 @@ public class ClientManagerThread extends Thread
                     // User is timed out
                     if (credentials.getPassword() != null && timedOut.containsKey(credentials.getUsername()))
                     {
-                        if (((System.currentTimeMillis() - timedOut.get(credentials.getUsername())) / 1000) < 30)
+                        if (((System.currentTimeMillis() - timedOut.get(credentials.getUsername())) / 1000) < this.TIMEOUT)
                         { // Timeout hasn't ended
                             sender.put(ClientManager.LoginStatus.TIMEOUT);
                             continue;
