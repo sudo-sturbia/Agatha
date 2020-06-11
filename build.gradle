@@ -11,15 +11,17 @@ java {
 }
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
-    implementation "mysql:mysql-connector-java:8.0.19"
+    implementation 'mysql:mysql-connector-java:8.0.19'
 
     implementation 'com.google.code.gson:gson:2.8.6'
 
     implementation 'commons-codec:commons-codec:1.14'
+
+    implementation 'commons-cli:commons-cli:1.4'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.1'
