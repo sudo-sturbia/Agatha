@@ -12,13 +12,20 @@ import java.sql.SQLException;
 public class DatabaseSetupManager
 {
     /**
-     * Create a new database containing one user table.
+     * Setup a Connector and Create a new database containing Users' table.
      *
      * @param dbName name of the database to create.
      * @throws ServerSetupException if setup can't be performed.
      */
     public static void setup(String dbName) throws ServerSetupException
     {
+        try {
+            ConnectorBuilder.get().setup();
+        }
+        catch (SQLException e) {
+            throw new ServerSetupException("Couldn't setup database connector.");
+        }
+
         try (
                 // Create database and users table
                 Connection connection = ConnectorBuilder.get().get();
