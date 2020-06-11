@@ -150,12 +150,9 @@ public class Create implements Request
             return gson.toJson(new ExecutionState(3)); // JSON can't be unmarshalled
         }
 
-        if (!this.writeBook(book, list[0]))
-        {
-            return gson.toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return gson.toJson(new ExecutionState(0)); // Successful
+        return !this.writeBook(book, list[0]) ?
+                gson.toJson(new ExecutionState(3)) : // Operation failed
+                gson.toJson(new ExecutionState(0));  // Successful
     }
 
     /**
@@ -196,12 +193,9 @@ public class Create implements Request
             return gson.toJson(new ExecutionState(3)); // JSON can't be unmarshalled
         }
 
-        if (!this.writeNote(note, list[0], list[2]))
-        {
-            return gson.toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return gson.toJson(new ExecutionState(0)); // Successful
+        return !this.writeNote(note, list[0], list[2]) ?
+                gson.toJson(new ExecutionState(3)) : // Operation failed
+                gson.toJson(new ExecutionState(0));  // Successful
     }
 
     /**
@@ -228,17 +222,11 @@ public class Create implements Request
         String[] list = this.request.split("^CREATE\\s+|:|/l/");
 
         String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 3)) != null)
-        {
-            return state;
-        }
-
-        if (!this.writeLabel(list[0], list[2]))
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return new Gson().toJson(new ExecutionState(0)); // Successful
+        return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?
+                state :
+                !this.writeLabel(list[0], list[2]) ?
+                        new Gson().toJson(new ExecutionState(3)) : // Operation failed
+                        new Gson().toJson(new ExecutionState(0));  // Successful
     }
 
     /**

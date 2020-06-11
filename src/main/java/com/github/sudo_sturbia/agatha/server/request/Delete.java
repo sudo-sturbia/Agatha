@@ -125,17 +125,11 @@ public class Delete implements Request
         String[] list = this.request.split("^DELETE\\s+|:");
 
         String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 2)) != null)
-        {
-            return state;
-        }
-
-        if (!this.deleteClient(list[0]))
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return new Gson().toJson(new ExecutionState(0)); // Successful
+        return (state = RequestUtil.verify(this.dbName, list, 2)) != null ?
+                state :
+                !this.deleteClient(list[0]) ?
+                        new Gson().toJson(new ExecutionState(3)) : // Operation failed
+                        new Gson().toJson(new ExecutionState(0));  // Successful
     }
 
     /**
@@ -162,17 +156,11 @@ public class Delete implements Request
         String[] list = this.request.split("^DELETE\\s+|:|/b/");
 
         String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 3)) != null)
-        {
-            return state;
-        }
-
-        if (!this.deleteBook(list[0], list[2]))
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return new Gson().toJson(new ExecutionState(0)); // Successful
+        return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?
+                state :
+                !this.deleteBook(list[0], list[2]) ?
+                        new Gson().toJson(new ExecutionState(3)) : // Operation failed
+                        new Gson().toJson(new ExecutionState(0));  // Successful
     }
 
     /**
@@ -199,17 +187,11 @@ public class Delete implements Request
         String[] list = this.request.split("^DELETE\\s+|:|/b/\\*$");
 
         String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 2)) != null)
-        {
-            return state;
-        }
-
-        if (!this.deleteAllBooks(list[0]))
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return new Gson().toJson(new ExecutionState(0)); // Successful
+        return (state = RequestUtil.verify(this.dbName, list, 2)) != null ?
+                state :
+                !this.deleteAllBooks(list[0]) ?
+                        new Gson().toJson(new ExecutionState(3)) : // Operation failed
+                        new Gson().toJson(new ExecutionState(0));  // Successful
     }
 
     /**
@@ -236,17 +218,11 @@ public class Delete implements Request
         String[] list = this.request.split("^DELETE\\s+|:|/l/");
 
         String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 3)) != null)
-        {
-            return state;
-        }
-
-        if (!this.deleteLabel(list[0], list[2]))
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return new Gson().toJson(new ExecutionState(0)); // Successful
+        return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?
+                state :
+                !this.deleteLabel(list[0], list[2]) ?
+                        new Gson().toJson(new ExecutionState(3)) : // Successful
+                        new Gson().toJson(new ExecutionState(0));  // Operation failed
     }
 
     /**
@@ -273,17 +249,11 @@ public class Delete implements Request
         String[] list = this.request.split("^DELETE\\s+|:|/l/\\*$");
 
         String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 2)) != null)
-        {
-            return state;
-        }
-
-        if (!this.deleteAllLabels(list[0]))
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return new Gson().toJson(new ExecutionState(0)); // Successful
+        return (state = RequestUtil.verify(this.dbName, list, 2)) != null ?
+                state :
+                !this.deleteAllLabels(list[0]) ?
+                        new Gson().toJson(new ExecutionState(3)) : // Operation failed
+                        new Gson().toJson(new ExecutionState(0));  // Successful
     }
 
     /**
@@ -310,17 +280,11 @@ public class Delete implements Request
         String[] list = this.request.split("^DELETE\\s+|:|/b/|/n/");
 
         String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 4)) != null)
-        {
-            return state;
-        }
-
-        if (!this.deleteNote(list[0], list[2], Integer.parseInt(list[3])))
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return new Gson().toJson(new ExecutionState(0)); // Successful
+        return (state = RequestUtil.verify(this.dbName, list, 4)) != null ?
+                state :
+                !this.deleteNote(list[0], list[2], Integer.parseInt(list[3])) ?
+                        new Gson().toJson(new ExecutionState(3)) : // Operation failed
+                        new Gson().toJson(new ExecutionState(0));  // Successful
     }
 
     /**
@@ -347,17 +311,11 @@ public class Delete implements Request
         String[] list = this.request.split("^DELETE\\s+|:|/b/|/n/\\*$");
 
         String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 3)) != null)
-        {
-            return state;
-        }
-
-        if (!this.deleteAllNotes(list[0], list[2]))
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return new Gson().toJson(new ExecutionState(0)); // Successful
+        return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?
+                state :
+                !this.deleteAllNotes(list[0], list[2]) ?
+                        new Gson().toJson(new ExecutionState(3)) : // Operation failed
+                        new Gson().toJson(new ExecutionState(0));  // Successful
     }
 
     /**
