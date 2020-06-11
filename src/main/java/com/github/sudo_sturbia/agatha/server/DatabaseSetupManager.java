@@ -26,7 +26,8 @@ public class DatabaseSetupManager
                 PreparedStatement usersTable = connection.prepareStatement(
                         "CREATE TABLE IF NOT EXISTS ?.Users (" +
                                 "username varchar(255) NOT NULL, " +
-                                "password varchar(64) NOT NULL, " +
+                                "password char(64) NOT NULL, " +
+                                "salt char(16) NOT NULL, " +
                                 "PRIMARY KEY(username)" +
                                 ");")
         ) {

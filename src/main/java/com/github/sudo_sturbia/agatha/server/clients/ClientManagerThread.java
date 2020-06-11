@@ -152,9 +152,6 @@ public class ClientManagerThread extends Thread
      */
     private boolean doesExist(String dbName, String username, String password)
     {
-        // Encrypt password using sha256
-        String encrypted = DigestUtils.sha256Hex(password);
-
         boolean exists = false; // Assume that credentials are wrong for safety
         try (
                 Connection connection = ConnectorBuilder.get().get();
@@ -168,6 +165,9 @@ public class ClientManagerThread extends Thread
                 // Verify credentials
                 if (set.next())
                 {
+                    // Encrypt password using sha256
+                    String encrypted = DigestUtils.sha256Hex(password + set.getString("salt"));
+
                     if (set.getString("username").equals(username) &&
                             set.getString("password").equals(encrypted))
                     {

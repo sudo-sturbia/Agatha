@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -104,7 +105,7 @@ public class Create implements Request
         String[] list = this.request.split("^CREATE\\s+|:");
         if (list.length != 2 ||
                 ClientManager.get().doesExist(this.dbName, list[0]) ||
-                !this.writeUser(list[0], DigestUtils.sha256Hex(list[1])))
+                !this.writeUser(list[0], list[1]))
         {
             return new Gson().toJson(new ExecutionState(3)); // Operation failed
         }
@@ -234,15 +235,15 @@ public class Create implements Request
      * books' table for the user.
      *
      * @param username user's username.
-     * @param hashedPass user's password hashed using sha256.
+     * @param password user's password.
      * @return True if operation is performed successfully, false otherwise.
      */
-    private boolean writeUser(String username, String hashedPass)
+    private boolean writeUser(String username, String password)
     {
         try (
                 Connection connection = ConnectorBuilder.get().get();
                 PreparedStatement addUser = connection.prepareStatement(
-                        "INSERT INTO ?.Users VALUES ('?', '?');"
+                        "INSERT INTO ?.Users VALUES ('?', '?', '?');"
                 );
                 PreparedStatement createTable = connection.prepareStatement(
                         "CREATE TABLE IF NOT EXISTS ?.? (" +
@@ -257,9 +258,12 @@ public class Create implements Request
                                 ");"
                 );
         ) {
+            String salt = this.salt();
+
             addUser.setString(1, this.dbName);
             addUser.setString(2, username);
-            addUser.setString(3, hashedPass);
+            addUser.setString(3, DigestUtils.sha256Hex(password + salt));
+            addUser.setString(4, salt);
 
             createTable.setString(1, this.dbName);
             createTable.setString(2, username);
@@ -273,6 +277,29 @@ public class Create implements Request
         }
 
         return true;
+    }
+
+    /**
+     * Create a 16 character salt.
+     *
+     * @return A 16 character random string to be used as a salt.
+     */
+    private String salt()
+    {
+        char[] possibleChars = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+
+        SecureRandom random = new SecureRandom();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < 16; i++)
+        {
+            builder.append(possibleChars[random.nextInt(possibleChars.length)]);
+        }
+
+        return builder.toString();
     }
 
     /**
