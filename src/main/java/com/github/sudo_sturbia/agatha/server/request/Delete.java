@@ -327,7 +327,7 @@ public class Delete implements Request
     private boolean deleteClient(String username)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getNames = connection.prepareStatement(
                         "SELECT bookName FROM ?.?"
                 );
@@ -371,7 +371,7 @@ public class Delete implements Request
     private boolean deleteBook(String username, String bookName)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteBook = connection.prepareStatement(
                         "DELETE FROM ?.? WHERE bookName = '?'"
                 );
@@ -408,7 +408,7 @@ public class Delete implements Request
     private boolean deleteAllBooks(String username)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteBooks = connection.prepareStatement(
                         "DELETE FROM ?.?"
                 );
@@ -437,7 +437,7 @@ public class Delete implements Request
     private boolean deleteLabel(String username, String label)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteLabel = connection.prepareStatement(
                         "ALTER TABLE ?.? DROP COLUMN ?"
                 );
@@ -466,7 +466,7 @@ public class Delete implements Request
     private boolean deleteAllLabels(String username)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getLabels = connection.prepareStatement(
                         "SELECT * FROM ?.?"
                 );
@@ -516,7 +516,7 @@ public class Delete implements Request
     private boolean deleteNote(String username, String bookName, int page)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteNote = connection.prepareStatement(
                         "DELETE FROM ?.? " +
                                 "WHERE page = ?"
@@ -547,7 +547,7 @@ public class Delete implements Request
     private boolean deleteAllNotes(String username, String bookName)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteNotes = connection.prepareStatement(
                         "DELETE FROM ?.?"
                 );

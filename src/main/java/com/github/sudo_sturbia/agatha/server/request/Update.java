@@ -310,7 +310,7 @@ public class Update implements Request
     private boolean updateBook(Book book, String username, String bookName)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement updateBook = connection.prepareStatement(
                         "UPDATE ?.? " +
                                 "SET " +
@@ -361,7 +361,7 @@ public class Update implements Request
     private boolean updateNotes(List<Note> notes, String username, String bookName)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteOld = connection.prepareStatement(
                         "DELETE FROM ?.?;"
                 );
@@ -419,7 +419,7 @@ public class Update implements Request
 
         // Update value in database
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement updateBook = connection.prepareStatement(
                         "UPDATE ?.? " +
                                 "SET " +
@@ -457,7 +457,7 @@ public class Update implements Request
     private boolean updateNote(Note note, String username, String bookName, int page)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement updateNote = connection.prepareStatement(
                         "UPDATE ?.? " +
                                 "SET " +
@@ -508,7 +508,7 @@ public class Update implements Request
 
         // Update value in database
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement updateNote = connection.prepareStatement(
                         "UPDATE ?.? " +
                                 "SET " +
@@ -545,7 +545,7 @@ public class Update implements Request
     private boolean bookLabel(String username, String bookName, String label, boolean isAdd)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement addLabel = connection.prepareStatement(
                         "UPDATE ?.? " +
                                 "SET " +

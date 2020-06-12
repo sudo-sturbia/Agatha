@@ -235,7 +235,7 @@ public class Create implements Request
     private boolean writeUser(String username, String password)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement addUser = connection.prepareStatement(
                         "INSERT INTO ?.Users VALUES ('?', '?', '?');"
                 );
@@ -311,7 +311,7 @@ public class Create implements Request
         // Writes book's fields to user's table, and writes all
         // of book's notes (if any exist) to book's table.
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement checkBook = connection.prepareStatement(
                         "SELECT * FROM ?.? WHERE bookName = '?';"
                 );
@@ -383,7 +383,7 @@ public class Create implements Request
     private boolean writeNotes(List<Note> notes, String username, String bookName)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement insertNote = connection.prepareStatement(
                         "INSERT INTO ?.? " +
                                 "VALUES ('?', ?);"
@@ -421,7 +421,7 @@ public class Create implements Request
     private boolean writeNote(Note note, String username, String bookName)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement checkBookName = connection.prepareStatement(
                         "SELECT * FROM ?.? WHERE bookName='?';"
                 );
@@ -480,7 +480,7 @@ public class Create implements Request
         // Add a new boolean column to user's books table.
         // Default value is false.
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement addColumn = connection.prepareStatement(
                         "ALTER TABLE ?.? ADD ? bool NOT NULL DEFAULT 0;"
                 );

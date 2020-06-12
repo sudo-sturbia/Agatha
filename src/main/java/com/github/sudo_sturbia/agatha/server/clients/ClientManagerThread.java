@@ -122,7 +122,7 @@ public class ClientManagerThread extends Thread
     {
         boolean exists = true; // Assume that username exists for safety
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement statement = connection.prepareStatement("SELECT * FROM ?.Users WHERE username = '?';");
         ) {
             statement.setString(1, dbName);
@@ -157,7 +157,7 @@ public class ClientManagerThread extends Thread
     {
         boolean exists = false; // Assume that credentials are wrong for safety
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement statement = connection.prepareStatement("SELECT * FROM ?.Users WHERE username = '?';");
         ) {
             statement.setString(1, dbName);

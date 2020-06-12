@@ -40,7 +40,7 @@ public class DriverConnector implements Connector
     }
 
     @Override
-    public Connection get() throws SQLException
+    public Connection connection() throws SQLException
     {
         // Return a CustomConnection
         return new CustomConnection(

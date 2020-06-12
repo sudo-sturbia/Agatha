@@ -50,7 +50,7 @@ public class CustomConnection implements Connection
     public void close() throws SQLException
     {
         // Return connection without a wrapper
-        ConnectorBuilder.get().close(this.connection);
+        ConnectorBuilder.connector().close(this.connection);
     }
 
     @Override

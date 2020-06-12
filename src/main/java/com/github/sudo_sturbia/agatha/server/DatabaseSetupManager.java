@@ -26,7 +26,7 @@ public class DatabaseSetupManager
     public static void setup(String dbName) throws ServerSetupException
     {
         try {
-            ConnectorBuilder.get().setup();
+            ConnectorBuilder.connector().setup();
         }
         catch (SQLException e) {
             throw new ServerSetupException("Couldn't setup database connector.");
@@ -34,7 +34,7 @@ public class DatabaseSetupManager
 
         try (
                 // Create database and users table
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement database = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS ?;");
                 PreparedStatement usersTable = connection.prepareStatement(
                         "CREATE TABLE IF NOT EXISTS ?.Users (" +

@@ -70,7 +70,7 @@ public class ConnectorBuilder
      * @return A Connector object.
      * @throws IllegalStateException if connector is null (not setup).
      */
-    public static Connector get() throws IllegalStateException
+    public static Connector connector() throws IllegalStateException
     {
         if (connector == null)
         {

@@ -207,7 +207,7 @@ public class Read implements Request
     private String loadBook(String bookName, String username)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getBook = connection.prepareStatement(
                         "SELECT * FROM ?.? WHERE bookName='?'"
                 );
@@ -280,7 +280,7 @@ public class Read implements Request
     private String loadBooksNames(String username)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getNames = connection.prepareStatement(
                         "SELECT bookName FROM ?.?"
                 );
@@ -317,7 +317,7 @@ public class Read implements Request
     private String loadBooksNamesWithLabel(String label, String username)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getNames = connection.prepareStatement(
                         "SELECT bookName FROM ?.? WHERE ? = 1"
                 );

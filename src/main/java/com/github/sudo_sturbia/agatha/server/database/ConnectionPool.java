@@ -51,7 +51,7 @@ public class ConnectionPool implements Connector
     }
 
     @Override
-    public Connection get() throws SQLException
+    public Connection connection() throws SQLException
     {
         if (!this.pool.isEmpty())
         {

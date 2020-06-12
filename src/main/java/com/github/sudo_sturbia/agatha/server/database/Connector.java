@@ -25,7 +25,7 @@ public interface Connector
      * @return A Connection object connected to application's database.
      * @throws SQLException in case of a SQL error.
      */
-    public Connection get() throws SQLException;
+    public Connection connection() throws SQLException;
 
     /**
      * Close or return a database connection.
