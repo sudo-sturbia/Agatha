@@ -1,5 +1,6 @@
 package com.github.sudo_sturbia.agatha.server.request;
 
+import com.github.sudo_sturbia.agatha.server.clients.ClientManager;
 import com.google.gson.Gson;
 
 /**
@@ -25,9 +26,9 @@ public class RequestUtil
     public static String verify(String dbName, String[] list, int size)
     {
         return list.length != size ?
-                new Gson().toJson(new ExecutionState(3)) : // Operation failed
-                !UserManager.doesExist(dbName, list[0], list[1]) ? // Verify username and password
+                new Gson().toJson(new ExecutionState(3)) :
+                (!ClientManager.get().doesExist(dbName, list[0], list[1])) ? // Verify username and password
                         new Gson().toJson(new ExecutionState(2)) : // Wrong credentials
-                        null;
+                        null; // Operation failed
     }
 }
