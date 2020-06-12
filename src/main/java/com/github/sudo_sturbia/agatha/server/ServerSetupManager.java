@@ -40,19 +40,16 @@ public class ServerSetupManager
         try (
                 // Create database and users table
                 Connection connection = ConnectorBuilder.connector().connection();
-                PreparedStatement database = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS ?;");
+                PreparedStatement database = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS " + dbName + ";");
                 PreparedStatement usersTable = connection.prepareStatement(
-                        "CREATE TABLE IF NOT EXISTS ?.Users (" +
+                        "CREATE TABLE IF NOT EXISTS " + dbName + ".Users (" +
                                 "username varchar(255) NOT NULL, " +
                                 "password char(64) NOT NULL, " +
                                 "salt char(16) NOT NULL, " +
                                 "PRIMARY KEY(username)" +
                                 ");")
         ) {
-            database.setString(1, dbName);
             database.executeUpdate();
-
-            usersTable.setString(1, dbName);
             usersTable.executeUpdate();
         }
         catch (SQLException e)

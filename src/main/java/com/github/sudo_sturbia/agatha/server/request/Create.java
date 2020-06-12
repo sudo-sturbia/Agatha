@@ -237,10 +237,10 @@ public class Create implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement addUser = connection.prepareStatement(
-                        "INSERT INTO ?.Users VALUES ('?', '?', '?');"
+                        "INSERT INTO " + this.dbName + ".Users VALUES (?, ?, ?);"
                 );
                 PreparedStatement createTable = connection.prepareStatement(
-                        "CREATE TABLE IF NOT EXISTS ?.? (" +
+                        "CREATE TABLE IF NOT EXISTS " + this.dbName + "." + username + " (" +
                                 "bookName varchar(255) NOT NULL, " +
                                 "author varchar(255), " +
                                 "state varchar(10) NOT NULL, " +
@@ -254,15 +254,11 @@ public class Create implements Request
         ) {
             String salt = this.salt();
 
-            addUser.setString(1, this.dbName);
-            addUser.setString(2, username);
-            addUser.setString(3, DigestUtils.sha256Hex(password + salt));
-            addUser.setString(4, salt);
-
-            createTable.setString(1, this.dbName);
-            createTable.setString(2, username);
-
+            addUser.setString(1, username);
+            addUser.setString(2, DigestUtils.sha256Hex(password + salt));
+            addUser.setString(3, salt);
             addUser.executeUpdate();
+
             createTable.executeUpdate();
         }
         catch (SQLException e)
@@ -313,14 +309,14 @@ public class Create implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement checkBook = connection.prepareStatement(
-                        "SELECT * FROM ?.? WHERE bookName = '?';"
+                        "SELECT * FROM " + this.dbName + "." + username + " WHERE bookName = ?;"
                 );
                 PreparedStatement addBook = connection.prepareStatement(
-                        "INSERT INTO ?.? VALUES" +
-                                "('?', '?', '?', ?, ?, '?', ?);"
+                        "INSERT INTO " + this.dbName + "." + username + " VALUES" +
+                                "(?, ?, ?, ?, ?, ?, ?);"
                 );
                 PreparedStatement createNotesTable = connection.prepareStatement(
-                        "CREATE TABLE IF NOT EXISTS ?.? (" +
+                        "CREATE TABLE IF NOT EXISTS " + this.dbName + "." + username + book.getName() + " (" +
                                 "note varchar(65535), " +
                                 "page int(255) NOT NULL, " +
                                 "PRIMARY KEY(page)" +
@@ -328,9 +324,7 @@ public class Create implements Request
                 )
         ) {
             // Verify that book's name doesn't already exist
-            checkBook.setString(1, this.dbName);
-            checkBook.setString(2, username);
-            checkBook.setString(3, book.getName());
+            checkBook.setString(1, book.getName());
             try (ResultSet set = checkBook.executeQuery())
             {
                 // Book's name already exists
@@ -341,22 +335,17 @@ public class Create implements Request
             }
 
             // Insert book
-            addBook.setString(1, this.dbName);
-            addBook.setString(2, username);
-            addBook.setString(3, book.getName());
-            addBook.setString(4, book.getAuthor());
-            addBook.setString(5, book.getStateToString());
-            addBook.setInt(6, book.getNumberOfPages());
-            addBook.setInt(7, book.getNumberOfReadPages());
-            addBook.setString(8, book.getCoverImagePath());
-            addBook.setBoolean(9, book.getNotes().size() > 0);
+            addBook.setString(1, book.getName());
+            addBook.setString(2, book.getAuthor());
+            addBook.setString(3, book.getStateToString());
+            addBook.setInt(4, book.getNumberOfPages());
+            addBook.setInt(5, book.getNumberOfReadPages());
+            addBook.setString(6, book.getCoverImagePath());
+            addBook.setBoolean(7, book.getNotes().size() > 0);
 
             addBook.executeUpdate();
 
             // Create notes table
-            createNotesTable.setString(1, this.dbName);
-            createNotesTable.setString(2, username + book.getName());
-
             createNotesTable.executeUpdate();
 
             if (!this.writeNotes(book.getNotes(), username, book.getName()))
@@ -385,17 +374,14 @@ public class Create implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement insertNote = connection.prepareStatement(
-                        "INSERT INTO ?.? " +
-                                "VALUES ('?', ?);"
+                        "INSERT INTO " + this.dbName + "." + username + bookName + " " +
+                                "VALUES (?, ?);"
                 )
         ) {
-            insertNote.setString(1, this.dbName);
-            insertNote.setString(2, username + bookName);
-
             for (Note note : notes)
             {
-                insertNote.setString(3, note.getNote());
-                insertNote.setInt(4, note.getPageNumber());
+                insertNote.setString(1, note.getNote());
+                insertNote.setInt(2, note.getPageNumber());
 
                 insertNote.executeUpdate();
             }
@@ -423,19 +409,17 @@ public class Create implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement checkBookName = connection.prepareStatement(
-                        "SELECT * FROM ?.? WHERE bookName='?';"
+                        "SELECT * FROM " + this.dbName + "." + username + " WHERE bookName = ?;"
                 );
                 PreparedStatement checkPage = connection.prepareStatement(
-                        "SELECT * FROM ?.? WHERE page=?;"
+                        "SELECT * FROM " + this.dbName + "." + username + bookName + " WHERE page = ?;"
                 );
                 PreparedStatement insertNote = connection.prepareStatement(
-                        "INSERT INTO ?.? " +
-                                "VALUES ('?', ?);"
+                        "INSERT INTO " + this.dbName + "." + username + bookName + " " +
+                                "VALUES (?, ?);"
                 )
         ) {
-            checkBookName.setString(1, this.dbName);
-            checkBookName.setString(2, username);
-            checkBookName.setString(3, bookName);
+            checkBookName.setString(1, bookName);
 
             ResultSet book = checkBookName.executeQuery();
             if (!book.next()) // Book's name doesn't exist
@@ -443,9 +427,7 @@ public class Create implements Request
                 return false;
             }
 
-            checkPage.setString(1, this.dbName);
-            checkPage.setString(2, username + bookName);
-            checkPage.setInt(3, note.getPageNumber());
+            checkPage.setInt(1, note.getPageNumber());
 
             ResultSet set = checkPage.executeQuery();
             if (set.next()) // Page's number is used
@@ -453,10 +435,8 @@ public class Create implements Request
                 return false;
             }
 
-            insertNote.setString(1, this.dbName);
-            insertNote.setString(2, username + bookName);
-            insertNote.setString(3, note.getNote());
-            insertNote.setInt(4, note.getPageNumber());
+            insertNote.setString(1, note.getNote());
+            insertNote.setInt(2, note.getPageNumber());
 
             insertNote.executeUpdate();
         }
@@ -482,13 +462,9 @@ public class Create implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement addColumn = connection.prepareStatement(
-                        "ALTER TABLE ?.? ADD ? bool NOT NULL DEFAULT 0;"
+                        "ALTER TABLE " + this.dbName + "." + username + " ADD " + label + " bool NOT NULL DEFAULT 0;"
                 );
         ) {
-            addColumn.setString(1, this.dbName);
-            addColumn.setString(2, username);
-            addColumn.setString(3, label);
-
             addColumn.executeUpdate();
         }
         catch (SQLException e)

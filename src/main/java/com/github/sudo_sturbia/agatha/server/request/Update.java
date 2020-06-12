@@ -312,27 +312,25 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement updateBook = connection.prepareStatement(
-                        "UPDATE ?.? " +
+                        "UPDATE " + this.dbName + "." + username + " " +
                                 "SET " +
-                                "bookName = '?', " +
-                                "author = '?', " +
-                                "state = '?', " +
+                                "bookName = ?, " +
+                                "author = ?, " +
+                                "state = ?, " +
                                 "pages = ?, " +
                                 "readPages = ?, " +
-                                "coverPath = '?', " +
+                                "coverPath = ?, " +
                                 "hasNotes = ? " +
-                                "WHERE bookName = '?';"
+                                "WHERE bookName = ?;"
                 );
         ) {
-            updateBook.setString(1, this.dbName);
-            updateBook.setString(2, username);
-            updateBook.setString(3, book.getName());
-            updateBook.setString(4, book.getAuthor());
-            updateBook.setString(5, book.getStateToString());
-            updateBook.setInt(6, book.getNumberOfPages());
-            updateBook.setInt(7, book.getNumberOfReadPages());
-            updateBook.setString(8, book.getCoverImagePath());
-            updateBook.setBoolean(9, book.getNotes().size() > 0);
+            updateBook.setString(1, book.getName());
+            updateBook.setString(2, book.getAuthor());
+            updateBook.setString(3, book.getStateToString());
+            updateBook.setInt(4, book.getNumberOfPages());
+            updateBook.setInt(5, book.getNumberOfReadPages());
+            updateBook.setString(6, book.getCoverImagePath());
+            updateBook.setBoolean(7, book.getNotes().size() > 0);
 
             updateBook.executeUpdate();
 
@@ -363,25 +361,19 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteOld = connection.prepareStatement(
-                        "DELETE FROM ?.?;"
+                        "DELETE FROM " + this.dbName + "." + username + bookName + ";"
                 );
                 PreparedStatement insertNotes = connection.prepareStatement(
-                        "INSERT INTO ?.? " +
-                                "VALUES ('?', ?);"
+                        "INSERT INTO " + this.dbName + "." + username + bookName + " " +
+                                "VALUES (?, ?);"
                 );
         ) {
-            deleteOld.setString(1, this.dbName);
-            deleteOld.setString(2, username + bookName);
-
             deleteOld.executeUpdate();
-
-            insertNotes.setString(1, this.dbName);
-            insertNotes.setString(2, username + bookName);
 
             for (Note note : notes)
             {
-                insertNotes.setString(3, note.getNote());
-                insertNotes.setInt(4, note.getPageNumber());
+                insertNotes.setString(1, note.getNote());
+                insertNotes.setInt(2, note.getPageNumber());
 
                 insertNotes.executeUpdate();
             }
@@ -421,18 +413,13 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement updateBook = connection.prepareStatement(
-                        "UPDATE ?.? " +
+                        "UPDATE " + this.dbName + "." + username + " " +
                                 "SET " +
-                                "? = ? " +
-                                "WHERE bookName = '?';"
+                                fieldName + " = " + fieldValue + " " +
+                                "WHERE bookName = ?;"
                 );
         ) {
-            updateBook.setString(1, this.dbName);
-            updateBook.setString(2, username);
-            updateBook.setString(3, fieldName);
-            updateBook.setString(4, fieldValue);
-            updateBook.setString(5, bookName);
-
+            updateBook.setString(1, bookName);
             updateBook.executeUpdate();
         }
         catch (SQLException e)
@@ -459,18 +446,16 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement updateNote = connection.prepareStatement(
-                        "UPDATE ?.? " +
+                        "UPDATE " + this.dbName + "." + username + bookName + " " +
                                 "SET " +
-                                "note = '?'," +
+                                "note = ?," +
                                 "page = ? " +
                                 "WHERE page = ?;"
                 );
         ) {
-            updateNote.setString(1, this.dbName);
-            updateNote.setString(2, username + bookName);
-            updateNote.setString(3, note.getNote());
-            updateNote.setInt(4, page);
-
+            updateNote.setString(1, note.getNote());
+            updateNote.setInt(2, page);
+            updateNote.setInt(3, page);
             updateNote.executeUpdate();
         }
         catch (SQLException e)
@@ -510,18 +495,13 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement updateNote = connection.prepareStatement(
-                        "UPDATE ?.? " +
+                        "UPDATE " + this.dbName + "." + username + bookName + " " +
                                 "SET " +
-                                "? = ? " +
+                                fieldName + " = " + fieldValue + " " +
                                 "WHERE page = ?;"
                 );
         ) {
-            updateNote.setString(1, this.dbName);
-            updateNote.setString(2, username + bookName);
-            updateNote.setString(3, fieldName);
-            updateNote.setString(4, fieldValue);
-            updateNote.setInt(5, page);
-
+            updateNote.setInt(1, page);
             updateNote.executeUpdate();
         }
         catch (SQLException e)
@@ -547,18 +527,14 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement addLabel = connection.prepareStatement(
-                        "UPDATE ?.? " +
+                        "UPDATE " + this.dbName + "." + username + " " +
                                 "SET " +
-                                "? = ? " +
-                                "WHERE bookName = '?';"
+                                label + " = ? " +
+                                "WHERE bookName = ?;"
                 );
         ) {
-            addLabel.setString(1, this.dbName);
-            addLabel.setString(2, username);
-            addLabel.setString(3, label);
-            addLabel.setBoolean(4, isAdd);
-            addLabel.setString(5, bookName);
-
+            addLabel.setBoolean(1, isAdd);
+            addLabel.setString(2, bookName);
             addLabel.executeUpdate();
         }
         catch (SQLException e)

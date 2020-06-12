@@ -209,15 +209,13 @@ public class Read implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getBook = connection.prepareStatement(
-                        "SELECT * FROM ?.? WHERE bookName='?'"
+                        "SELECT * FROM " + this.dbName + "." + username + " WHERE bookName = ?;"
                 );
                 PreparedStatement getNotes = connection.prepareStatement(
-                        "SELECT * FROM ?.?"
+                        "SELECT * FROM " + this.dbName + "." + username + bookName + ";"
                 );
         ) {
-            getBook.setString(1, this.dbName);
-            getBook.setString(2, username);
-            getBook.setString(3, bookName);
+            getBook.setString(1, bookName);
 
             ResultSet set = getBook.executeQuery();
             if (set.next())
@@ -250,9 +248,6 @@ public class Read implements Request
                 // Load user's notes
                 if (set.getBoolean("hasNotes"))
                 {
-                    getNotes.setString(1, this.dbName);
-                    getNotes.setString(2, username + bookName);
-
                     ResultSet noteSet = getNotes.executeQuery();
                     while (noteSet.next())
                     {
@@ -282,12 +277,9 @@ public class Read implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getNames = connection.prepareStatement(
-                        "SELECT bookName FROM ?.?"
+                        "SELECT bookName FROM " + this.dbName + "." + username + ";"
                 );
         ) {
-            getNames.setString(1, this.dbName);
-            getNames.setString(2, username);
-
             List<String> bookNames = new ArrayList<>();
 
             ResultSet set = getNames.executeQuery();
@@ -319,13 +311,9 @@ public class Read implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getNames = connection.prepareStatement(
-                        "SELECT bookName FROM ?.? WHERE ? = 1"
+                        "SELECT bookName FROM " + this.dbName + "." + username + " WHERE " + label + " = 1;"
                 );
         ) {
-            getNames.setString(1, this.dbName);
-            getNames.setString(2, username);
-            getNames.setString(3, label);
-
             List<String> bookNames = new ArrayList<>();
 
             ResultSet names = getNames.executeQuery();

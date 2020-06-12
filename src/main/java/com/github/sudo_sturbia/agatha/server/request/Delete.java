@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -329,28 +330,21 @@ public class Delete implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getNames = connection.prepareStatement(
-                        "SELECT bookName FROM ?.?"
+                        "SELECT bookName FROM " + this.dbName + "." + username + ";"
                 );
-                PreparedStatement dropTable = connection.prepareStatement(
-                        "DROP TABLE ?.?"
-                )
+                Statement dropTable = connection.createStatement();
         ) {
-            dropTable.setString(1, this.dbName);
-
-            getNames.setString(1, this.dbName);
-            getNames.setString(2, username);
-
             // Delete book's tables
             ResultSet set = getNames.executeQuery();
+
+            String dropTableQuery = "DROP TABLE " + dbName + ".";
             while (set.next())
             {
-                dropTable.setString(2, username + set.getString("bookName"));
-                dropTable.executeUpdate();
+                dropTable.executeUpdate(dropTableQuery + username + set.getString("bookName") + ";");
             }
 
             // Delete user table
-            dropTable.setString(2, username);
-            dropTable.executeUpdate();
+            dropTable.executeUpdate(dropTableQuery + username);
         }
         catch (SQLException e)
         {
@@ -373,20 +367,14 @@ public class Delete implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteBook = connection.prepareStatement(
-                        "DELETE FROM ?.? WHERE bookName = '?'"
+                        "DELETE FROM " + this.dbName + "." + username + " WHERE bookName = ?;"
                 );
                 PreparedStatement dropTable = connection.prepareStatement(
-                        "DROP TABLE ?.?"
+                        "DROP TABLE " + this.dbName + "." + username + bookName + ";"
                 )
         ) {
-            deleteBook.setString(1, this.dbName);
-            deleteBook.setString(2, username);
-            deleteBook.setString(3, bookName);
-
+            deleteBook.setString(1, bookName);
             deleteBook.executeUpdate();
-
-            dropTable.setString(1, this.dbName);
-            dropTable.setString(2, username + bookName);
 
             dropTable.executeUpdate();
         }
@@ -410,12 +398,9 @@ public class Delete implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteBooks = connection.prepareStatement(
-                        "DELETE FROM ?.?"
+                        "DELETE FROM " + this.dbName + "." + username + ";"
                 );
         ) {
-            deleteBooks.setString(1, this.dbName);
-            deleteBooks.setString(2, username);
-
             deleteBooks.executeUpdate();
         }
         catch (SQLException e)
@@ -439,13 +424,9 @@ public class Delete implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteLabel = connection.prepareStatement(
-                        "ALTER TABLE ?.? DROP COLUMN ?"
+                        "ALTER TABLE " + this.dbName + "." + username + " DROP COLUMN " + label + ";"
                 );
         ) {
-            deleteLabel.setString(1, this.dbName);
-            deleteLabel.setString(2, username);
-            deleteLabel.setString(3, label);
-
             deleteLabel.executeUpdate();
         }
         catch (SQLException e)
@@ -468,31 +449,24 @@ public class Delete implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getLabels = connection.prepareStatement(
-                        "SELECT * FROM ?.?"
+                        "SELECT * FROM " + this.dbName + "." + username + ";"
                 );
-                PreparedStatement deleteLabel = connection.prepareStatement(
-                        "ALTER TABLE ?.? DROP COLUMN ?"
-                );
+                Statement deleteLabel = connection.createStatement();
         ) {
-            deleteLabel.setString(1, this.dbName);
-            deleteLabel.setString(2, username);
-
-            getLabels.setString(1, this.dbName);
-            getLabels.setString(2, username);
-
             ResultSet set = getLabels.executeQuery();
             ResultSetMetaData data = set.getMetaData();
 
             // Find label names and delete them
             List<String> columns = new ArrayList<>(Arrays.asList("bookName", "author", "state", "pages", "readPages", "coverPath"));
+
+            String deleteLabelQuery = "ALTER TABLE " + this.dbName + "." + username + " DROP COLUMN ";
             for (int i = 1, count = data.getColumnCount(); i <= count; i++)
             {
                 // If column is a label
                 String columnName = data.getColumnName(i);
                 if (!columns.contains(columnName))
                 {
-                    deleteLabel.setString(3, columnName);
-                    deleteLabel.executeUpdate();
+                    deleteLabel.executeUpdate(deleteLabelQuery + columnName + ";");
                 }
             }
         }
@@ -518,14 +492,11 @@ public class Delete implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteNote = connection.prepareStatement(
-                        "DELETE FROM ?.? " +
-                                "WHERE page = ?"
+                        "DELETE FROM " + this.dbName + "." + username + bookName + " " +
+                                "WHERE page = ?;"
                 );
         ) {
-            deleteNote.setString(1, this.dbName);
-            deleteNote.setString(2, username + bookName);
-            deleteNote.setInt(3, page);
-
+            deleteNote.setInt(1, page);
             deleteNote.executeUpdate();
         }
         catch (SQLException e)
@@ -549,12 +520,9 @@ public class Delete implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteNotes = connection.prepareStatement(
-                        "DELETE FROM ?.?"
+                        "DELETE FROM " + this.dbName + "." + username + bookName + ";"
                 );
         ) {
-            deleteNotes.setString(1, this.dbName);
-            deleteNotes.setString(2, username + bookName);
-
             deleteNotes.executeUpdate();
         }
         catch (SQLException e)

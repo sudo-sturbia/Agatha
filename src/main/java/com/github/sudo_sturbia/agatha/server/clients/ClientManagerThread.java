@@ -123,10 +123,9 @@ public class ClientManagerThread extends Thread
         boolean exists = true; // Assume that username exists for safety
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
-                PreparedStatement statement = connection.prepareStatement("SELECT * FROM ?.Users WHERE username = '?';");
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + dbName + ".Users WHERE username = ?;");
         ) {
-            statement.setString(1, dbName);
-            statement.setString(2, username);
+            statement.setString(1, username);
 
             try (ResultSet set = statement.executeQuery())
             {
@@ -158,10 +157,9 @@ public class ClientManagerThread extends Thread
         boolean exists = false; // Assume that credentials are wrong for safety
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
-                PreparedStatement statement = connection.prepareStatement("SELECT * FROM ?.Users WHERE username = '?';");
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + dbName + ".Users WHERE username = ?;");
         ) {
-            statement.setString(1, dbName);
-            statement.setString(2, username);
+            statement.setString(1, username);
 
             try (ResultSet set = statement.executeQuery())
             {
