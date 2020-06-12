@@ -397,10 +397,23 @@ public class Delete implements Request
     {
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
+                PreparedStatement getNames = connection.prepareStatement(
+                        "SELECT bookName FROM " + this.dbName + "." + username + ";"
+                );
+                Statement dropTable = connection.createStatement();
                 PreparedStatement deleteBooks = connection.prepareStatement(
                         "DELETE FROM " + this.dbName + "." + username + ";"
                 );
         ) {
+            // Delete book's tables
+            ResultSet set = getNames.executeQuery();
+
+            String dropTableQuery = "DROP TABLE " + dbName + ".";
+            while (set.next())
+            {
+                dropTable.executeUpdate(dropTableQuery + username + set.getString("bookName") + ";");
+            }
+
             deleteBooks.executeUpdate();
         }
         catch (SQLException e)
