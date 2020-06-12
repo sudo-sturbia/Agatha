@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * main thread of the server and is used to verify clients' credentials.
  * <p>
  * Agatha's server is supposed to deal with ClientManagerThread directly,
- * but should rather interact user ClientManager. ClientManager creates
+ * but should rather interact with ClientManager. ClientManager creates
  * a ClientManagerThread with necessary communication objects and
  * interacts with ClientManagerThread throughout execution of the
  * server.

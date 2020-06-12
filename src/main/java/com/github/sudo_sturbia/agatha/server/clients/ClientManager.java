@@ -3,6 +3,15 @@ package com.github.sudo_sturbia.agatha.server.clients;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * ClientManager manages client related information. It can be used
+ * to verify a client's credentials, or the existence of a username
+ * (to avoid conflicts.)
+ * <p>
+ * ClientManager manages, and communicates with a ClientManagerThread
+ * that runs parallel to the main thread throughout the execution of
+ * the server.
+ */
 public class ClientManager
 {
     /** Singleton manager instance. */
@@ -65,7 +74,24 @@ public class ClientManager
      */
     public boolean doesExist(String dbName, String username)
     {
-        return this.doesExist(dbName, username, null);
+        try
+        {
+            this.sender.put(new Credentials(dbName, username, null));
+
+            switch(this.receiver.take())
+            {
+                case FAILED:
+                    return false;
+                case SUCCEEDED:
+                case TIMEOUT: // Can't happen
+                default: // Can't happen
+                    return true;
+            }
+        }
+        catch (InterruptedException e)  // Shouldn't happen, Returns true for safety
+        {
+            return true;
+        }
     }
 
     /**
@@ -74,33 +100,24 @@ public class ClientManager
      * @param dbName name of application's database.
      * @param username client's username.
      * @param password client's password.
-     * @return True if credentials are correct, False otherwise.
-     * @throws LoginTimeoutException
-     *      if client has failed to access the account (gave an
-     *      incorrect password) five or more times in the last
-     *      30 minutes. Time is calculated starting from the last
-     *      failed attempt.
+     * @return
+     *      LoginStatus.SUCCEEDED: if credentials are correct.
+     *      LoginStatus.FAILED: if credentials are incorrect.
+     *      LoginStatus.TIMEOUT: if client has failed to access
+     *      the account (gave an incorrect password) five or more
+     *      times in the last 30 minutes. Time is calculated starting
+     *      from the last failed attempt.
      */
-    public boolean doesExist(String dbName, String username, String password) throws LoginTimeoutException
+    public LoginStatus doesExist(String dbName, String username, String password)
     {
         try
         {
             this.sender.put(new Credentials(dbName, username, password));
-
-            switch(this.receiver.take())
-            {
-                case TIMEOUT:
-                    throw new LoginTimeoutException();
-                case SUCCEEDED:
-                    return true;
-                case FAILED:
-                default: // Safety
-                    return false;
-            }
+            return this.receiver.take();
         }
-        catch (InterruptedException e)  // Shouldn't happen, Returns false for safety
+        catch (InterruptedException e) // Shouldn't happen, Returns failed for safety
         {
-            return false;
+            return LoginStatus.FAILED;
         }
     }
 }

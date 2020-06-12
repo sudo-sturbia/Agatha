@@ -101,16 +101,10 @@ public class Create implements Request
      */
     private String createUser()
     {
-        // Break statement into username and password
         String[] list = this.request.split("^CREATE\\s+|:");
-        if (list.length != 2 ||
-                ClientManager.get().doesExist(this.dbName, list[0]) ||
-                !this.writeUser(list[0], list[1]))
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return new Gson().toJson(new ExecutionState(0)); // Successful
+        return list.length != 2 || ClientManager.get().doesExist(this.dbName, list[0]) || !this.writeUser(list[0], list[1]) ?
+                new Gson().toJson(new ExecutionState(3)) : // Operation failed
+                new Gson().toJson(new ExecutionState(0)); // Successful
     }
 
     /**

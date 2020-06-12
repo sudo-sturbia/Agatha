@@ -25,10 +25,20 @@ public class RequestUtil
      */
     public static String verify(String dbName, String[] list, int size)
     {
-        return list.length != size ?
-                new Gson().toJson(new ExecutionState(3)) :
-                (!ClientManager.get().doesExist(dbName, list[0], list[1])) ? // Verify username and password
-                        new Gson().toJson(new ExecutionState(2)) : // Wrong credentials
-                        null; // Operation failed
+        if (list.length != size)
+        {
+            return new Gson().toJson(new ExecutionState(1));
+        }
+
+        switch (ClientManager.get().doesExist(dbName, list[0], list[1]))
+        {
+            case SUCCEEDED:
+                return null; // Succeeded
+            case TIMEOUT:
+                return new Gson().toJson(new ExecutionState(4)); // Account locked
+            case FAILED:
+            default: // Can't happen
+                return new Gson().toJson(new ExecutionState(2)); // Wrong credentials
+        }
     }
 }
