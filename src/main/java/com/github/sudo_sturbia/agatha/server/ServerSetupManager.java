@@ -1,5 +1,6 @@
 package com.github.sudo_sturbia.agatha.server;
 
+import com.github.sudo_sturbia.agatha.server.clients.ClientManager;
 import com.github.sudo_sturbia.agatha.server.database.ConnectorBuilder;
 
 import java.sql.Connection;
@@ -7,18 +8,20 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * DatabaseSetupManager creates a new database to be used by the
- * server and performs initial configuration on it.
+ * ServerSetupManager creates a new database to be used by the
+ * server, performs initial configuration on it, and creates a shutdown
+ * hook to terminate all components when the server finishes execution.
  * <p>
  * An Agatha database consists of a Users table, a table for each
  * client containing client's books, and a table for each book containing
  * book's notes. DatabaseSetupManager sets up the initial database
  * with the Users table, the rest are left to be created on demand.
  */
-public class DatabaseSetupManager
+public class ServerSetupManager
 {
     /**
-     * Setup a Connector and Create a new database containing Users' table.
+     * Setup a Connector, Create a new application database containing
+     * Users' table, and create a shutdown hook.
      *
      * @param dbName name of the database to create.
      * @throws ServerSetupException if setup can't be performed.
@@ -31,6 +34,8 @@ public class DatabaseSetupManager
         catch (SQLException e) {
             throw new ServerSetupException("Couldn't setup database connector.");
         }
+
+        ServerSetupManager.addShutdownHook();;
 
         try (
                 // Create database and users table
@@ -54,5 +59,17 @@ public class DatabaseSetupManager
         {
             throw new ServerSetupException("Couldn't perform initial database setup.");
         }
+    }
+
+    /**
+     * Create a shutdown hook to be run when the server finished execution.
+     */
+    private static void addShutdownHook()
+    {
+        Runtime.getRuntime().addShutdownHook(new Thread(() ->
+        {
+            ConnectorBuilder.connector().clean();
+            ClientManager.get().stopManagerThread();
+        }));
     }
 }
