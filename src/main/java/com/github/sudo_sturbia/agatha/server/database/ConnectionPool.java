@@ -45,10 +45,8 @@ public class ConnectionPool implements Connector
         final int INITIAL_CAPACITY = 16;
         for (int i = 0; i < INITIAL_CAPACITY; i++)
         {
-            this.pool.add(new CustomConnection(
-                    DriverManager.getConnection("jdbc:mysql://localhost:3306/" + this.dbName,
-                            this.dbServerUsername, this.dbServerPass)
-            ));
+            this.pool.add(DriverManager.getConnection("jdbc:mysql://localhost:3306/" + this.dbName,
+                            this.dbServerUsername, this.dbServerPass));
         }
     }
 
@@ -57,7 +55,7 @@ public class ConnectionPool implements Connector
     {
         if (!this.pool.isEmpty())
         {
-            return this.pool.remove(this.pool.size() - 1);
+            return new CustomConnection(this.pool.remove(this.pool.size() - 1));
         }
 
         return new CustomConnection(
@@ -73,11 +71,25 @@ public class ConnectionPool implements Connector
         final int MAX_CAPACITY = 32;
         if (this.pool.size() < MAX_CAPACITY)
         {
-            this.pool.add(new CustomConnection(connection));
+            this.pool.add(connection);
         }
         else
         {
             connection.close();
+        }
+    }
+
+    @Override
+    public void clean()
+    {
+        for (Connection connection : this.pool)
+        {
+            try {
+                connection.close();
+            }
+            catch (SQLException e) {
+                // Ignore
+            }
         }
     }
 }

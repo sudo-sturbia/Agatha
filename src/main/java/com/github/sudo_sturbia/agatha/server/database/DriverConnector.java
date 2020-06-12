@@ -36,7 +36,7 @@ public class DriverConnector implements Connector
     @Override
     public void setup() throws SQLException
     {
-        // no setup needed ..
+        // No setup needed.
     }
 
     @Override
@@ -53,5 +53,11 @@ public class DriverConnector implements Connector
     public void close(Connection connection) throws SQLException
     {
         connection.close();
+    }
+
+    @Override
+    public void clean()
+    {
+        // no cleaning needed.
     }
 }

@@ -34,4 +34,9 @@ public interface Connector
      * @throws SQLException in case of a SQL error.
      */
     void close(Connection connection) throws SQLException;
+
+    /**
+     * Release resources and prepare connector for closing.
+     */
+    void clean();
 }
