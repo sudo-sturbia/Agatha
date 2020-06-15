@@ -9,14 +9,11 @@ package com.github.sudo_sturbia.agatha.client.model.book;
  */
 public class NoteImp implements Note
 {
-    /** Containing book. */
-    private final Book book;
-
     /** Text note. */
     private String note;
 
     /** Page to which the note is attached. */
-    private int pageNumber;
+    private final int pageNumber;
 
     /**
      * NodeImp's constructor.
@@ -49,7 +46,6 @@ public class NoteImp implements Note
                     " already contains a note.");
         }
 
-        this.book = book;
         this.note = note;
         this.pageNumber = pageNumber;
     }
@@ -74,24 +70,5 @@ public class NoteImp implements Note
     @Override
     public int getPageNumber() {
         return this.pageNumber;
-    }
-
-    @Override
-    public void setPageNumber(int newPage) throws IllegalArgumentException
-    {
-        if (pageNumber < 0 || pageNumber > book.getNumberOfPages())
-        {
-            throw new IllegalArgumentException("Invalid number of read pages.");
-        }
-        else if (this.book.getNoteAtPage(newPage) != null)
-        {
-            throw new IllegalArgumentException("Book already has a note at given page.");
-        }
-
-        // Update both note and book
-        this.book.removeNoteAtPage(this.pageNumber);
-
-        this.pageNumber = newPage;
-        this.book.addNote(this);
     }
 }

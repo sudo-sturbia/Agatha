@@ -96,13 +96,13 @@ public class BookImp implements Book
         switch (state)
         {
             case READ:
-                this.state = new ReadState(this);
+                this.state = new ReadState(this.pages);
                 break;
             case CURRENTLY_READING:
-                this.state = new ReadingState(this, 0);
+                this.state = new ReadingState(this.pages, 0);
                 break;
             case INTERESTED:
-                this.state = new InterestedState(this);
+                this.state = new InterestedState(this.pages);
                 break;
         }
     }

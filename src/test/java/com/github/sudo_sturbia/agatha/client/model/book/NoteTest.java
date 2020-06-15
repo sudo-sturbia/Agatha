@@ -39,33 +39,6 @@ class NoteTest
                 "Two notes at the same page.");
     }
 
-    @DisplayName("Test update page number.")
-    @Test
-    void updatePageNumber()
-    {
-        Book book = BookBuilder.newBook()
-                               .name("Book")
-                               .numberOfPages(100)
-                               .build();
-
-        Note note = new NoteImp(book, "Note", 10);
-
-        // Correct update
-        note.setPageNumber(30);
-        assertEquals(30, note.getPageNumber(), "Wrong page number after update.");
-
-        // Should throw exception
-        assertThrows(IllegalArgumentException.class, () -> note.setPageNumber(-1),
-                "Updated page number is -ve.");
-
-        assertThrows(IllegalArgumentException.class, () -> note.setPageNumber(101),
-                "Updated page number > Book's number of pages.");
-
-        book.addNote(new NoteImp(book, "Note", 15));
-        assertThrows(IllegalArgumentException.class, () -> note.setPageNumber(15),
-                "Two notes at the same page.");
-    }
-
     @DisplayName("Test update note.")
     @Test
     void updateNote()

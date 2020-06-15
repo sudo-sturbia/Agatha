@@ -5,23 +5,23 @@ package com.github.sudo_sturbia.agatha.client.model.book;
  */
 public class InterestedState implements BookState
 {
-    /** Containing book. */
-    private Book book;
+    /** Number of book's pages. */
+    private final int pages;
 
     /**
      * InterestedState's constructor.
      *
-     * @param book book containing state.
+     * @param pages number of book's pages.
      * @throws IllegalArgumentException if book is null.
      */
-    InterestedState(Book book) throws IllegalArgumentException
+    InterestedState(int pages) throws IllegalArgumentException
     {
-        if (book == null)
+        if (pages < 0)
         {
-            throw new IllegalArgumentException("No book is given.");
+            throw new IllegalArgumentException("Invalid number of pages.");
         }
 
-        this.book = book;
+        this.pages = pages;
     }
 
     @Override
@@ -45,20 +45,20 @@ public class InterestedState implements BookState
     @Override
     public BookState setNumberOfReadPages(int newNumber) throws IllegalArgumentException
     {
-        if (newNumber < 0 || newNumber > this.book.getNumberOfPages())
+        if (newNumber < 0 || newNumber > this.pages)
         {
             throw new IllegalArgumentException("Invalid number of read pages.");
         }
 
         // Transition to "read"
-        if (newNumber == this.book.getNumberOfPages())
+        if (newNumber == this.pages)
         {
-            return new ReadState(this.book);
+            return new ReadState(this.pages);
         }
         // Transition to "currently reading"
         else if (newNumber > 0)
         {
-            return new ReadingState(this.book, newNumber);
+            return new ReadingState(this.pages, newNumber);
         }
 
         return this;
