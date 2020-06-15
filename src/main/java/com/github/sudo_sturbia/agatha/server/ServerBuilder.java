@@ -97,7 +97,7 @@ public class ServerBuilder
         }
 
         // Setup connector
-        ConnectorBuilder.setup(this.connector, this.dbName, this.dbServerUsername, this.dbServerPass);
+        ConnectorBuilder.setup(this.connector, this.dbServerUsername, this.dbServerPass);
 
         return new ServerImp(this.dbName, this.port);
     }

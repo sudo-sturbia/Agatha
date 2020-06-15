@@ -10,9 +10,6 @@ import java.sql.SQLException;
  */
 public class DriverConnector implements Connector
 {
-    /** Name of Application's database. */
-    private final String dbName;
-
     /** Username for database server (MySQL). */
     private final String dbServerUsername;
 
@@ -22,13 +19,11 @@ public class DriverConnector implements Connector
     /**
      * DriverConnector's constructor.
      *
-     * @param dbName name of database.
      * @param dbServerUsername username for database server (MySQL.)
      * @param dbServerPass password for database server (MySQL.)
      */
-    DriverConnector(String dbName, String dbServerUsername, String dbServerPass)
+    DriverConnector(String dbServerUsername, String dbServerPass)
     {
-        this.dbName = dbName;
         this.dbServerUsername = dbServerUsername;
         this.dbServerPass = dbServerPass;
     }
@@ -44,7 +39,7 @@ public class DriverConnector implements Connector
     {
         // Return a CustomConnection
         return new CustomConnection(
-                DriverManager.getConnection("jdbc:mysql://localhost:3306/" + this.dbName,
+                DriverManager.getConnection("jdbc:mysql://localhost:3306/",
                         this.dbServerUsername, this.dbServerPass)
         );
     }

@@ -20,14 +20,12 @@ public class ConnectorBuilder
      * Should be called only once.
      *
      * @param type type of connector.
-     * @param dbName name of application's database.
      * @param dbServerUsername username for database server (MySQL).
      * @param dbServerPass password for database server (MySQL).
      * @throws IllegalArgumentException if any given argument is null.
      * @throws IllegalStateException if method was called before.
      */
-    public static void setup(ConnectorType type, String dbName,
-                             String dbServerUsername, String dbServerPass)
+    public static void setup(ConnectorType type, String dbServerUsername, String dbServerPass)
             throws IllegalArgumentException, IllegalStateException
     {
         // If method was called before
@@ -39,10 +37,6 @@ public class ConnectorBuilder
         if (type == null)
         {
             throw new IllegalArgumentException("Connector type is not given.");
-        }
-        else if (dbName == null)
-        {
-            throw new IllegalArgumentException("Database name is not given.");
         }
         else if (dbServerUsername == null)
         {
@@ -56,10 +50,10 @@ public class ConnectorBuilder
         switch (type)
         {
             case POOL:
-                connector = new ConnectionPool(dbName, dbServerUsername, dbServerPass);
+                connector = new ConnectionPool(dbServerUsername, dbServerPass);
                 break;
             case NORMAL:
-                connector = new DriverConnector(dbName, dbServerUsername, dbServerPass);
+                connector = new DriverConnector(dbServerUsername, dbServerPass);
                 break;
         }
     }
