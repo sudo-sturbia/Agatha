@@ -24,9 +24,10 @@ public class ServerSetupManager
      * Users' table, and create a shutdown hook.
      *
      * @param dbName name of the database to create.
+     * @param addHook shutdown hook is only added if this parameter is true.
      * @throws ServerSetupException if setup can't be performed.
      */
-    public static void setup(String dbName) throws ServerSetupException
+    public static void setup(String dbName, boolean addHook) throws ServerSetupException
     {
         try {
             ConnectorBuilder.connector().setup();
@@ -35,7 +36,10 @@ public class ServerSetupManager
             throw new ServerSetupException("Couldn't setup database connector.");
         }
 
-        ServerSetupManager.addShutdownHook();;
+        if (addHook)
+        {
+            ServerSetupManager.addShutdownHook();;
+        }
 
         try (
                 // Create database and users table
