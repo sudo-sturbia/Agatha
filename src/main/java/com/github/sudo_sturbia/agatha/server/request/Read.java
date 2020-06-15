@@ -99,7 +99,7 @@ public class Read implements Request
      */
     private String readUser()
     {
-        String[] list = this.request.split("^READ\\s+|:");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^READ\\s+|:"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 2)) != null ?
@@ -129,7 +129,7 @@ public class Read implements Request
      */
     private String readBook()
     {
-        String[] list = this.request.split("^READ\\s+|:|/b/");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^READ\\s+|:|/b/"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?
@@ -159,7 +159,7 @@ public class Read implements Request
      */
     private String readBooksNames()
     {
-        String[] list = this.request.split("^READ\\s+|:|/b/\\*$");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^READ\\s+|:|/b/\\*$"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 2)) != null ?
@@ -189,7 +189,7 @@ public class Read implements Request
      */
     private String readBooksWithLabel()
     {
-        String[] list = this.request.split("^READ\\s+|:|/b/\\*$");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^READ\\s+|:|/b/\\*$"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?

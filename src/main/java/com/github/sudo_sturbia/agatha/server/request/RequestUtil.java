@@ -3,6 +3,10 @@ package com.github.sudo_sturbia.agatha.server.request;
 import com.github.sudo_sturbia.agatha.server.clients.ClientManager;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * RequestUtil is a container for utility methods used by classes
  * implementing Request interface.
@@ -40,5 +44,18 @@ public class RequestUtil
             default: // Can't happen
                 return new Gson().toJson(new ExecutionState(2)); // Wrong credentials
         }
+    }
+
+    /**
+     * Remove empty strings from an array.
+     *
+     * @param list array to remove empty strings from.
+     * @return list with no empty strings.
+     */
+    public static String[] removeEmpty(String[] list)
+    {
+        List<String> removeFrom = new ArrayList<>(Arrays.asList(list));
+        removeFrom.removeIf(String::isEmpty);
+        return removeFrom.toArray(new String[0]);
     }
 }

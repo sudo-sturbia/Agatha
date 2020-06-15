@@ -123,7 +123,7 @@ public class Delete implements Request
      */
     private String deleteClient()
     {
-        String[] list = this.request.split("^DELETE\\s+|:");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^DELETE\\s+|:"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 2)) != null ?
@@ -154,7 +154,7 @@ public class Delete implements Request
      */
     private String deleteBook()
     {
-        String[] list = this.request.split("^DELETE\\s+|:|/b/");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^DELETE\\s+|:|/b/"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?
@@ -185,7 +185,7 @@ public class Delete implements Request
      */
     private String deleteAllBooks()
     {
-        String[] list = this.request.split("^DELETE\\s+|:|/b/\\*$");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^DELETE\\s+|:|/b/\\*$"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 2)) != null ?
@@ -216,7 +216,7 @@ public class Delete implements Request
      */
     private String deleteLabel()
     {
-        String[] list = this.request.split("^DELETE\\s+|:|/l/");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^DELETE\\s+|:|/l/"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?
@@ -247,7 +247,7 @@ public class Delete implements Request
      */
     private String deleteAllLabels()
     {
-        String[] list = this.request.split("^DELETE\\s+|:|/l/\\*$");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^DELETE\\s+|:|/l/\\*$"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 2)) != null ?
@@ -278,7 +278,7 @@ public class Delete implements Request
      */
     private String deleteNote()
     {
-        String[] list = this.request.split("^DELETE\\s+|:|/b/|/n/");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^DELETE\\s+|:|/b/|/n/"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 4)) != null ?
@@ -309,7 +309,7 @@ public class Delete implements Request
      */
     private String deleteAllNotes()
     {
-        String[] list = this.request.split("^DELETE\\s+|:|/b/|/n/\\*$");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^DELETE\\s+|:|/b/|/n/\\*$"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?

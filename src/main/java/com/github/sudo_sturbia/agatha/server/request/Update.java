@@ -108,7 +108,7 @@ public class Update implements Request
      */
     private String updateBook()
     {
-        String[] list = this.request.split("^UPDATE\\s+|:|/b/|/");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^UPDATE\\s+|:|/b/|/"));
 
         String state;
         if ((state = RequestUtil.verify(this.dbName, list, 4)) != null)
@@ -151,7 +151,7 @@ public class Update implements Request
      */
     private String updateBooksField()
     {
-        String[] list = this.request.split("^UPDATE\\s+|:|/b/|/|=");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^UPDATE\\s+|:|/b/|/|="));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 5)) != null ?
@@ -182,7 +182,7 @@ public class Update implements Request
      */
     private String updateNote()
     {
-        String[] list = this.request.split("^UPDATE\\s+|:|/b/|/n/|/");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^UPDATE\\s+|:|/b/|/n/|/"));
 
         String state;
         if ((state = RequestUtil.verify(this.dbName, list, 5)) != null)
@@ -225,7 +225,7 @@ public class Update implements Request
      */
     private String updateNotesField()
     {
-        String[] list = this.request.split("^UPDATE\\s+|:|/b/|/n/|/|=");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^UPDATE\\s+|:|/b/|/n/|/|="));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 6)) != null ?
@@ -257,7 +257,7 @@ public class Update implements Request
      */
     private String addLabelToBook()
     {
-        String[] list = this.request.split("^UPDATE\\s+|:|/l/|/add/b/");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^UPDATE\\s+|:|/l/|/add/b/"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 4)) != null ?
@@ -288,7 +288,7 @@ public class Update implements Request
      */
     private String removeLabelFromBook()
     {
-        String[] list = this.request.split("^UPDATE\\s+|:|/l/|/remove/b/");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^UPDATE\\s+|:|/l/|/remove/b/"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 4)) != null ?

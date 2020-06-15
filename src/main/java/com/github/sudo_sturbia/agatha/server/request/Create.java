@@ -101,7 +101,7 @@ public class Create implements Request
      */
     private String createUser()
     {
-        String[] list = this.request.split("^CREATE\\s+|:");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^CREATE\\s+|:"));
         return list.length != 2 || ClientManager.get().doesExist(this.dbName, list[0]) || !this.writeUser(list[0], list[1]) ?
                 new Gson().toJson(new ExecutionState(3)) : // Operation failed
                 new Gson().toJson(new ExecutionState(0)); // Successful
@@ -128,7 +128,7 @@ public class Create implements Request
      */
     private String createBook()
     {
-        String[] list = this.request.split("^CREATE\\s+|:|/b/");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^CREATE\\s+|:|/b/"));
 
         String state;
         if ((state = RequestUtil.verify(this.dbName, list, 3)) != null)
@@ -171,7 +171,7 @@ public class Create implements Request
      */
     private String createNote()
     {
-        String[] list = this.request.split("^CREATE\\s+|:|/b/|/n/");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^CREATE\\s+|:|/b/|/n/"));
 
         String state;
         if ((state = RequestUtil.verify(this.dbName, list, 4)) != null)
@@ -214,7 +214,7 @@ public class Create implements Request
      */
     private String createLabel()
     {
-        String[] list = this.request.split("^CREATE\\s+|:|/l/");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^CREATE\\s+|:|/l/"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?
