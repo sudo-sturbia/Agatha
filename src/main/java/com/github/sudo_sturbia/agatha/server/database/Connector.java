@@ -4,8 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * Connector provides database connections to be used by
- * Agatha's server.
+ * Connector provides database connections to be used by Agatha's server.
  * <p>
  * The interface is meant to not be too specific so that it
  * can be implemented in different ways e.g. a connection pool or
@@ -26,7 +25,7 @@ public interface Connector
      * @return A Connection object connected to application's database.
      * @throws SQLException in case of a SQL error.
      */
-    public Connection get() throws SQLException;
+    public Connection connection() throws SQLException;
 
     /**
      * Close or return a database connection.
@@ -35,4 +34,9 @@ public interface Connector
      * @throws SQLException in case of a SQL error.
      */
     void close(Connection connection) throws SQLException;
+
+    /**
+     * Release resources and prepare connector for closing.
+     */
+    void clean();
 }

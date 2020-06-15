@@ -1,11 +1,14 @@
 package com.github.sudo_sturbia.agatha.server.database;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ConnectionPool is an implementation of Connector that provides
- * a pool of connections for usage.
+ * a dynamic pool of connections.
  */
 public class ConnectionPool implements Connector
 {
@@ -17,6 +20,9 @@ public class ConnectionPool implements Connector
 
     /** Password for database server (MySQL). */
     private final String dbServerPass;
+
+    /** Connections' pool. */
+    private final List<Connection> pool;
 
     /**
      * DriverConnector's constructor.
@@ -30,22 +36,60 @@ public class ConnectionPool implements Connector
         this.dbName = dbName;
         this.dbServerUsername = dbServerUsername;
         this.dbServerPass = dbServerPass;
+        this.pool = new ArrayList<>();
     }
 
     @Override
     public void setup() throws SQLException
     {
+        final int INITIAL_CAPACITY = 16;
+        for (int i = 0; i < INITIAL_CAPACITY; i++)
+        {
+            this.pool.add(DriverManager.getConnection("jdbc:mysql://localhost:3306/" + this.dbName,
+                            this.dbServerUsername, this.dbServerPass));
+        }
     }
 
     @Override
-    public Connection get() throws SQLException
+    public Connection connection() throws SQLException
     {
-        return null;
+        if (!this.pool.isEmpty())
+        {
+            return new CustomConnection(this.pool.remove(this.pool.size() - 1));
+        }
+
+        return new CustomConnection(
+                DriverManager.getConnection("jdbc:mysql://localhost:3306/" + this.dbName,
+                        this.dbServerUsername, this.dbServerPass)
+        );
     }
 
 
     @Override
     public void close(Connection connection) throws SQLException
     {
+        final int MAX_CAPACITY = 32;
+        if (this.pool.size() < MAX_CAPACITY)
+        {
+            this.pool.add(connection);
+        }
+        else
+        {
+            connection.close();
+        }
+    }
+
+    @Override
+    public void clean()
+    {
+        for (Connection connection : this.pool)
+        {
+            try {
+                connection.close();
+            }
+            catch (SQLException e) {
+                // Ignore
+            }
+        }
     }
 }

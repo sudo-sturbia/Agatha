@@ -1,15 +1,11 @@
 package com.github.sudo_sturbia.agatha.server;
 
-import com.github.sudo_sturbia.agatha.server.database.ConnectorBuilder;
-
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.sql.SQLException;
 
 /**
- * ServerImp Implementation of Agatha's server. Server uses
- * a custom communication protocol that supports the four main
- * CRUD functions.
+ * ServerImp is an implementation of Agatha's server. ServerImp uses
+ * a custom communication protocol that supports the four main CRUD functions.
  * @see com.github.sudo_sturbia.agatha.server.Protocol
  */
 public class ServerImp implements Server
@@ -36,17 +32,7 @@ public class ServerImp implements Server
     @Override
     public void run() throws ServerSetupException
     {
-        // Perform initial setup
-        try
-        {
-            ConnectorBuilder.get().setup();
-            DatabaseSetupManager.setup(this.dbName);
-        }
-        catch (SQLException e)
-        {
-            throw new ServerSetupException("Connector can not be setup.");
-        }
-
+        ServerSetupManager.setup(this.dbName);
 
         try (ServerSocket serverSocket = new ServerSocket(this.port))
         {

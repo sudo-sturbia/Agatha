@@ -17,24 +17,19 @@ import com.google.gson.Gson;
  * with every request. It implements the four CRUD functions for
  * communication with the server, each represented by a key word.
  * <p>
- *
  * Client requests are defined as by the following format:
- * <code>
+ * <pre>
  *     FUNCTION username:password/object
- * </code><br/>
- *
+ * </pre>
  * FUNCTION can be any of the CRUD operations, each of which is
  * represented by a class implementing Request interface. Each
  * function is documented separately in its implementing class.
  * object can be a book, note, label, or collection of books.
  * <p>
- * Due to the structure of a request,<br/>
- * username shouldn't contain a :<br/>
- * password shouldn't contain a : or /<br/>
- * object shouldn't contain any unnecessary / (other than specified.)
- * <p>
- * A password can be sanitized by the client application before sending,
- * but sanitizing should be avoided otherwise so names can be correctly
+ * Due to the structure of requests, a request should not contain
+ * any unnecessary : or /. A password can be sanitized by the client
+ * application before sending so that : and / are replaced, but
+ * sanitization should be avoided otherwise so names can be correctly
  * displayed.
  *
  * @see com.github.sudo_sturbia.agatha.server.request

@@ -4,11 +4,13 @@ import com.github.sudo_sturbia.agatha.client.model.book.Book;
 import com.github.sudo_sturbia.agatha.client.model.book.BookImp;
 import com.github.sudo_sturbia.agatha.client.model.book.Note;
 import com.github.sudo_sturbia.agatha.client.model.book.NoteImp;
+import com.github.sudo_sturbia.agatha.server.clients.ClientManager;
 import com.github.sudo_sturbia.agatha.server.database.ConnectorBuilder;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -99,16 +101,10 @@ public class Create implements Request
      */
     private String createUser()
     {
-        // Break statement into username and password
         String[] list = this.request.split("^CREATE\\s+|:");
-        if (list.length != 2 ||
-                UserManager.doesExist(this.dbName, list[0]) ||
-                !this.writeUser(list[0], DigestUtils.sha256Hex(list[1])))
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return new Gson().toJson(new ExecutionState(0)); // Successful
+        return list.length != 2 || ClientManager.get().doesExist(this.dbName, list[0]) || !this.writeUser(list[0], list[1]) ?
+                new Gson().toJson(new ExecutionState(3)) : // Operation failed
+                new Gson().toJson(new ExecutionState(0)); // Successful
     }
 
     /**
@@ -149,12 +145,9 @@ public class Create implements Request
             return gson.toJson(new ExecutionState(3)); // JSON can't be unmarshalled
         }
 
-        if (!this.writeBook(book, list[0]))
-        {
-            return gson.toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return gson.toJson(new ExecutionState(0)); // Successful
+        return !this.writeBook(book, list[0]) ?
+                gson.toJson(new ExecutionState(3)) : // Operation failed
+                gson.toJson(new ExecutionState(0));  // Successful
     }
 
     /**
@@ -195,12 +188,9 @@ public class Create implements Request
             return gson.toJson(new ExecutionState(3)); // JSON can't be unmarshalled
         }
 
-        if (!this.writeNote(note, list[0], list[2]))
-        {
-            return gson.toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return gson.toJson(new ExecutionState(0)); // Successful
+        return !this.writeNote(note, list[0], list[2]) ?
+                gson.toJson(new ExecutionState(3)) : // Operation failed
+                gson.toJson(new ExecutionState(0));  // Successful
     }
 
     /**
@@ -227,17 +217,11 @@ public class Create implements Request
         String[] list = this.request.split("^CREATE\\s+|:|/l/");
 
         String state;
-        if ((state = RequestUtil.verify(this.dbName, list, 3)) != null)
-        {
-            return state;
-        }
-
-        if (!this.writeLabel(list[0], list[2]))
-        {
-            return new Gson().toJson(new ExecutionState(3)); // Operation failed
-        }
-
-        return new Gson().toJson(new ExecutionState(0)); // Successful
+        return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?
+                state :
+                !this.writeLabel(list[0], list[2]) ?
+                        new Gson().toJson(new ExecutionState(3)) : // Operation failed
+                        new Gson().toJson(new ExecutionState(0));  // Successful
     }
 
     /**
@@ -245,18 +229,18 @@ public class Create implements Request
      * books' table for the user.
      *
      * @param username user's username.
-     * @param hashedPass user's password hashed using sha256.
+     * @param password user's password.
      * @return True if operation is performed successfully, false otherwise.
      */
-    private boolean writeUser(String username, String hashedPass)
+    private boolean writeUser(String username, String password)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement addUser = connection.prepareStatement(
-                        "INSERT INTO ?.Users VALUES ('?', '?');"
+                        "INSERT INTO " + this.dbName + ".Users VALUES (?, ?, ?);"
                 );
                 PreparedStatement createTable = connection.prepareStatement(
-                        "CREATE TABLE IF NOT EXISTS ?.? (" +
+                        "CREATE TABLE IF NOT EXISTS " + this.dbName + "." + username + " (" +
                                 "bookName varchar(255) NOT NULL, " +
                                 "author varchar(255), " +
                                 "state varchar(10) NOT NULL, " +
@@ -268,14 +252,13 @@ public class Create implements Request
                                 ");"
                 );
         ) {
-            addUser.setString(1, this.dbName);
-            addUser.setString(2, username);
-            addUser.setString(3, hashedPass);
+            String salt = this.salt();
 
-            createTable.setString(1, this.dbName);
-            createTable.setString(2, username);
-
+            addUser.setString(1, username);
+            addUser.setString(2, DigestUtils.sha256Hex(password + salt));
+            addUser.setString(3, salt);
             addUser.executeUpdate();
+
             createTable.executeUpdate();
         }
         catch (SQLException e)
@@ -284,6 +267,29 @@ public class Create implements Request
         }
 
         return true;
+    }
+
+    /**
+     * Create a 16 character salt.
+     *
+     * @return A 16 character random string to be used as a salt.
+     */
+    private String salt()
+    {
+        char[] possibleChars = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+
+        SecureRandom random = new SecureRandom();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < 16; i++)
+        {
+            builder.append(possibleChars[random.nextInt(possibleChars.length)]);
+        }
+
+        return builder.toString();
     }
 
     /**
@@ -301,16 +307,16 @@ public class Create implements Request
         // Writes book's fields to user's table, and writes all
         // of book's notes (if any exist) to book's table.
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement checkBook = connection.prepareStatement(
-                        "SELECT * FROM ?.? WHERE bookName = '?';"
+                        "SELECT * FROM " + this.dbName + "." + username + " WHERE bookName = ?;"
                 );
                 PreparedStatement addBook = connection.prepareStatement(
-                        "INSERT INTO ?.? VALUES" +
-                                "('?', '?', '?', ?, ?, '?', ?);"
+                        "INSERT INTO " + this.dbName + "." + username + " VALUES" +
+                                "(?, ?, ?, ?, ?, ?, ?);"
                 );
                 PreparedStatement createNotesTable = connection.prepareStatement(
-                        "CREATE TABLE IF NOT EXISTS ?.? (" +
+                        "CREATE TABLE IF NOT EXISTS " + this.dbName + "." + username + book.getName() + " (" +
                                 "note varchar(65535), " +
                                 "page int(255) NOT NULL, " +
                                 "PRIMARY KEY(page)" +
@@ -318,9 +324,7 @@ public class Create implements Request
                 )
         ) {
             // Verify that book's name doesn't already exist
-            checkBook.setString(1, this.dbName);
-            checkBook.setString(2, username);
-            checkBook.setString(3, book.getName());
+            checkBook.setString(1, book.getName());
             try (ResultSet set = checkBook.executeQuery())
             {
                 // Book's name already exists
@@ -331,22 +335,17 @@ public class Create implements Request
             }
 
             // Insert book
-            addBook.setString(1, this.dbName);
-            addBook.setString(2, username);
-            addBook.setString(3, book.getName());
-            addBook.setString(4, book.getAuthor());
-            addBook.setString(5, book.getStateToString());
-            addBook.setInt(6, book.getNumberOfPages());
-            addBook.setInt(7, book.getNumberOfReadPages());
-            addBook.setString(8, book.getCoverImagePath());
-            addBook.setBoolean(9, book.getNotes().size() > 0);
+            addBook.setString(1, book.getName());
+            addBook.setString(2, book.getAuthor());
+            addBook.setString(3, book.getStateToString());
+            addBook.setInt(4, book.getNumberOfPages());
+            addBook.setInt(5, book.getNumberOfReadPages());
+            addBook.setString(6, book.getCoverImagePath());
+            addBook.setBoolean(7, book.getNotes().size() > 0);
 
             addBook.executeUpdate();
 
             // Create notes table
-            createNotesTable.setString(1, this.dbName);
-            createNotesTable.setString(2, username + book.getName());
-
             createNotesTable.executeUpdate();
 
             if (!this.writeNotes(book.getNotes(), username, book.getName()))
@@ -373,19 +372,16 @@ public class Create implements Request
     private boolean writeNotes(List<Note> notes, String username, String bookName)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement insertNote = connection.prepareStatement(
-                        "INSERT INTO ?.? " +
-                                "VALUES ('?', ?);"
+                        "INSERT INTO " + this.dbName + "." + username + bookName + " " +
+                                "VALUES (?, ?);"
                 )
         ) {
-            insertNote.setString(1, this.dbName);
-            insertNote.setString(2, username + bookName);
-
             for (Note note : notes)
             {
-                insertNote.setString(3, note.getNote());
-                insertNote.setInt(4, note.getPageNumber());
+                insertNote.setString(1, note.getNote());
+                insertNote.setInt(2, note.getPageNumber());
 
                 insertNote.executeUpdate();
             }
@@ -411,21 +407,19 @@ public class Create implements Request
     private boolean writeNote(Note note, String username, String bookName)
     {
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement checkBookName = connection.prepareStatement(
-                        "SELECT * FROM ?.? WHERE bookName='?';"
+                        "SELECT * FROM " + this.dbName + "." + username + " WHERE bookName = ?;"
                 );
                 PreparedStatement checkPage = connection.prepareStatement(
-                        "SELECT * FROM ?.? WHERE page=?;"
+                        "SELECT * FROM " + this.dbName + "." + username + bookName + " WHERE page = ?;"
                 );
                 PreparedStatement insertNote = connection.prepareStatement(
-                        "INSERT INTO ?.? " +
-                                "VALUES ('?', ?);"
+                        "INSERT INTO " + this.dbName + "." + username + bookName + " " +
+                                "VALUES (?, ?);"
                 )
         ) {
-            checkBookName.setString(1, this.dbName);
-            checkBookName.setString(2, username);
-            checkBookName.setString(3, bookName);
+            checkBookName.setString(1, bookName);
 
             ResultSet book = checkBookName.executeQuery();
             if (!book.next()) // Book's name doesn't exist
@@ -433,9 +427,7 @@ public class Create implements Request
                 return false;
             }
 
-            checkPage.setString(1, this.dbName);
-            checkPage.setString(2, username + bookName);
-            checkPage.setInt(3, note.getPageNumber());
+            checkPage.setInt(1, note.getPageNumber());
 
             ResultSet set = checkPage.executeQuery();
             if (set.next()) // Page's number is used
@@ -443,10 +435,8 @@ public class Create implements Request
                 return false;
             }
 
-            insertNote.setString(1, this.dbName);
-            insertNote.setString(2, username + bookName);
-            insertNote.setString(3, note.getNote());
-            insertNote.setInt(4, note.getPageNumber());
+            insertNote.setString(1, note.getNote());
+            insertNote.setInt(2, note.getPageNumber());
 
             insertNote.executeUpdate();
         }
@@ -470,15 +460,11 @@ public class Create implements Request
         // Add a new boolean column to user's books table.
         // Default value is false.
         try (
-                Connection connection = ConnectorBuilder.get().get();
+                Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement addColumn = connection.prepareStatement(
-                        "ALTER TABLE ?.? ADD ? bool NOT NULL DEFAULT 0;"
+                        "ALTER TABLE " + this.dbName + "." + username + " ADD " + label + " bool NOT NULL DEFAULT 0;"
                 );
         ) {
-            addColumn.setString(1, this.dbName);
-            addColumn.setString(2, username);
-            addColumn.setString(3, label);
-
             addColumn.executeUpdate();
         }
         catch (SQLException e)

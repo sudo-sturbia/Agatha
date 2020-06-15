@@ -6,12 +6,13 @@ package com.github.sudo_sturbia.agatha.server.request;
  * <p>
  * Execution code is one of the following.
  * <pre>
- *     0 - Operation performed correctly
- *     1 - Wrong syntax/structure
- *     2 - Incorrect credentials
- *     3 - Operation failed
+ *     0. Operation performed correctly.
+ *     1. Wrong syntax/structure.
+ *     2. Incorrect credentials.
+ *     3. Operation failed.
+ *     4. Account locked for invalid login attempts.
  * </pre>
- * Each code except 0 has a message.
+ * All codes are accompanied by a message.
  */
 public class ExecutionState
 {
@@ -43,8 +44,11 @@ public class ExecutionState
             case 3:
                 this.message = "Operation failed.";
                 break;
+            case 4:
+                this.message = "Account locked for invalid login attempts.";
+                break;
             default:
-                throw new IllegalStateException("Invalid execution code.");
+                throw new IllegalArgumentException("Invalid execution code.");
         }
 
         this.code = code;
