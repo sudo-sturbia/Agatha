@@ -128,7 +128,7 @@ public class Create implements Request
      */
     private String createBook()
     {
-        String[] list = RequestUtil.removeEmpty(this.request.split("^CREATE\\s+|:|/b/"));
+        String[] list = RequestUtil.splitTwice(this.request, "/b/", "^CREATE\\s+|:");
 
         String state;
         if ((state = RequestUtil.verify(this.dbName, list, 3)) != null)
@@ -171,7 +171,7 @@ public class Create implements Request
      */
     private String createNote()
     {
-        String[] list = RequestUtil.removeEmpty(this.request.split("^CREATE\\s+|:|/b/|/n/"));
+        String[] list = RequestUtil.splitTwice(this.request, "/n/", "^CREATE\\s+|:|/b/");
 
         String state;
         if ((state = RequestUtil.verify(this.dbName, list, 4)) != null)

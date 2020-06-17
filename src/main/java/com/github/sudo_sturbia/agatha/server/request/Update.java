@@ -108,7 +108,7 @@ public class Update implements Request
      */
     private String updateBook()
     {
-        String[] list = RequestUtil.removeEmpty(this.request.split("^UPDATE\\s+|:|/b/|/"));
+        String[] list = RequestUtil.splitTwice(this.request, "/b/|/", "^UPDATE\\s+|:");
 
         String state;
         if ((state = RequestUtil.verify(this.dbName, list, 4)) != null)
@@ -182,7 +182,8 @@ public class Update implements Request
      */
     private String updateNote()
     {
-        String[] list = RequestUtil.removeEmpty(this.request.split("^UPDATE\\s+|:|/b/|/n/|/"));
+        String[] list = RequestUtil.splitTwice(this.request, "/b/|/n/|/", "^UPDATE\\s+|:");
+
 
         String state;
         if ((state = RequestUtil.verify(this.dbName, list, 5)) != null)

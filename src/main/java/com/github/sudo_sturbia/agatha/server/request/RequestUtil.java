@@ -29,7 +29,7 @@ public class RequestUtil
      */
     public static String verify(String dbName, String[] list, int size)
     {
-        if (list.length != size)
+        if (list == null || list.length != size)
         {
             return new Gson().toJson(new ExecutionState(1));
         }
@@ -57,5 +57,36 @@ public class RequestUtil
         List<String> removeFrom = new ArrayList<>(Arrays.asList(list));
         removeFrom.removeIf(String::isEmpty);
         return removeFrom.toArray(new String[0]);
+    }
+
+    /**
+     * Split given string str twice, first use reg1 to split, then
+     * split the first part of the split string using reg2.
+     * This method is created to be used by request strings which
+     * contains JSON data to avoid splitting the JSON string.
+     * <p>
+     * Returned array has no empty elements.
+     *
+     * @param str string to split.
+     * @param reg1 regex pattern to use in first split.
+     * @param reg2 regex pattern to use in second split.
+     * @return An array of split parts, null if something an error
+     *      occurs while splitting.
+     */
+    public static String[] splitTwice(String str, String reg1, String reg2)
+    {
+        // First split
+        List<String> split = new ArrayList<>(Arrays.asList(str.split(reg1)));
+
+        if (split.isEmpty())
+        {
+            return null;
+        }
+
+        // Second split of first element of list
+        split.addAll(0, new ArrayList<>(Arrays.asList(split.remove(0).split(reg2))));
+        split.removeIf(String::isEmpty);
+
+        return split.toArray(new String[0]);
     }
 }
