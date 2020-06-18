@@ -260,7 +260,7 @@ public class Create implements Request
                         "INSERT INTO " + this.dbName + ".Users VALUES (?, ?, ?);"
                 );
                 PreparedStatement createTable = connection.prepareStatement(
-                        "CREATE TABLE IF NOT EXISTS " + this.dbName + "." + username + " (" +
+                        "CREATE TABLE IF NOT EXISTS " + this.dbName + "." + Sanitizer.sanitize(username) + " (" +
                                 "bookName varchar(255) NOT NULL, " +
                                 "author varchar(255), " +
                                 "state varchar(10) NOT NULL, " +
@@ -329,14 +329,14 @@ public class Create implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement checkBook = connection.prepareStatement(
-                        "SELECT * FROM " + this.dbName + "." + username + " WHERE bookName = ?;"
+                        "SELECT * FROM " + this.dbName + "." + Sanitizer.sanitize(username) + " WHERE bookName = ?;"
                 );
                 PreparedStatement addBook = connection.prepareStatement(
-                        "INSERT INTO " + this.dbName + "." + username + " VALUES" +
+                        "INSERT INTO " + this.dbName + "." + Sanitizer.sanitize(username) + " VALUES" +
                                 "(?, ?, ?, ?, ?, ?, ?);"
                 );
                 PreparedStatement createNotesTable = connection.prepareStatement(
-                        "CREATE TABLE IF NOT EXISTS " + this.dbName + "." + username + book.getName() + " (" +
+                        "CREATE TABLE IF NOT EXISTS " + this.dbName + "." + Sanitizer.sanitize(username + book.getName()) + " (" +
                                 "note varchar(65535), " +
                                 "page int(255) NOT NULL, " +
                                 "PRIMARY KEY(page)" +
@@ -394,7 +394,7 @@ public class Create implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement insertNote = connection.prepareStatement(
-                        "INSERT INTO " + this.dbName + "." + username + bookName + " " +
+                        "INSERT INTO " + this.dbName + "." + Sanitizer.sanitize(username + bookName) + " " +
                                 "VALUES (?, ?);"
                 )
         ) {
@@ -429,13 +429,13 @@ public class Create implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement checkBookName = connection.prepareStatement(
-                        "SELECT * FROM " + this.dbName + "." + username + " WHERE bookName = ?;"
+                        "SELECT * FROM " + this.dbName + "." + Sanitizer.sanitize(username) + " WHERE bookName = ?;"
                 );
                 PreparedStatement checkPage = connection.prepareStatement(
-                        "SELECT * FROM " + this.dbName + "." + username + bookName + " WHERE page = ?;"
+                        "SELECT * FROM " + this.dbName + "." + Sanitizer.sanitize(username + bookName) + " WHERE page = ?;"
                 );
                 PreparedStatement insertNote = connection.prepareStatement(
-                        "INSERT INTO " + this.dbName + "." + username + bookName + " " +
+                        "INSERT INTO " + this.dbName + "." + Sanitizer.sanitize(username + bookName) + " " +
                                 "VALUES (?, ?);"
                 )
         ) {
@@ -482,7 +482,7 @@ public class Create implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement addColumn = connection.prepareStatement(
-                        "ALTER TABLE " + this.dbName + "." + username + " ADD " + label + " bool NOT NULL DEFAULT 0;"
+                        "ALTER TABLE " + this.dbName + "." + Sanitizer.sanitize(username) + " ADD " + label + " bool NOT NULL DEFAULT 0;"
                 );
         ) {
             addColumn.executeUpdate();

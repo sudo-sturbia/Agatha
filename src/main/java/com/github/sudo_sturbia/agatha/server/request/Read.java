@@ -209,10 +209,10 @@ public class Read implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getBook = connection.prepareStatement(
-                        "SELECT * FROM " + this.dbName + "." + username + " WHERE bookName = ?;"
+                        "SELECT * FROM " + this.dbName + "." + Sanitizer.sanitize(username) + " WHERE bookName = ?;"
                 );
                 PreparedStatement getNotes = connection.prepareStatement(
-                        "SELECT * FROM " + this.dbName + "." + username + bookName + ";"
+                        "SELECT * FROM " + this.dbName + "." + Sanitizer.sanitize(username + bookName) + ";"
                 );
         ) {
             getBook.setString(1, bookName);
@@ -277,7 +277,7 @@ public class Read implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getNames = connection.prepareStatement(
-                        "SELECT bookName FROM " + this.dbName + "." + username + ";"
+                        "SELECT bookName FROM " + this.dbName + "." + Sanitizer.sanitize(username) + ";"
                 );
         ) {
             List<String> bookNames = new ArrayList<>();
@@ -311,7 +311,7 @@ public class Read implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getNames = connection.prepareStatement(
-                        "SELECT bookName FROM " + this.dbName + "." + username + " WHERE " + label + " = 1;"
+                        "SELECT bookName FROM " + this.dbName + "." + Sanitizer.sanitize(username) + " WHERE " + label + " = 1;"
                 );
         ) {
             List<String> bookNames = new ArrayList<>();

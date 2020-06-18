@@ -316,7 +316,7 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement updateBook = connection.prepareStatement(
-                        "UPDATE " + this.dbName + "." + username + " " +
+                        "UPDATE " + this.dbName + "." + Sanitizer.sanitize(username) + " " +
                                 "SET " +
                                 "bookName = ?, " +
                                 "author = ?, " +
@@ -365,10 +365,10 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteOld = connection.prepareStatement(
-                        "DELETE FROM " + this.dbName + "." + username + bookName + ";"
+                        "DELETE FROM " + this.dbName + "." + Sanitizer.sanitize(username + bookName) + ";"
                 );
                 PreparedStatement insertNotes = connection.prepareStatement(
-                        "INSERT INTO " + this.dbName + "." + username + bookName + " " +
+                        "INSERT INTO " + this.dbName + "." + Sanitizer.sanitize(username + bookName) + " " +
                                 "VALUES (?, ?);"
                 );
         ) {
@@ -417,7 +417,7 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement updateBook = connection.prepareStatement(
-                        "UPDATE " + this.dbName + "." + username + " " +
+                        "UPDATE " + this.dbName + "." + Sanitizer.sanitize(username) + " " +
                                 "SET " +
                                 fieldName + " = " + fieldValue + " " +
                                 "WHERE bookName = ?;"
@@ -450,7 +450,7 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement updateNote = connection.prepareStatement(
-                        "UPDATE " + this.dbName + "." + username + bookName + " " +
+                        "UPDATE " + this.dbName + "." + Sanitizer.sanitize(username + bookName) + " " +
                                 "SET " +
                                 "note = ?," +
                                 "page = ? " +
@@ -499,7 +499,7 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement updateNote = connection.prepareStatement(
-                        "UPDATE " + this.dbName + "." + username + bookName + " " +
+                        "UPDATE " + this.dbName + "." + Sanitizer.sanitize(username + bookName) + " " +
                                 "SET " +
                                 fieldName + " = " + fieldValue + " " +
                                 "WHERE page = ?;"
@@ -531,7 +531,7 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement addLabel = connection.prepareStatement(
-                        "UPDATE " + this.dbName + "." + username + " " +
+                        "UPDATE " + this.dbName + "." + Sanitizer.sanitize(username) + " " +
                                 "SET " +
                                 label + " = ? " +
                                 "WHERE bookName = ?;"
