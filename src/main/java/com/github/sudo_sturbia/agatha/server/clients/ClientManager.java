@@ -62,6 +62,7 @@ public class ClientManager
      */
     public void stopManagerThread()
     {
+        ClientManager.manager = null;
         this.thread.interrupt();
     }
 
