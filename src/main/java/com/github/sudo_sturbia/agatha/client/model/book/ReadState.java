@@ -8,6 +8,9 @@ public class ReadState implements BookState
     /** Number of book's pages. */
     private final int pages;
 
+    /** State constant. Used in deserialization. */
+    private final State TYPE = State.READ;
+
     /**
      * ReadState's constructor.
      *
@@ -27,7 +30,7 @@ public class ReadState implements BookState
     @Override
     public State getState()
     {
-        return State.READ;
+        return this.TYPE;
     }
 
     @Override

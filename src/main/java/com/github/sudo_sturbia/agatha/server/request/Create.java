@@ -2,11 +2,14 @@ package com.github.sudo_sturbia.agatha.server.request;
 
 import com.github.sudo_sturbia.agatha.client.model.book.Book;
 import com.github.sudo_sturbia.agatha.client.model.book.BookImp;
+import com.github.sudo_sturbia.agatha.client.model.book.BookState;
+import com.github.sudo_sturbia.agatha.client.model.book.BookStateDeserializer;
 import com.github.sudo_sturbia.agatha.client.model.book.Note;
 import com.github.sudo_sturbia.agatha.client.model.book.NoteImp;
 import com.github.sudo_sturbia.agatha.server.clients.ClientManager;
 import com.github.sudo_sturbia.agatha.server.database.ConnectorBuilder;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -137,17 +140,17 @@ public class Create implements Request
         }
 
         Book book;
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().registerTypeAdapter(BookState.class, new BookStateDeserializer()).create();
         try {
             book = gson.fromJson(list[2], BookImp.class);
         }
         catch (JsonSyntaxException e) {
-            return gson.toJson(new ExecutionState(3)); // JSON can't be unmarshalled
+            return new Gson().toJson(new ExecutionState(3)); // JSON can't be unmarshalled
         }
 
         return !this.writeBook(book, list[0]) ?
-                gson.toJson(new ExecutionState(3)) : // Operation failed
-                gson.toJson(new ExecutionState(0));  // Successful
+                new Gson().toJson(new ExecutionState(3)) : // Operation failed
+                new Gson().toJson(new ExecutionState(0));  // Successful
     }
 
     /**

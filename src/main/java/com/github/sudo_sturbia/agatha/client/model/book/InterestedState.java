@@ -8,6 +8,9 @@ public class InterestedState implements BookState
     /** Number of book's pages. */
     private final int pages;
 
+    /** State constant. Used in deserialization. */
+    private final State TYPE = State.INTERESTED;
+
     /**
      * InterestedState's constructor.
      *
@@ -27,7 +30,7 @@ public class InterestedState implements BookState
     @Override
     public State getState()
     {
-        return State.INTERESTED;
+        return this.TYPE;
     }
 
     @Override
