@@ -337,7 +337,7 @@ public class Create implements Request
                 );
                 PreparedStatement createNotesTable = connection.prepareStatement(
                         "CREATE TABLE IF NOT EXISTS " + this.dbName + "." + Sanitizer.sanitize(username + book.getName()) + " (" +
-                                "note varchar(65535), " +
+                                "note text, " +
                                 "page int(255) NOT NULL, " +
                                 "PRIMARY KEY(page)" +
                                 ");"
