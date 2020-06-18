@@ -396,7 +396,12 @@ public class Create implements Request
                 PreparedStatement insertNote = connection.prepareStatement(
                         "INSERT INTO " + this.dbName + "." + Sanitizer.sanitize(username + bookName) + " " +
                                 "VALUES (?, ?);"
-                )
+                );
+                PreparedStatement hasNotes = connection.prepareStatement(
+                        "UPDATE " + this.dbName + "." + Sanitizer.sanitize(username) + " " +
+                                "SET hasNotes = ? " +
+                                "WHERE bookName = ? "
+                );
         ) {
             for (Note note : notes)
             {
@@ -405,6 +410,10 @@ public class Create implements Request
 
                 insertNote.executeUpdate();
             }
+
+            hasNotes.setBoolean(1, true);
+            hasNotes.setString(2, bookName);
+            hasNotes.executeUpdate();
         }
         catch (SQLException e)
         {
