@@ -61,13 +61,13 @@ public class Read implements Request
         {
             return this.readUser();
         }
-        else if (this.isReadBook())
-        {
-            return this.readBook();
-        }
         else if (this.isReadBooksNames())
         {
             return this.readBooksNames();
+        }
+        else if (this.isReadBook())
+        {
+            return this.readBook();
         }
         else if (this.isReadBooksWithLabel())
         {
@@ -189,7 +189,7 @@ public class Read implements Request
      */
     private String readBooksWithLabel()
     {
-        String[] list = RequestUtil.removeEmpty(this.request.split("^READ\\s+|:|/b/\\*$"));
+        String[] list = RequestUtil.removeEmpty(this.request.split("^READ\\s+|:|/l/"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?
