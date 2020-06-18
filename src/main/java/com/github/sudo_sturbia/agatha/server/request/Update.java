@@ -5,6 +5,7 @@ import com.github.sudo_sturbia.agatha.client.model.book.BookImp;
 import com.github.sudo_sturbia.agatha.client.model.book.BookState;
 import com.github.sudo_sturbia.agatha.client.model.book.BookStateDeserializer;
 import com.github.sudo_sturbia.agatha.client.model.book.Note;
+import com.github.sudo_sturbia.agatha.client.model.book.NoteDeserializer;
 import com.github.sudo_sturbia.agatha.client.model.book.NoteImp;
 import com.github.sudo_sturbia.agatha.server.database.ConnectorBuilder;
 import com.google.gson.Gson;
@@ -120,7 +121,9 @@ public class Update implements Request
         }
 
         Book book;
-        Gson gson = new GsonBuilder().registerTypeAdapter(BookState.class, new BookStateDeserializer()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(BookState.class, new BookStateDeserializer())
+                                     .registerTypeAdapter(Note.class, new NoteDeserializer())
+                                     .create();
         try {
             book = gson.fromJson(list[3], BookImp.class);
         }

@@ -21,21 +21,21 @@ class NoteTest
                                .build();
 
         // Should throw exception
-        assertThrows(IllegalArgumentException.class, () -> new NoteImp(null, "Note", 10),
-                "Not Book reference given.");
+        assertThrows(IllegalArgumentException.class, () -> new NoteImp(-1, "Note", 10),
+                "Invalid number of pages.");
 
-        assertThrows(IllegalArgumentException.class, () -> new NoteImp(book, null, 10),
+        assertThrows(IllegalArgumentException.class, () -> new NoteImp(book.getNumberOfPages(), null, 10),
                 "No text-note given.");
 
-        assertThrows(IllegalArgumentException.class, () -> new NoteImp(book, "Note", -1),
+        assertThrows(IllegalArgumentException.class, () -> new NoteImp(book.getNumberOfPages(), "Note", -1),
                 "Page number is -ve.");
 
-        assertThrows(IllegalArgumentException.class, () -> new NoteImp(book, "Note", 101),
+        assertThrows(IllegalArgumentException.class, () -> new NoteImp(book.getNumberOfPages(), "Note", 101),
                 "Page number > book's number of pages.");
 
         // Create a note at page 10
-        book.addNote(new NoteImp(book, "Note", 10));
-        assertThrows(IllegalArgumentException.class, () -> new NoteImp(book, "Note", 10),
+        book.addNote(new NoteImp(book.getNumberOfPages(), "Note", 10));
+        assertThrows(IllegalArgumentException.class, () -> book.addNote(new NoteImp(book.getNumberOfPages(), "Note", 10)),
                 "Two notes at the same page.");
     }
 
@@ -48,7 +48,7 @@ class NoteTest
                                .numberOfPages(100)
                                .build();
 
-        Note note = new NoteImp(book, "Note", 10);
+        Note note = new NoteImp(book.getNumberOfPages(), "Note", 10);
 
         // Correct update
         note.setNote("Updated note");

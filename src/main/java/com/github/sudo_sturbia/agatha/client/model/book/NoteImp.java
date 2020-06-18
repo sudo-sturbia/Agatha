@@ -16,9 +16,9 @@ public class NoteImp implements Note
     private final int pageNumber;
 
     /**
-     * NodeImp's constructor.
+     * NoteImp's constructor.
      *
-     * @param book the book containing the note.
+     * @param pages number of book's pages.
      * @param note text note.
      * @param pageNumber the number of the page to which the
      *                   note is attached.
@@ -26,24 +26,19 @@ public class NoteImp implements Note
      *         or page number is &gt; number of book's pages or &lt; 0
      *         or if page already contains a note.
      */
-    public NoteImp(Book book, String note, int pageNumber) throws IllegalArgumentException
+    public NoteImp(int pages, String note, int pageNumber) throws IllegalArgumentException
     {
-        if (book == null)
+        if (pages < 0)
         {
-            throw new IllegalArgumentException("No book is given.");
+            throw new IllegalArgumentException("Invalid number of pages.");
         }
         else if (note == null)
         {
             throw new IllegalArgumentException("No note is given.");
         }
-        else if (pageNumber < 0 || pageNumber > book.getNumberOfPages())
+        else if (pageNumber < 0 || pageNumber > pages)
         {
             throw new IllegalArgumentException("Invalid number of read pages.");
-        }
-        else if (book.getNoteAtPage(pageNumber) != null)
-        {
-            throw new IllegalArgumentException("Page " + pageNumber +
-                    " already contains a note.");
         }
 
         this.note = note;
@@ -68,7 +63,8 @@ public class NoteImp implements Note
     }
 
     @Override
-    public int getPageNumber() {
+    public int getPageNumber()
+    {
         return this.pageNumber;
     }
 }

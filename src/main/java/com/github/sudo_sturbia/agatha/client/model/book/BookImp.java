@@ -163,16 +163,23 @@ public class BookImp implements Book
     @Override
     public void addNote(Note note)
     {
+        if (this.notes.get(note.getPageNumber()) != null)
+        {
+            throw new IllegalArgumentException("Page " + note.getPageNumber() + " already has a note.");
+        }
+
         this.notes.put(note.getPageNumber(), note);
     }
 
     @Override
     public void addNote(String noteText, int pageNumber) throws IllegalArgumentException
     {
-        // Create a new note
-        Note note = new NoteImp(this, noteText, pageNumber);
+        if (this.notes.get(pageNumber) != null)
+        {
+            throw new IllegalArgumentException("Page " + pageNumber + " already has a note.");
+        }
 
-        this.notes.put(pageNumber, note);
+        this.notes.put(pageNumber, new NoteImp(this.pages, noteText, pageNumber));
     }
 
     @Override

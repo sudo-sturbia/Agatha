@@ -150,7 +150,7 @@ class BookTest
         assertEquals(0, book.getNotes().size(), "No notes created.");
         assertNull(book.getNoteAtPage(1), "No note exists.");
 
-        book.addNote(new NoteImp(book, "Note", 10));
+        book.addNote(new NoteImp(book.getNumberOfPages(), "Note", 10));
         assertEquals(1, book.getNotes().size(), "Created one note.");
 
         assertThrows(IllegalArgumentException.class, () -> book.addNote(null, 15),
@@ -188,7 +188,7 @@ class BookTest
         for (int i = 0; i < 100; i++)
         {
             assertThrows(IllegalArgumentException.class,
-                    () -> book.addNote(new NoteImp(book, "replacement", random.nextInt(10001))),
+                    () -> book.addNote(new NoteImp(book.getNumberOfPages(), "replacement", random.nextInt(10001))),
                     "A note already exists in page.");
         }
 
