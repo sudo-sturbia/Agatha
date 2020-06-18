@@ -98,14 +98,25 @@ public class Create implements Request
     }
 
     /**
-     * Creates a new application user.
+     * Creates a new application user. Only alphanumeric characters
+     * and spaces are allowed in username.
      *
      * @return A JSON response.
      */
     private String createUser()
     {
         String[] list = RequestUtil.removeEmpty(this.request.split("^CREATE\\s+|:"));
-        return list.length != 2 || ClientManager.get().doesExist(this.dbName, list[0]) || !this.writeUser(list[0], list[1]) ?
+        if (list.length != 2)
+        {
+            return new Gson().toJson(new ExecutionState(1)); // Wrong structure
+        }
+
+        if (!list[0].matches("[a-zA-Z0-9\\s]+")) // Non alphanumeric characters
+        {
+            return new Gson().toJson(new ExecutionState(5)); // Invalid characters
+        }
+
+        return ClientManager.get().doesExist(this.dbName, list[0]) || !this.writeUser(list[0], list[1]) ?
                 new Gson().toJson(new ExecutionState(3)) : // Operation failed
                 new Gson().toJson(new ExecutionState(0)); // Successful
     }
@@ -125,7 +136,8 @@ public class Create implements Request
     }
 
     /**
-     * Creates a new book for given user.
+     * Creates a new book for given user. Only alphanumeric characters
+     * and spaces are allowed in book's name.
      *
      * @return A JSON response.
      */
@@ -146,6 +158,11 @@ public class Create implements Request
         }
         catch (JsonSyntaxException e) {
             return new Gson().toJson(new ExecutionState(3)); // JSON can't be unmarshalled
+        }
+
+        if (!book.getName().matches("[a-zA-Z0-9\\s]+")) // Non alphanumeric characters
+        {
+            return new Gson().toJson(new ExecutionState(5)); // Invalid characters
         }
 
         return !this.writeBook(book, list[0]) ?

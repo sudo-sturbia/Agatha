@@ -47,6 +47,9 @@ public class ExecutionState
             case 4:
                 this.message = "Account locked for invalid login attempts.";
                 break;
+            case 5:
+                this.message = "Uses invalid characters in username/book's name.";
+                break;
             default:
                 throw new IllegalArgumentException("Invalid execution code.");
         }

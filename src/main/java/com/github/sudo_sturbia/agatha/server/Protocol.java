@@ -31,6 +31,9 @@ import com.google.gson.Gson;
  * application before sending so that : and / are replaced, but
  * sanitization should be avoided otherwise so names can be correctly
  * displayed.
+ * <p>
+ * Usernames and book names can only contain alphanumeric characters
+ * and spaces. Any other characters are rejected.
  *
  * @see com.github.sudo_sturbia.agatha.server.request
  */
