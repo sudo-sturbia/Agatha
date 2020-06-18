@@ -90,4 +90,27 @@ public class TestUtil
             Protocol.handle(request, TestUtil.dbName);
         }
     }
+
+    /**
+     * Create a user, book, note, and label with the given name
+     * to use for testing.
+     */
+    public static void create(String username)
+    {
+        final Gson gson = new Gson();
+
+        Book book = BookBuilder.newBook("My Book", 100).build();
+        Note note = new NoteImp(100, "Note #1", 10);
+        book.addNote(note);
+
+        List<String> requests = new ArrayList<>();
+        requests.add("CREATE " + username + ":password");
+        requests.add("CREATE " + username + ":password/b/" + gson.toJson(book));
+        requests.add("CREATE " + username + ":password/l/label");
+
+        for (String request : requests)
+        {
+            Protocol.handle(request, TestUtil.dbName);
+        }
+    }
 }

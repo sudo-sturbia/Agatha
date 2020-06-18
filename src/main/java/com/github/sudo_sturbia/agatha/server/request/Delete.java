@@ -63,29 +63,29 @@ public class Delete implements Request
         {
             return this.deleteClient();
         }
-        else if (this.isDeleteBook())
-        {
-            return this.deleteBook();
-        }
         else if (this.isDeleteAllBooks())
         {
             return this.deleteAllBooks();
         }
-        else if (this.isDeleteLabel())
+        else if (this.isDeleteBook())
         {
-            return this.deleteLabel();
+            return this.deleteBook();
         }
         else if (this.isDeleteAllLabels())
         {
             return this.deleteAllLabels();
         }
-        else if (this.isDeleteNote())
+        else if (this.isDeleteLabel())
         {
-            return this.deleteNote();
+            return this.deleteLabel();
         }
         else if (this.isDeleteAllNotes())
         {
             return this.deleteAllNotes();
+        }
+        else if (this.isDeleteNote())
+        {
+            return this.deleteNote();
         }
 
         return new Gson().toJson(new ExecutionState(1)); // Wrong syntax

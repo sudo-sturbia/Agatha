@@ -339,6 +339,8 @@ public class Update implements Request
             updateBook.setString(6, book.getCoverImagePath());
             updateBook.setBoolean(7, book.getNotes().size() > 0);
 
+            updateBook.setString(8, bookName);
+
             updateBook.executeUpdate();
 
             if (this.updateNotes(book.getNotes(), username, bookName))
