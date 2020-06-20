@@ -7,9 +7,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -46,6 +49,9 @@ public class ClientManagerThread extends Thread
      * this map and added to the timeout list for 30 minutes. */
     private final Map<String, Integer> failedLoginCount;
 
+    /** Count threads that are currently executing. */
+    private final List<ClearCountThread> countThreads;
+
     /** scheduler is used as a locking timer. It checks on locked
      * accounts in timedOut map and unlocks them if timeout has ended. */
     private final ScheduledExecutorService scheduler;
@@ -59,7 +65,8 @@ public class ClientManagerThread extends Thread
         this.sender = sender;
         this.receiver = receiver;
         this.timedOut = new HashMap<>();
-        this.failedLoginCount = new HashMap<>();
+        this.failedLoginCount = new ConcurrentHashMap<>();
+        this.countThreads = new ArrayList<>();
 
         this.scheduler = Executors.newScheduledThreadPool(1);
         this.scheduler.scheduleAtFixedRate(
@@ -67,7 +74,7 @@ public class ClientManagerThread extends Thread
                     synchronized (this)
                     {
                         ClientManagerThread.this.timedOut.entrySet()
-                                .removeIf(e -> (System.currentTimeMillis() - e.getValue()) / 1000 > this.TIMEOUT);
+                                .removeIf(e -> (System.currentTimeMillis() - e.getValue()) / 60000 > this.TIMEOUT);
                     }
                 }, 0, this.TIMEOUT, TimeUnit.MINUTES
         );
@@ -87,7 +94,7 @@ public class ClientManagerThread extends Thread
                     // User is timed out
                     if (credentials.getPassword() != null && timedOut.containsKey(credentials.getUsername()))
                     {
-                        if (((System.currentTimeMillis() - timedOut.get(credentials.getUsername())) / 1000) < this.TIMEOUT)
+                        if (((System.currentTimeMillis() - timedOut.get(credentials.getUsername())) / 60000) < this.TIMEOUT)
                         { // Timeout hasn't ended
                             sender.put(ClientManager.LoginStatus.TIMEOUT);
                             continue;
@@ -106,8 +113,12 @@ public class ClientManagerThread extends Thread
         }
         catch (InterruptedException e)
         {
-            // Server finished execution ..
+            // Server finished execution
             this.scheduler.shutdown();
+            for (Thread thread : this.countThreads)
+            {
+                thread.interrupt();
+            }
         }
     }
 
@@ -199,7 +210,18 @@ public class ClientManagerThread extends Thread
      */
     private void loginFailed(String username)
     {
-        this.failedLoginCount.put(username, this.failedLoginCount.get(username) == null ? 1 : this.failedLoginCount.get(username) + 1);
+        if (this.failedLoginCount.get(username) == null)
+        {
+            this.failedLoginCount.put(username, 1);
+
+            ClearCountThread thread = new ClearCountThread(this.failedLoginCount, this.countThreads, username);
+            this.countThreads.add(thread);
+            thread.start();
+        }
+        else
+        {
+            this.failedLoginCount.put(username, this.failedLoginCount.get(username) + 1);
+        }
 
         if (this.failedLoginCount.get(username) >= 5)
         {
