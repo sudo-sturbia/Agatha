@@ -27,21 +27,27 @@ import java.util.List;
  * Each Library must have at least three labels representing Book's
  * three states. States are the only mutually exclusive labels.
  */
-public interface Library
+public class Library
 {
     /**
      * Get username of the client who owns the library.
      *
      * @return Username of client attached to library.
      */
-    public String getUsername();
+    public String getUsername()
+    {
+        return null;
+    }
 
     /**
      * Get a list of names of user's books.
      *
      * @return A list containing names of user's books.
      */
-    public List<String> getNamesOfBooks();
+    public List<String> getNamesOfBooks()
+    {
+        return null;
+    }
 
     /**
      * Get a list of name of books with given label.
@@ -49,7 +55,10 @@ public interface Library
      * @param label label to search for.
      * @return A list containing name of books that have the label.
      */
-    public List<String> getNamesOfBooksWithLabel(String label);
+    public List<String> getNamesOfBooksWithLabel(String label)
+    {
+        return null;
+    }
 
     /**
      * Get Book with given name.
@@ -58,14 +67,19 @@ public interface Library
      * @return A Book object with the name, null if requested
      *         name doesn't exist.
      */
-    public Book getBookWithName(String name);
+    public Book getBookWithName(String name)
+    {
+        return null;
+    }
 
     /**
      * Add a book to the collection.
      *
      * @param book book to add.
      */
-    public void addBook(Book book);
+    public void addBook(Book book)
+    {
+    }
 
     /**
      * Add a book with a given label to the collection. If the
@@ -75,14 +89,18 @@ public interface Library
      * @param book book to add.
      * @param label name of book's label.
      */
-    public void addBook(Book book, String label);
+    public void addBook(Book book, String label)
+    {
+    }
 
     /**
      * Add a collection of books to the library.
      *
      * @param books books to add.
      */
-    public void addBooks(Collection<Book> books);
+    public void addBooks(Collection<Book> books)
+    {
+    }
 
     /**
      * Add a collection of books with a given label to the library.
@@ -92,7 +110,9 @@ public interface Library
      * @param books books to add to the library.
      * @param label name of books' label.
      */
-    public void addBooks(Collection<Book> books, String label);
+    public void addBooks(Collection<Book> books, String label)
+    {
+    }
 
     /**
      * Add a new label to the library. Label initially has no
@@ -100,7 +120,9 @@ public interface Library
      *
      * @param label name of the label to add.
      */
-    public void addLabel(String label);
+    public void addLabel(String label)
+    {
+    }
 
     /**
      * Add a label to a book (adds the book to the collection
@@ -111,21 +133,27 @@ public interface Library
      * @throws IllegalArgumentException if given bookName doesn't
      *         exist in the library.
      */
-    public void addLabelToBook(String bookName, String label) throws IllegalArgumentException;
+    public void addLabelToBook(String bookName, String label) throws IllegalArgumentException
+    {
+    }
 
     /**
      * Delete the book with the given name from the library.
      *
      * @param name name of the book to delete.
      */
-    public void deleteBookWithName(String name);
+    public void deleteBookWithName(String name)
+    {
+    }
 
     /**
      * Delete all books with the given label from the library.
      *
      * @param label label of the book to delete.
      */
-    public void deleteBooksWithLabel(String label);
+    public void deleteBooksWithLabel(String label)
+    {
+    }
 
     /**
      * Delete a label. Books marked with the label will be
@@ -133,7 +161,9 @@ public interface Library
      *
      * @param label name of the label to delete.
      */
-    public void deleteLabel(String label);
+    public void deleteLabel(String label)
+    {
+    }
 
     /**
      * Delete label from book.
@@ -141,5 +171,7 @@ public interface Library
      * @param bookName name of book to delete label from.
      * @param label name of label to delete.
      */
-    public void deleteLabelFromBook(String bookName, String label);
+    public void deleteLabelFromBook(String bookName, String label)
+    {
+    }
 }
