@@ -28,16 +28,4 @@ public interface Note
      * @return Page number to which note is attached.
      */
     public int getPageNumber();
-
-    /**
-     * Update the page to which the note is attached. The
-     * method updates both the note object and the book to
-     * which the note is attached.
-     *
-     * @param newPage number of new page.
-     * @throws IllegalArgumentException if the book already has
-     *         a note in given page, or if newPage &gt; number of
-     *         book's pages or &lt; 0.
-     */
-    public void setPageNumber(int newPage) throws IllegalArgumentException;
 }
