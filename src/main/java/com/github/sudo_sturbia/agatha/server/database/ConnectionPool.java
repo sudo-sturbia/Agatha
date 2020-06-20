@@ -12,9 +12,6 @@ import java.util.List;
  */
 public class ConnectionPool implements Connector
 {
-    /** Name of Application's database. */
-    private final String dbName;
-
     /** Username for database server (MySQL). */
     private final String dbServerUsername;
 
@@ -27,13 +24,11 @@ public class ConnectionPool implements Connector
     /**
      * DriverConnector's constructor.
      *
-     * @param dbName name of database.
      * @param dbServerUsername username for database server (MySQL.)
      * @param dbServerPass password for database server (MySQL.)
      */
-    ConnectionPool(String dbName, String dbServerUsername, String dbServerPass)
+    ConnectionPool(String dbServerUsername, String dbServerPass)
     {
-        this.dbName = dbName;
         this.dbServerUsername = dbServerUsername;
         this.dbServerPass = dbServerPass;
         this.pool = new ArrayList<>();
@@ -45,7 +40,7 @@ public class ConnectionPool implements Connector
         final int INITIAL_CAPACITY = 16;
         for (int i = 0; i < INITIAL_CAPACITY; i++)
         {
-            this.pool.add(DriverManager.getConnection("jdbc:mysql://localhost:3306/" + this.dbName,
+            this.pool.add(DriverManager.getConnection("jdbc:mysql://localhost:3306/",
                             this.dbServerUsername, this.dbServerPass));
         }
     }
@@ -59,7 +54,7 @@ public class ConnectionPool implements Connector
         }
 
         return new CustomConnection(
-                DriverManager.getConnection("jdbc:mysql://localhost:3306/" + this.dbName,
+                DriverManager.getConnection("jdbc:mysql://localhost:3306/",
                         this.dbServerUsername, this.dbServerPass)
         );
     }

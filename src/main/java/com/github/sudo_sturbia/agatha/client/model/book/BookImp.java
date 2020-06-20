@@ -96,13 +96,13 @@ public class BookImp implements Book
         switch (state)
         {
             case READ:
-                this.state = new ReadState(this);
+                this.state = new ReadState(this.pages);
                 break;
             case CURRENTLY_READING:
-                this.state = new ReadingState(this, 0);
+                this.state = new ReadingState(this.pages, 0);
                 break;
             case INTERESTED:
-                this.state = new InterestedState(this);
+                this.state = new InterestedState(this.pages);
                 break;
         }
     }
@@ -163,16 +163,23 @@ public class BookImp implements Book
     @Override
     public void addNote(Note note)
     {
+        if (this.notes.get(note.getPageNumber()) != null)
+        {
+            throw new IllegalArgumentException("Page " + note.getPageNumber() + " already has a note.");
+        }
+
         this.notes.put(note.getPageNumber(), note);
     }
 
     @Override
     public void addNote(String noteText, int pageNumber) throws IllegalArgumentException
     {
-        // Create a new note
-        Note note = new NoteImp(this, noteText, pageNumber);
+        if (this.notes.get(pageNumber) != null)
+        {
+            throw new IllegalArgumentException("Page " + pageNumber + " already has a note.");
+        }
 
-        this.notes.put(pageNumber, note);
+        this.notes.put(pageNumber, new NoteImp(this.pages, noteText, pageNumber));
     }
 
     @Override

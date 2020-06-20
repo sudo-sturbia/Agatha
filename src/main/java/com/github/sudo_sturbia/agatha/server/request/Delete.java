@@ -63,29 +63,29 @@ public class Delete implements Request
         {
             return this.deleteClient();
         }
-        else if (this.isDeleteBook())
-        {
-            return this.deleteBook();
-        }
         else if (this.isDeleteAllBooks())
         {
             return this.deleteAllBooks();
         }
-        else if (this.isDeleteLabel())
+        else if (this.isDeleteBook())
         {
-            return this.deleteLabel();
+            return this.deleteBook();
         }
         else if (this.isDeleteAllLabels())
         {
             return this.deleteAllLabels();
         }
-        else if (this.isDeleteNote())
+        else if (this.isDeleteLabel())
         {
-            return this.deleteNote();
+            return this.deleteLabel();
         }
         else if (this.isDeleteAllNotes())
         {
             return this.deleteAllNotes();
+        }
+        else if (this.isDeleteNote())
+        {
+            return this.deleteNote();
         }
 
         return new Gson().toJson(new ExecutionState(1)); // Wrong syntax
@@ -123,7 +123,7 @@ public class Delete implements Request
      */
     private String deleteClient()
     {
-        String[] list = this.request.split("^DELETE\\s+|:");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^DELETE\\s+|:"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 2)) != null ?
@@ -154,7 +154,7 @@ public class Delete implements Request
      */
     private String deleteBook()
     {
-        String[] list = this.request.split("^DELETE\\s+|:|/b/");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^DELETE\\s+|:|/b/"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?
@@ -185,7 +185,7 @@ public class Delete implements Request
      */
     private String deleteAllBooks()
     {
-        String[] list = this.request.split("^DELETE\\s+|:|/b/\\*$");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^DELETE\\s+|:|/b/\\*$"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 2)) != null ?
@@ -216,7 +216,7 @@ public class Delete implements Request
      */
     private String deleteLabel()
     {
-        String[] list = this.request.split("^DELETE\\s+|:|/l/");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^DELETE\\s+|:|/l/"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?
@@ -247,7 +247,7 @@ public class Delete implements Request
      */
     private String deleteAllLabels()
     {
-        String[] list = this.request.split("^DELETE\\s+|:|/l/\\*$");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^DELETE\\s+|:|/l/\\*$"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 2)) != null ?
@@ -278,7 +278,7 @@ public class Delete implements Request
      */
     private String deleteNote()
     {
-        String[] list = this.request.split("^DELETE\\s+|:|/b/|/n/");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^DELETE\\s+|:|/b/|/n/"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 4)) != null ?
@@ -309,7 +309,7 @@ public class Delete implements Request
      */
     private String deleteAllNotes()
     {
-        String[] list = this.request.split("^DELETE\\s+|:|/b/|/n/\\*$");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^DELETE\\s+|:|/b/|/n/\\*$"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?
@@ -330,7 +330,7 @@ public class Delete implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getNames = connection.prepareStatement(
-                        "SELECT bookName FROM " + this.dbName + "." + username + ";"
+                        "SELECT bookName FROM " + this.dbName + "." + Sanitizer.sanitize(username) + ";"
                 );
                 Statement dropTable = connection.createStatement();
         ) {
@@ -340,7 +340,7 @@ public class Delete implements Request
             String dropTableQuery = "DROP TABLE " + dbName + ".";
             while (set.next())
             {
-                dropTable.executeUpdate(dropTableQuery + username + set.getString("bookName") + ";");
+                dropTable.executeUpdate(dropTableQuery + Sanitizer.sanitize(username + set.getString("bookName")) + ";");
             }
 
             // Delete user table
@@ -367,10 +367,10 @@ public class Delete implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteBook = connection.prepareStatement(
-                        "DELETE FROM " + this.dbName + "." + username + " WHERE bookName = ?;"
+                        "DELETE FROM " + this.dbName + "." + Sanitizer.sanitize(username) + " WHERE bookName = ?;"
                 );
                 PreparedStatement dropTable = connection.prepareStatement(
-                        "DROP TABLE " + this.dbName + "." + username + bookName + ";"
+                        "DROP TABLE " + this.dbName + "." + Sanitizer.sanitize(username + bookName) + ";"
                 )
         ) {
             deleteBook.setString(1, bookName);
@@ -398,11 +398,11 @@ public class Delete implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getNames = connection.prepareStatement(
-                        "SELECT bookName FROM " + this.dbName + "." + username + ";"
+                        "SELECT bookName FROM " + this.dbName + "." + Sanitizer.sanitize(username) + ";"
                 );
                 Statement dropTable = connection.createStatement();
                 PreparedStatement deleteBooks = connection.prepareStatement(
-                        "DELETE FROM " + this.dbName + "." + username + ";"
+                        "DELETE FROM " + this.dbName + "." + Sanitizer.sanitize(username) + ";"
                 );
         ) {
             // Delete book's tables
@@ -411,7 +411,7 @@ public class Delete implements Request
             String dropTableQuery = "DROP TABLE " + dbName + ".";
             while (set.next())
             {
-                dropTable.executeUpdate(dropTableQuery + username + set.getString("bookName") + ";");
+                dropTable.executeUpdate(dropTableQuery + Sanitizer.sanitize(username + set.getString("bookName")) + ";");
             }
 
             deleteBooks.executeUpdate();
@@ -437,7 +437,7 @@ public class Delete implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteLabel = connection.prepareStatement(
-                        "ALTER TABLE " + this.dbName + "." + username + " DROP COLUMN " + label + ";"
+                        "ALTER TABLE " + this.dbName + "." + Sanitizer.sanitize(username) + " DROP COLUMN " + label + ";"
                 );
         ) {
             deleteLabel.executeUpdate();
@@ -462,7 +462,7 @@ public class Delete implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getLabels = connection.prepareStatement(
-                        "SELECT * FROM " + this.dbName + "." + username + ";"
+                        "SELECT * FROM " + this.dbName + "." + Sanitizer.sanitize(username) + ";"
                 );
                 Statement deleteLabel = connection.createStatement();
         ) {
@@ -472,7 +472,7 @@ public class Delete implements Request
             // Find label names and delete them
             List<String> columns = new ArrayList<>(Arrays.asList("bookName", "author", "state", "pages", "readPages", "coverPath"));
 
-            String deleteLabelQuery = "ALTER TABLE " + this.dbName + "." + username + " DROP COLUMN ";
+            String deleteLabelQuery = "ALTER TABLE " + this.dbName + "." + Sanitizer.sanitize(username) + " DROP COLUMN ";
             for (int i = 1, count = data.getColumnCount(); i <= count; i++)
             {
                 // If column is a label
@@ -505,7 +505,7 @@ public class Delete implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteNote = connection.prepareStatement(
-                        "DELETE FROM " + this.dbName + "." + username + bookName + " " +
+                        "DELETE FROM " + this.dbName + "." + Sanitizer.sanitize(username + bookName) + " " +
                                 "WHERE page = ?;"
                 );
         ) {
@@ -533,7 +533,7 @@ public class Delete implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteNotes = connection.prepareStatement(
-                        "DELETE FROM " + this.dbName + "." + username + bookName + ";"
+                        "DELETE FROM " + this.dbName + "." + Sanitizer.sanitize(username + bookName) + ";"
                 );
         ) {
             deleteNotes.executeUpdate();

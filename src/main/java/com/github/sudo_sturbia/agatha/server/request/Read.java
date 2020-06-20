@@ -61,13 +61,13 @@ public class Read implements Request
         {
             return this.readUser();
         }
-        else if (this.isReadBook())
-        {
-            return this.readBook();
-        }
         else if (this.isReadBooksNames())
         {
             return this.readBooksNames();
+        }
+        else if (this.isReadBook())
+        {
+            return this.readBook();
         }
         else if (this.isReadBooksWithLabel())
         {
@@ -99,7 +99,7 @@ public class Read implements Request
      */
     private String readUser()
     {
-        String[] list = this.request.split("^READ\\s+|:");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^READ\\s+|:"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 2)) != null ?
@@ -129,7 +129,7 @@ public class Read implements Request
      */
     private String readBook()
     {
-        String[] list = this.request.split("^READ\\s+|:|/b/");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^READ\\s+|:|/b/"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?
@@ -159,7 +159,7 @@ public class Read implements Request
      */
     private String readBooksNames()
     {
-        String[] list = this.request.split("^READ\\s+|:|/b/\\*$");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^READ\\s+|:|/b/\\*$"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 2)) != null ?
@@ -189,7 +189,7 @@ public class Read implements Request
      */
     private String readBooksWithLabel()
     {
-        String[] list = this.request.split("^READ\\s+|:|/b/\\*$");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^READ\\s+|:|/l/"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 3)) != null ?
@@ -209,10 +209,10 @@ public class Read implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getBook = connection.prepareStatement(
-                        "SELECT * FROM " + this.dbName + "." + username + " WHERE bookName = ?;"
+                        "SELECT * FROM " + this.dbName + "." + Sanitizer.sanitize(username) + " WHERE bookName = ?;"
                 );
                 PreparedStatement getNotes = connection.prepareStatement(
-                        "SELECT * FROM " + this.dbName + "." + username + bookName + ";"
+                        "SELECT * FROM " + this.dbName + "." + Sanitizer.sanitize(username + bookName) + ";"
                 );
         ) {
             getBook.setString(1, bookName);
@@ -277,7 +277,7 @@ public class Read implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getNames = connection.prepareStatement(
-                        "SELECT bookName FROM " + this.dbName + "." + username + ";"
+                        "SELECT bookName FROM " + this.dbName + "." + Sanitizer.sanitize(username) + ";"
                 );
         ) {
             List<String> bookNames = new ArrayList<>();
@@ -311,7 +311,7 @@ public class Read implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement getNames = connection.prepareStatement(
-                        "SELECT bookName FROM " + this.dbName + "." + username + " WHERE " + label + " = 1;"
+                        "SELECT bookName FROM " + this.dbName + "." + Sanitizer.sanitize(username) + " WHERE " + label + " = 1;"
                 );
         ) {
             List<String> bookNames = new ArrayList<>();

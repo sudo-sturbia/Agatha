@@ -2,10 +2,14 @@ package com.github.sudo_sturbia.agatha.server.request;
 
 import com.github.sudo_sturbia.agatha.client.model.book.Book;
 import com.github.sudo_sturbia.agatha.client.model.book.BookImp;
+import com.github.sudo_sturbia.agatha.client.model.book.BookState;
+import com.github.sudo_sturbia.agatha.client.model.book.BookStateDeserializer;
 import com.github.sudo_sturbia.agatha.client.model.book.Note;
+import com.github.sudo_sturbia.agatha.client.model.book.NoteDeserializer;
 import com.github.sudo_sturbia.agatha.client.model.book.NoteImp;
 import com.github.sudo_sturbia.agatha.server.database.ConnectorBuilder;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import java.sql.Connection;
@@ -108,7 +112,7 @@ public class Update implements Request
      */
     private String updateBook()
     {
-        String[] list = this.request.split("^UPDATE\\s+|:|/b/|/");
+        String[] list = RequestUtil.splitTwice(this.request, "/b/|/", "^UPDATE\\s+|:");
 
         String state;
         if ((state = RequestUtil.verify(this.dbName, list, 4)) != null)
@@ -117,17 +121,19 @@ public class Update implements Request
         }
 
         Book book;
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().registerTypeAdapter(BookState.class, new BookStateDeserializer())
+                                     .registerTypeAdapter(Note.class, new NoteDeserializer())
+                                     .create();
         try {
             book = gson.fromJson(list[3], BookImp.class);
         }
         catch (JsonSyntaxException e) {
-            return gson.toJson(new ExecutionState(3)); // JSON can't be unmarshalled
+            return new Gson().toJson(new ExecutionState(3)); // JSON can't be unmarshalled
         }
 
         return !this.updateBook(book, list[0], list[2]) ?
-                gson.toJson(new ExecutionState(3)) : // Operation failed
-                gson.toJson(new ExecutionState(0));  // Successful
+                new Gson().toJson(new ExecutionState(3)) : // Operation failed
+                new Gson().toJson(new ExecutionState(0));  // Successful
     }
 
     /**
@@ -151,7 +157,7 @@ public class Update implements Request
      */
     private String updateBooksField()
     {
-        String[] list = this.request.split("^UPDATE\\s+|:|/b/|/|=");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^UPDATE\\s+|:|/b/|/|="));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 5)) != null ?
@@ -182,7 +188,8 @@ public class Update implements Request
      */
     private String updateNote()
     {
-        String[] list = this.request.split("^UPDATE\\s+|:|/b/|/n/|/");
+        String[] list = RequestUtil.splitTwice(this.request, "/b/|/n/|/", "^UPDATE\\s+|:");
+
 
         String state;
         if ((state = RequestUtil.verify(this.dbName, list, 5)) != null)
@@ -225,7 +232,7 @@ public class Update implements Request
      */
     private String updateNotesField()
     {
-        String[] list = this.request.split("^UPDATE\\s+|:|/b/|/n/|/|=");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^UPDATE\\s+|:|/b/|/n/|/|="));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 6)) != null ?
@@ -257,7 +264,7 @@ public class Update implements Request
      */
     private String addLabelToBook()
     {
-        String[] list = this.request.split("^UPDATE\\s+|:|/l/|/add/b/");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^UPDATE\\s+|:|/l/|/add/b/"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 4)) != null ?
@@ -288,7 +295,7 @@ public class Update implements Request
      */
     private String removeLabelFromBook()
     {
-        String[] list = this.request.split("^UPDATE\\s+|:|/l/|/remove/b/");
+        String[] list = RequestUtil.removeEmpty(this.request.split("^UPDATE\\s+|:|/l/|/remove/b/"));
 
         String state;
         return (state = RequestUtil.verify(this.dbName, list, 4)) != null ?
@@ -312,7 +319,7 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement updateBook = connection.prepareStatement(
-                        "UPDATE " + this.dbName + "." + username + " " +
+                        "UPDATE " + this.dbName + "." + Sanitizer.sanitize(username) + " " +
                                 "SET " +
                                 "bookName = ?, " +
                                 "author = ?, " +
@@ -331,6 +338,8 @@ public class Update implements Request
             updateBook.setInt(5, book.getNumberOfReadPages());
             updateBook.setString(6, book.getCoverImagePath());
             updateBook.setBoolean(7, book.getNotes().size() > 0);
+
+            updateBook.setString(8, bookName);
 
             updateBook.executeUpdate();
 
@@ -361,10 +370,10 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement deleteOld = connection.prepareStatement(
-                        "DELETE FROM " + this.dbName + "." + username + bookName + ";"
+                        "DELETE FROM " + this.dbName + "." + Sanitizer.sanitize(username + bookName) + ";"
                 );
                 PreparedStatement insertNotes = connection.prepareStatement(
-                        "INSERT INTO " + this.dbName + "." + username + bookName + " " +
+                        "INSERT INTO " + this.dbName + "." + Sanitizer.sanitize(username + bookName) + " " +
                                 "VALUES (?, ?);"
                 );
         ) {
@@ -413,7 +422,7 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement updateBook = connection.prepareStatement(
-                        "UPDATE " + this.dbName + "." + username + " " +
+                        "UPDATE " + this.dbName + "." + Sanitizer.sanitize(username) + " " +
                                 "SET " +
                                 fieldName + " = " + fieldValue + " " +
                                 "WHERE bookName = ?;"
@@ -446,7 +455,7 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement updateNote = connection.prepareStatement(
-                        "UPDATE " + this.dbName + "." + username + bookName + " " +
+                        "UPDATE " + this.dbName + "." + Sanitizer.sanitize(username + bookName) + " " +
                                 "SET " +
                                 "note = ?," +
                                 "page = ? " +
@@ -495,7 +504,7 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement updateNote = connection.prepareStatement(
-                        "UPDATE " + this.dbName + "." + username + bookName + " " +
+                        "UPDATE " + this.dbName + "." + Sanitizer.sanitize(username + bookName) + " " +
                                 "SET " +
                                 fieldName + " = " + fieldValue + " " +
                                 "WHERE page = ?;"
@@ -527,7 +536,7 @@ public class Update implements Request
         try (
                 Connection connection = ConnectorBuilder.connector().connection();
                 PreparedStatement addLabel = connection.prepareStatement(
-                        "UPDATE " + this.dbName + "." + username + " " +
+                        "UPDATE " + this.dbName + "." + Sanitizer.sanitize(username) + " " +
                                 "SET " +
                                 label + " = ? " +
                                 "WHERE bookName = ?;"

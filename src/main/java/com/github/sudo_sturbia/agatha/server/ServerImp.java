@@ -32,7 +32,7 @@ public class ServerImp implements Server
     @Override
     public void run() throws ServerSetupException
     {
-        ServerSetupManager.setup(this.dbName);
+        ServerSetupManager.setup(this.dbName, true);
 
         try (ServerSocket serverSocket = new ServerSocket(this.port))
         {

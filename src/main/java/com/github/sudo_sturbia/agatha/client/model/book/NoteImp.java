@@ -9,19 +9,16 @@ package com.github.sudo_sturbia.agatha.client.model.book;
  */
 public class NoteImp implements Note
 {
-    /** Containing book. */
-    private final Book book;
-
     /** Text note. */
     private String note;
 
     /** Page to which the note is attached. */
-    private int pageNumber;
+    private final int pageNumber;
 
     /**
-     * NodeImp's constructor.
+     * NoteImp's constructor.
      *
-     * @param book the book containing the note.
+     * @param pages number of book's pages.
      * @param note text note.
      * @param pageNumber the number of the page to which the
      *                   note is attached.
@@ -29,27 +26,21 @@ public class NoteImp implements Note
      *         or page number is &gt; number of book's pages or &lt; 0
      *         or if page already contains a note.
      */
-    public NoteImp(Book book, String note, int pageNumber) throws IllegalArgumentException
+    public NoteImp(int pages, String note, int pageNumber) throws IllegalArgumentException
     {
-        if (book == null)
+        if (pages < 0)
         {
-            throw new IllegalArgumentException("No book is given.");
+            throw new IllegalArgumentException("Invalid number of pages.");
         }
         else if (note == null)
         {
             throw new IllegalArgumentException("No note is given.");
         }
-        else if (pageNumber < 0 || pageNumber > book.getNumberOfPages())
+        else if (pageNumber < 0 || pageNumber > pages)
         {
             throw new IllegalArgumentException("Invalid number of read pages.");
         }
-        else if (book.getNoteAtPage(pageNumber) != null)
-        {
-            throw new IllegalArgumentException("Page " + pageNumber +
-                    " already contains a note.");
-        }
 
-        this.book = book;
         this.note = note;
         this.pageNumber = pageNumber;
     }
@@ -72,26 +63,8 @@ public class NoteImp implements Note
     }
 
     @Override
-    public int getPageNumber() {
-        return this.pageNumber;
-    }
-
-    @Override
-    public void setPageNumber(int newPage) throws IllegalArgumentException
+    public int getPageNumber()
     {
-        if (pageNumber < 0 || pageNumber > book.getNumberOfPages())
-        {
-            throw new IllegalArgumentException("Invalid number of read pages.");
-        }
-        else if (this.book.getNoteAtPage(newPage) != null)
-        {
-            throw new IllegalArgumentException("Book already has a note at given page.");
-        }
-
-        // Update both note and book
-        this.book.removeNoteAtPage(this.pageNumber);
-
-        this.pageNumber = newPage;
-        this.book.addNote(this);
+        return this.pageNumber;
     }
 }
