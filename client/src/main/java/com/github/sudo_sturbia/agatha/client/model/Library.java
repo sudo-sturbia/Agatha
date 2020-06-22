@@ -1,7 +1,12 @@
 package com.github.sudo_sturbia.agatha.client.model;
 
 import com.github.sudo_sturbia.agatha.core.Book;
+import com.github.sudo_sturbia.agatha.core.BookImp;
+import com.github.sudo_sturbia.agatha.core.ExecutionState;
+import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,12 +28,40 @@ import java.util.List;
  * Library arranges books according to labels. A label is simple
  * string created by the user to describe a group of books. A Book
  * can have any number of labels.
- * <p>
- * Each Library must have at least three labels representing Book's
- * three states. States are the only mutually exclusive labels.
  */
 public class Library
 {
+    /** Library's Communicator. */
+    private final Communicator communicator;
+
+    /** Private constructor. */
+    private Library(Communicator communicator)
+    {
+        this.communicator = communicator;
+    }
+
+    /**
+     * Get user's library. Verifies given username and password, and
+     * returns a library representing the client if credentials are
+     * correct.
+     *
+     * @param username client's username.
+     * @param password client's password.
+     * @return Client's library if credentials are correct, null otherwise.
+     */
+    public static Library getLibrary(String username, String password, int port, String host)
+    {
+        Communicator communicator = new Communicator(username, password, port, host);
+        ExecutionState state = communicator.request(ExecutionState.class, Communicator.FUNCTION.READ, "");
+
+        if (state.getCode() == 0)
+        {
+            return new Library(communicator);
+        }
+
+        return null;
+    }
+
     /**
      * Get username of the client who owns the library.
      *
@@ -36,7 +69,7 @@ public class Library
      */
     public String getUsername()
     {
-        return null;
+        return this.communicator.getUsername();
     }
 
     /**
@@ -46,7 +79,8 @@ public class Library
      */
     public List<String> getNamesOfBooks()
     {
-        return null;
+        return new ArrayList<>(Arrays.asList(
+                this.communicator.request(String[].class, Communicator.FUNCTION.READ, "/b/*")));
     }
 
     /**
@@ -57,7 +91,8 @@ public class Library
      */
     public List<String> getNamesOfBooksWithLabel(String label)
     {
-        return null;
+        return new ArrayList<>(Arrays.asList(
+                this.communicator.request(String[].class, Communicator.FUNCTION.READ, String.format("/l/%s", label))));
     }
 
     /**
@@ -69,16 +104,29 @@ public class Library
      */
     public Book getBookWithName(String name)
     {
-        return null;
+        return this.communicator.request(BookImp.class, Communicator.FUNCTION.READ, String.format("/b/%s", name));
+    }
+
+    /**
+     * Update a book that already exists in the library.
+     *
+     * @param book book to update.
+     * @return execution state.
+     */
+    public ExecutionState updateBook(Book book)
+    {
+        return this.communicator.request(ExecutionState.class, Communicator.FUNCTION.UPDATE, String.format("/b/%s/%s", book.getName(), new Gson().toJson(book)));
     }
 
     /**
      * Add a book to the collection.
      *
      * @param book book to add.
+     * @return Execution state.
      */
-    public void addBook(Book book)
+    public ExecutionState addBook(Book book)
     {
+        return this.communicator.request(ExecutionState.class, Communicator.FUNCTION.CREATE, String.format("/b/%s", new Gson().toJson(book)));
     }
 
     /**
@@ -88,9 +136,19 @@ public class Library
      *
      * @param book book to add.
      * @param label name of book's label.
+     * @return Execution state.
      */
-    public void addBook(Book book, String label)
+    public ExecutionState addBook(Book book, String label)
     {
+        this.addLabel(label);
+
+        ExecutionState state = this.addBook(book);
+        if (state == null || state.getCode() != 0) // Something wrong with the book
+        {
+            return state;
+        }
+
+        return this.communicator.request(ExecutionState.class, Communicator.FUNCTION.UPDATE, String.format("/l/%s/add/b/%s", label, book.getName()));
     }
 
     /**
@@ -100,6 +158,10 @@ public class Library
      */
     public void addBooks(Collection<Book> books)
     {
+        for (Book book : books)
+        {
+            this.addBook(book);
+        }
     }
 
     /**
@@ -112,6 +174,13 @@ public class Library
      */
     public void addBooks(Collection<Book> books, String label)
     {
+        this.addLabel(label);
+
+        for (Book book : books)
+        {
+            this.addBook(book);
+            this.communicator.request(ExecutionState.class, Communicator.FUNCTION.UPDATE, String.format("/l/%s/add/b/%s", label, book.getName()));
+        }
     }
 
     /**
@@ -119,9 +188,11 @@ public class Library
      * books, but books can be added later.
      *
      * @param label name of the label to add.
+     * @return execution state.
      */
-    public void addLabel(String label)
+    public ExecutionState addLabel(String label)
     {
+        return this.communicator.request(ExecutionState.class, Communicator.FUNCTION.CREATE, String.format("/l/%s", label));
     }
 
     /**
@@ -130,20 +201,24 @@ public class Library
      *
      * @param bookName name of the book to add the label to.
      * @param label name of the label to add to the book.
+     * @return execution state.
      * @throws IllegalArgumentException if given bookName doesn't
      *         exist in the library.
      */
-    public void addLabelToBook(String bookName, String label) throws IllegalArgumentException
+    public ExecutionState addLabelToBook(String bookName, String label) throws IllegalArgumentException
     {
+        return this.communicator.request(ExecutionState.class, Communicator.FUNCTION.UPDATE, String.format("/l/%s/add/b/%s", label, bookName));
     }
 
     /**
      * Delete the book with the given name from the library.
      *
      * @param name name of the book to delete.
+     * @return execution state.
      */
-    public void deleteBookWithName(String name)
+    public ExecutionState deleteBookWithName(String name)
     {
+        return this.communicator.request(ExecutionState.class, Communicator.FUNCTION.DELETE, String.format("/b/%s", name));
     }
 
     /**
@@ -153,6 +228,11 @@ public class Library
      */
     public void deleteBooksWithLabel(String label)
     {
+        List<String> books = this.getNamesOfBooksWithLabel(label);
+        for (String book : books)
+        {
+            this.deleteBookWithName(book);
+        }
     }
 
     /**
@@ -160,9 +240,11 @@ public class Library
      * unaffected.
      *
      * @param label name of the label to delete.
+     * @return execution state.
      */
-    public void deleteLabel(String label)
+    public ExecutionState deleteLabel(String label)
     {
+        return this.communicator.request(ExecutionState.class, Communicator.FUNCTION.DELETE, String.format("/l/%s", label));
     }
 
     /**
@@ -170,8 +252,10 @@ public class Library
      *
      * @param bookName name of book to delete label from.
      * @param label name of label to delete.
+     * @return execution state.
      */
-    public void deleteLabelFromBook(String bookName, String label)
+    public ExecutionState deleteLabelFromBook(String bookName, String label)
     {
+        return this.communicator.request(ExecutionState.class, Communicator.FUNCTION.UPDATE, String.format("/l/%s/remove/b/%s", label, bookName));
     }
 }
