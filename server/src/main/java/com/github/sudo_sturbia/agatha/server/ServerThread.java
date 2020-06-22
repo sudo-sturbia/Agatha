@@ -37,11 +37,15 @@ public class ServerThread extends Thread
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         ) {
-            // Read request from socket, and handle it using Protocol
-            String response = Protocol.handle(in.readLine(), this.dbName);
+            String inputLine;
+            while ((inputLine = in.readLine()) != null && !inputLine.isEmpty())
+            {
+                // Handle the request using Protocol
+                String response = Protocol.handle(inputLine, this.dbName);
 
-            // Send response to client
-            out.println(response);
+                // Send response to client
+                out.println(response);
+            }
 
             socket.close();
         }
