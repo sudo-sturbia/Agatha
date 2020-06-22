@@ -1,6 +1,11 @@
 package com.github.sudo_sturbia.agatha.client.model;
 
+import com.github.sudo_sturbia.agatha.core.BookState;
+import com.github.sudo_sturbia.agatha.core.BookStateDeserializer;
+import com.github.sudo_sturbia.agatha.core.Note;
+import com.github.sudo_sturbia.agatha.core.NoteDeserializer;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -48,6 +53,16 @@ public class Communicator
     }
 
     /**
+     * Get client's username.
+     *
+     * @return Client's username, given by the library.
+     */
+    public String getUsername()
+    {
+        return this.username;
+    }
+
+    /**
      * Uses given parameters to construct a request of the form
      * <pre>
      *     function username:password/object
@@ -65,6 +80,10 @@ public class Communicator
      */
     public <T> T request(Class<? extends T> type, FUNCTION function, String object) throws IllegalArgumentException
     {
+        Gson gson = new GsonBuilder().registerTypeAdapter(BookState.class, new BookStateDeserializer())
+                                     .registerTypeAdapter(Note.class, new NoteDeserializer())
+                                     .create();
+
         String request = this.requestStr(function, object);
         String response = null;
         try (
@@ -80,7 +99,7 @@ public class Communicator
             System.err.println(e.getMessage());
         }
 
-        return response != null ? new Gson().fromJson(response, type) : null;
+        return response != null ? gson.fromJson(response, type) : null;
     }
 
     /**
