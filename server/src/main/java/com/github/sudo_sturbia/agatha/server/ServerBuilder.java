@@ -70,35 +70,14 @@ public class ServerBuilder
      */
     public Server build()
     {
-        // Validate values
-        if (this.dbName == null || this.dbName.isEmpty())
-        {
-            this.dbName = "Agatha";
-        }
+        // Validate given values, Use defaults if not valid
+        this.dbName = this.dbName == null || this.dbName.isEmpty() ? "Agatha" : this.dbName;
+        this.port = this.port < 0 ? 54321 : this.port;
+        this.dbServerUsername = this.dbServerUsername == null || this.dbServerUsername.isEmpty() ? "root" : this.dbServerUsername;
+        this.dbServerPass = this.dbServerPass == null ? "" : this.dbServerPass;
+        this.connector = this.connector == null ? ConnectorBuilder.ConnectorType.POOL : this.connector;
 
-        if (this.port < 0)
-        {
-            this.port = 54321;
-        }
-
-        if (this.dbServerUsername == null || this.dbServerUsername.isEmpty())
-        {
-            this.dbServerUsername = "root";
-        }
-
-        if (this.dbServerPass == null)
-        {
-            this.dbServerPass = "";
-        }
-
-        if (this.connector == null)
-        {
-            this.connector = ConnectorBuilder.ConnectorType.POOL;
-        }
-
-        // Setup connector
         ConnectorBuilder.setup(this.connector, this.dbServerUsername, this.dbServerPass);
-
         return new ServerImp(this.dbName, this.port);
     }
 

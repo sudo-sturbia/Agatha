@@ -47,15 +47,9 @@ public class ConnectorBuilder
             throw new IllegalArgumentException("Database server password is not given.");
         }
 
-        switch (type)
-        {
-            case POOL:
-                connector = new ConnectionPool(dbServerUsername, dbServerPass);
-                break;
-            case NORMAL:
-                connector = new DriverConnector(dbServerUsername, dbServerPass);
-                break;
-        }
+        connector = type == ConnectorType.POOL ?
+                new ConnectionPool(dbServerUsername, dbServerPass) :
+                new DriverConnector(dbServerUsername, dbServerPass);
     }
 
     /**
