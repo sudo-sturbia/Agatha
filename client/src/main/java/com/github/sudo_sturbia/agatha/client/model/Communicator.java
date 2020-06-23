@@ -2,10 +2,12 @@ package com.github.sudo_sturbia.agatha.client.model;
 
 import com.github.sudo_sturbia.agatha.core.BookState;
 import com.github.sudo_sturbia.agatha.core.BookStateDeserializer;
+import com.github.sudo_sturbia.agatha.core.ExecutionState;
 import com.github.sudo_sturbia.agatha.core.Note;
 import com.github.sudo_sturbia.agatha.core.NoteDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -60,6 +62,36 @@ public class Communicator
     public String getUsername()
     {
         return this.username;
+    }
+
+    /**
+     * Verifies that a server is running at the specified host on the
+     * specified port. Sends an incorrect request and verifies that
+     * response is an ExecutionState object with the correct error code.
+     *
+     * @return True if the server is running at the specified port,
+     *         False otherwise.
+     */
+    public boolean isServerRunning()
+    {
+        try (
+                Socket socket = new Socket(this.host, this.port);
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        ) {
+            out.println("Gibberish."); // Send request
+            String response = in.readLine();
+            if (new Gson().fromJson(response, ExecutionState.class).getCode() == 1)
+            {
+                return true;
+            }
+        }
+        catch (IOException | JsonParseException e)
+        {
+            // Request failed ..
+        }
+
+        return false;
     }
 
     /**

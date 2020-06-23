@@ -52,11 +52,15 @@ public class Library
     public static Library getLibrary(String username, String password, int port, String host)
     {
         Communicator communicator = new Communicator(username, password, port, host);
-        ExecutionState state = communicator.request(ExecutionState.class, Communicator.FUNCTION.READ, "");
 
-        if (state.getCode() == 0)
+        // Verify that server is running
+        if (communicator.isServerRunning())
         {
-            return new Library(communicator);
+            ExecutionState state = communicator.request(ExecutionState.class, Communicator.FUNCTION.READ, "");
+            if (state.getCode() == 0)
+            {
+                return new Library(communicator);
+            }
         }
 
         return null;
@@ -111,7 +115,7 @@ public class Library
      * Update a book that already exists in the library.
      *
      * @param book book to update.
-     * @return execution state.
+     * @return Execution state.
      */
     public ExecutionState updateBook(Book book)
     {
@@ -188,7 +192,7 @@ public class Library
      * books, but books can be added later.
      *
      * @param label name of the label to add.
-     * @return execution state.
+     * @return Execution state.
      */
     public ExecutionState addLabel(String label)
     {
@@ -201,7 +205,7 @@ public class Library
      *
      * @param bookName name of the book to add the label to.
      * @param label name of the label to add to the book.
-     * @return execution state.
+     * @return Execution state.
      * @throws IllegalArgumentException if given bookName doesn't
      *         exist in the library.
      */
@@ -214,7 +218,7 @@ public class Library
      * Delete the book with the given name from the library.
      *
      * @param name name of the book to delete.
-     * @return execution state.
+     * @return Execution state.
      */
     public ExecutionState deleteBookWithName(String name)
     {
@@ -240,7 +244,7 @@ public class Library
      * unaffected.
      *
      * @param label name of the label to delete.
-     * @return execution state.
+     * @return Execution state.
      */
     public ExecutionState deleteLabel(String label)
     {
@@ -252,7 +256,7 @@ public class Library
      *
      * @param bookName name of book to delete label from.
      * @param label name of label to delete.
-     * @return execution state.
+     * @return Execution state.
      */
     public ExecutionState deleteLabelFromBook(String bookName, String label)
     {
