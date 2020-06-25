@@ -6,6 +6,7 @@
 
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
+
 <GridPane prefHeight="750" prefWidth="1000"
           xmlns="http://javafx.com/javafx/10.0.2-internal"
           xmlns:fx="http://javafx.com/fxml/1"
@@ -65,6 +66,7 @@
 
             <Label id="books-title" text="Books List" GridPane.rowIndex="0"/>
 
+            <!-- Books' list. -->
             <StackPane GridPane.rowIndex="1">
                 <ScrollPane fitToWidth="true" fitToHeight="true">
                     <VBox fx:id="booksList" id="book-scroll-pane" spacing="5">
@@ -74,11 +76,113 @@
         </GridPane>
 
         <!-- Main panel. -->
-        <TabPane fx:id="appTabs" id="main-panel" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2">
-            <Tab closable="false" text="New Book">
+        <TabPane fx:id="appTabs" id="main-panel"
+                 GridPane.columnIndex="1" GridPane.rowIndex="0"
+                 GridPane.rowSpan="2">
 
+            <!-- Search tab. -->
+            <Tab closable="false" text="Search">
             </Tab>
-            <Tab closable="false" text="Labels">
+
+            <!-- New book tab. -->
+            <Tab closable="false" text="New Book">
+                <GridPane vgap="15" hgap="10" alignment="TOP_CENTER">
+                    <padding><Insets topRightBottomLeft="40"/></padding>
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="40"/>
+                        <ColumnConstraints percentWidth="10"/>
+                        <ColumnConstraints percentWidth="10"/>
+                        <ColumnConstraints percentWidth="10"/>
+                        <ColumnConstraints percentWidth="10"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints percentHeight="5"/>
+                        <RowConstraints percentHeight="5"/>
+                        <RowConstraints percentHeight="5"/>
+                        <RowConstraints percentHeight="5"/>
+                        <RowConstraints percentHeight="5"/>
+                        <RowConstraints percentHeight="5"/>
+                    </rowConstraints>
+
+                    <!-- Name field. -->
+                    <GridPane GridPane.rowIndex="0" GridPane.columnIndex="0"
+                              alignment="CENTER" vgap="10" hgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/><ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints percentHeight="100"/>
+                        </rowConstraints>
+
+                        <Label id="input-text" GridPane.rowIndex="0" GridPane.columnIndex="0" text="Name"/>
+                        <TextField fx:id="newBookName" id="input-box" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    </GridPane>
+
+                    <!-- Author field. -->
+                    <GridPane GridPane.rowIndex="1" GridPane.columnIndex="0"
+                              alignment="CENTER" vgap="10" hgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/><ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints percentHeight="100"/>
+                        </rowConstraints>
+
+                        <Label id="input-text" GridPane.rowIndex="0" GridPane.columnIndex="0" text="Author"/>
+                        <TextField fx:id="newBookAuthor" id="input-box" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    </GridPane>
+
+                    <!-- Number of pages field. -->
+                    <GridPane GridPane.rowIndex="2" GridPane.columnIndex="0"
+                              alignment="CENTER" vgap="10" hgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/><ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints percentHeight="100"/>
+                        </rowConstraints>
+
+                        <Label id="input-text" GridPane.rowIndex="0" GridPane.columnIndex="0" text="Number of Pages"/>
+                        <TextField fx:id="newBookPages" id="input-box" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    </GridPane>
+
+                    <!-- State field. -->
+                    <GridPane GridPane.rowIndex="3" GridPane.columnIndex="0"
+                              alignment="CENTER" vgap="10" hgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/><ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints percentHeight="100"/>
+                        </rowConstraints>
+
+                        <Label id="input-text" GridPane.rowIndex="0" GridPane.columnIndex="0" text="State"/>
+                        <ChoiceBox fx:id="newBookState" id="input-box" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                                   value="Interested" maxWidth="Infinity">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Interested"/>
+                                    <String fx:value="Currently Reading"/>
+                                    <String fx:value="Read"/>
+                                </FXCollections>
+                            </items>
+                        </ChoiceBox>
+                    </GridPane>
+
+                    <!-- Path to cover image. -->
+                    <Button fx:id="coverPathButton" id="input-box"
+                            GridPane.rowIndex="0" GridPane.columnIndex="2" GridPane.columnSpan="2"
+                            text="Choose Cover" maxWidth="Infinity"/>
+                    <ScrollPane fx:id="coverScrollPane" id="input-pane"
+                                GridPane.rowIndex="1" GridPane.columnIndex="2"
+                                GridPane.rowSpan="3" GridPane.columnSpan="2">
+                    </ScrollPane>
+
+                    <!-- Add new book button. -->
+                    <Button fx:id="newBookButton" id="input-box"
+                            GridPane.rowIndex="5" GridPane.columnIndex="1" GridPane.columnSpan="2"
+                            text="Add" maxWidth="Infinity"/>
+                </GridPane>
             </Tab>
         </TabPane>
     </GridPane>

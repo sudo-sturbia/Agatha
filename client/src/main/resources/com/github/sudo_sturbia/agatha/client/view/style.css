@@ -64,6 +64,12 @@
 
 #input-box {
     -fx-background-color: #fafafa;
+    -fx-background-radius: 5;
+}
+
+#input-pane {
+    -fx-background-color: #d6e6f2;
+    -fx-background-radius: 5;
 }
 
 #static-panel {
