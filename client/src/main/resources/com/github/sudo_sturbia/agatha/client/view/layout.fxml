@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<GridPane prefHeight="750" prefWidth="1000"
+          xmlns="http://javafx.com/javafx/10.0.2-internal"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="com.github.sudo_sturbia.agatha.client.controller.Controller">
+
+    <!-- Row and Column constraints. -->
+    <columnConstraints>
+        <ColumnConstraints percentWidth="100"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="96.0"/><RowConstraints percentHeight="4.0"/>
+    </rowConstraints>
+
+    <!-- Layout panes. -->
+    <!-- Title panel. -->
+    <GridPane id="static-panel" GridPane.rowIndex="1">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="15"/>
+            <ColumnConstraints percentWidth="85"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints percentHeight="100"/>
+        </rowConstraints>
+
+        <StackPane GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <Label id="title" text="Agatha"/>
+        </StackPane>
+        <Label id="description" GridPane.columnIndex="1" text="github.com/sudo-sturbia/Agatha"/>
+    </GridPane>
+
+    <!-- Main display. -->
+    <GridPane id="dynamic-panel" GridPane.rowIndex="0" vgap="10" hgap="10">
+        <!-- Padding and Constraints. -->
+        <padding><Insets topRightBottomLeft="10"/></padding>
+        <columnConstraints>
+            <ColumnConstraints percentWidth="25.0"/><ColumnConstraints percentWidth="75.0"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints percentHeight="25.0"/><RowConstraints percentHeight="75.0"/>
+        </rowConstraints>
+
+        <!-- User menu. -->
+        <StackPane id="user-menu" GridPane.columnIndex="0" GridPane.rowIndex="0">
+        </StackPane>
+
+        <!-- Books menu. -->
+        <GridPane id="books-menu" GridPane.columnIndex="0" GridPane.rowIndex="1" vgap="10">
+            <!-- Padding and Constraints. -->
+            <padding><Insets top="10" left="10"/></padding>
+            <columnConstraints>
+                <ColumnConstraints percentWidth="100"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="6"/>
+                <RowConstraints percentHeight="94"/>
+            </rowConstraints>
+
+            <Label id="books-title" text="Books List" GridPane.rowIndex="0"/>
+
+            <StackPane GridPane.rowIndex="1">
+                <ScrollPane fitToWidth="true" fitToHeight="true">
+                    <VBox fx:id="booksList" id="book-scroll-pane" spacing="5">
+                    </VBox>
+                </ScrollPane>
+            </StackPane>
+        </GridPane>
+
+        <!-- Main panel. -->
+        <TabPane fx:id="appTabs" id="main-panel" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2">
+            <Tab closable="false" text="New Book">
+
+            </Tab>
+            <Tab closable="false" text="Labels">
+            </Tab>
+        </TabPane>
+    </GridPane>
+</GridPane>
