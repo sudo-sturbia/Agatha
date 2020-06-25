@@ -1,5 +1,31 @@
 package com.github.sudo_sturbia.agatha.client.view;
 
-public class View
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
+
+public class View extends Application
 {
+    public static void main(String[] args)
+    {
+        View.launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception
+    {
+        Parent root = FXMLLoader.load(View.class.getResource("layout.fxml"));
+        Font.loadFont(View.class.getResource("fonts/Lato-Regular.ttf").toExternalForm(), 10);
+        Font.loadFont(View.class.getResource("fonts/AbrilFatface-Regular.ttf").toExternalForm(), 10);
+
+        Scene scene = new Scene(root, 1000, 750);
+        scene.getStylesheets().add(View.class.getResource("style.css").toExternalForm());
+
+        primaryStage.setTitle("Agatha");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
 }

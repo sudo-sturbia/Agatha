@@ -32,5 +32,5 @@ javafx {
 }
 
 application {
-    mainClassName = ''
+    mainClassName = 'com.github.sudo_sturbia.agatha.client.view.Main'
 }
