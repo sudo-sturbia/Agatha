@@ -82,6 +82,22 @@
 
             <!-- Search tab. -->
             <Tab closable="false" text="Search">
+                <GridPane alignment="TOP_CENTER">
+                    <padding><Insets topRightBottomLeft="40"/></padding>
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="20"/>
+                        <ColumnConstraints percentWidth="60"/>
+                        <ColumnConstraints percentWidth="20"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints percentHeight="5"/>
+                    </rowConstraints>
+
+                    <TextField fx:id="searchField" id="search-box"
+                               GridPane.rowIndex="0" GridPane.columnIndex="1"
+                               maxWidth="Infinity" alignment="CENTER"
+                               text="search for a label or a book"/>
+                </GridPane>
             </Tab>
 
             <!-- New book tab. -->
