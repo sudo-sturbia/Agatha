@@ -246,6 +246,8 @@ public class Read implements Request
                                        .coverPath(set.getString("coverPath"))
                                        .build();
 
+                book.setNumberOfReadPages(set.getInt("readPages"));
+
                 // Load user's notes
                 if (set.getBoolean("hasNotes"))
                 {
