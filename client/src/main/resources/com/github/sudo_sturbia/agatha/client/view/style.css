@@ -57,9 +57,13 @@
     -fx-background-color: #d6e6f2;
 }
 
-#search-box, #input-box {
+#search-box, #input-box, #info-box {
     -fx-background-color: #fafafa;
     -fx-background-radius: 5;
+}
+
+#info-button {
+    -fx-background-color: #d6e6f2;
 }
 
 #input-text {
