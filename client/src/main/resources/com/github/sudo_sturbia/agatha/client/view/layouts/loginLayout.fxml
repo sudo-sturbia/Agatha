@@ -5,8 +5,12 @@
 
 <?import javafx.geometry.Insets?>
 
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+
 <!-- Login page. -->
 <GridPane id="login-panel"
+          fx:id="loginPane"
           GridPane.rowIndex="0"
           vgap="10"
           hgap="10"
@@ -14,24 +18,43 @@
           xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.github.sudo_sturbia.agatha.client.controller.LoginController">
+
     <columnConstraints>
         <ColumnConstraints percentWidth="35"/>
         <ColumnConstraints percentWidth="7.5"/>
         <ColumnConstraints percentWidth="15"/>
         <ColumnConstraints percentWidth="7.5"/>
-        <ColumnConstraints percentWidth="35"/>
+        <ColumnConstraints percentWidth="15"/>
+        <ColumnConstraints percentWidth="20"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints percentHeight="45"/>
+        <RowConstraints percentHeight="5"/>
+        <RowConstraints percentHeight="5"/>
+        <RowConstraints percentHeight="35"/>
         <RowConstraints percentHeight="5"/>
         <RowConstraints percentHeight="5"/>
         <RowConstraints percentHeight="5"/>
         <RowConstraints percentHeight="40"/>
     </rowConstraints>
 
+    <!-- Login or sign up. -->
+    <ChoiceBox fx:id="loginOrSignUp"
+               id="login-sign-choice"
+               GridPane.rowIndex="1"
+               GridPane.columnIndex="4"
+               value="Login"
+               maxWidth="Infinity">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="Login"/>
+                <String fx:value="Sign Up"/>
+            </FXCollections>
+        </items>
+    </ChoiceBox>
+
     <!-- Username box. -->
     <GridPane id="login-box"
-              GridPane.rowIndex="1"
+              GridPane.rowIndex="3"
               GridPane.columnIndex="1"
               GridPane.columnSpan="3"
               alignment="CENTER">
@@ -60,7 +83,7 @@
 
     <!-- Password box. -->
     <GridPane id="login-box"
-              GridPane.rowIndex="2"
+              GridPane.rowIndex="4"
               GridPane.columnIndex="1"
               GridPane.columnSpan="3"
               alignment="CENTER">
@@ -90,9 +113,9 @@
     <!-- Login button -->
     <Button fx:id="loginButton"
             onAction="#login"
-            GridPane.rowIndex="3"
+            GridPane.rowIndex="5"
             GridPane.columnIndex="2"
             maxWidth="Infinity"
             alignment="CENTER"
-            text="login"/>
+            text="start"/>
 </GridPane>
