@@ -285,7 +285,6 @@
 
                 <!-- Add new book button. -->
                 <Button fx:id="newBookButton"
-                        id="input-box"
                         GridPane.rowIndex="5"
                         GridPane.columnIndex="1"
                         GridPane.columnSpan="2"

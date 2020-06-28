@@ -88,8 +88,7 @@
     </GridPane>
 
     <!-- Login button -->
-    <Button id="login-box"
-            fx:id="loginButton"
+    <Button fx:id="loginButton"
             onAction="#login"
             GridPane.rowIndex="3"
             GridPane.columnIndex="2"

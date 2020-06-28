@@ -44,6 +44,16 @@
     -fx-background-color: #ff7f50;
 }
 
+.button {
+    -fx-text-fill: #404969;
+    -fx-background-color: #fafafa;
+}
+
+.button:pressed {
+    -fx-text-fill: #fafafa;
+    -fx-background-color: #404969;
+}
+
 #dynamic-panel {
     -fx-background-color: #fafafa;
 }
