@@ -18,6 +18,10 @@ public class View extends Application
     public void start(Stage primaryStage) throws Exception
     {
         GridPane root = FXMLLoader.load(View.class.getResource("layouts/baseLayout.fxml"));
+        GridPane userLogin = FXMLLoader.load(View.class.getResource("layouts/loginLayout.fxml"));
+
+        root.add(userLogin, 0, 0);
+
         Font.loadFont(View.class.getResource("fonts/Lato-Regular.ttf").toExternalForm(), 10);
         Font.loadFont(View.class.getResource("fonts/AbrilFatface-Regular.ttf").toExternalForm(), 10);
 

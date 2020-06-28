@@ -62,15 +62,11 @@
     -fx-background-color: #d6e6f2;
 }
 
-#login-box {
-    -fx-background-color: #fafafa;
-    -fx-background-radius: 10;
+#login-sign-choice {
+    -fx-background-color: #d6e6f2;
 }
 
 #login-field {
-    -fx-border-color: #ff7f50;
-    -fx-border-radius: 5;
-
     -fx-background-color: #fafafa;
     -fx-background-radius: 5;
 }

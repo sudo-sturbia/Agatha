@@ -6,17 +6,15 @@
 
 <?import javafx.geometry.Insets?>
 
-<!-- Main display. Contains all of user's useful information. -->
 <?import javafx.collections.FXCollections?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
+
+<!-- Main display. Contains all of user's useful information. -->
 <GridPane id="dynamic-panel"
           GridPane.rowIndex="0"
           vgap="10"
           hgap="10"
           xmlns="http://javafx.com/javafx/10.0.2-internal"
-          xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="com.github.sudo_sturbia.agatha.client.controller.MainController">
+          xmlns:fx="http://javafx.com/fxml/1">
 
     <!-- Padding and Constraints. -->
     <padding><Insets topRightBottomLeft="10"/></padding>

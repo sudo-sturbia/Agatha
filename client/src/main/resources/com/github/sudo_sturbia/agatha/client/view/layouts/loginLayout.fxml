@@ -34,7 +34,9 @@
         <RowConstraints percentHeight="5"/>
         <RowConstraints percentHeight="5"/>
         <RowConstraints percentHeight="5"/>
-        <RowConstraints percentHeight="40"/>
+        <RowConstraints percentHeight="5"/>
+        <RowConstraints percentHeight="5"/>
+        <RowConstraints percentHeight="30"/>
     </rowConstraints>
 
     <!-- Login or sign up. -->
@@ -112,10 +114,19 @@
 
     <!-- Login button -->
     <Button fx:id="loginButton"
-            onAction="#login"
+            onAction="#loginOrSignUp"
             GridPane.rowIndex="5"
             GridPane.columnIndex="2"
             maxWidth="Infinity"
             alignment="CENTER"
             text="start"/>
+
+    <!-- error message box. -->
+    <Label id="error-box"
+           fx:id="errorContainer"
+           GridPane.rowIndex="7"
+           GridPane.columnIndex="1"
+           GridPane.columnSpan="3"
+           maxWidth="Infinity"
+           alignment="CENTER"/>
 </GridPane>

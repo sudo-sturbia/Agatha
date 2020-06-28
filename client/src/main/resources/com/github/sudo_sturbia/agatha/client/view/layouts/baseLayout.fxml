@@ -6,9 +6,7 @@
 <!-- Base layout. Loaded at the beginning, other layouts are added
      to it dynamically. -->
 <GridPane prefHeight="750" prefWidth="1000"
-          xmlns="http://javafx.com/javafx/10.0.2-internal"
-          xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="com.github.sudo_sturbia.agatha.client.controller.MainController">
+          xmlns="http://javafx.com/javafx/10.0.2-internal">
 
     <!-- Row and Column constraints. -->
     <columnConstraints>
