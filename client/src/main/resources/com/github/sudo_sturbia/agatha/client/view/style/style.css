@@ -48,9 +48,39 @@
     -fx-background-color: #fafafa;
 }
 
+#login-panel {
+    -fx-background-color: #d6e6f2;
+}
+
+#login-box {
+    -fx-background-color: #fafafa;
+    -fx-background-radius: 10;
+}
+
+#login-field {
+    -fx-border-color: #ff7f50;
+    -fx-border-radius: 5;
+
+    -fx-background-color: #fafafa;
+    -fx-background-radius: 5;
+}
+
+#user-vector {
+    -fx-text-fill: #ff7f50;
+    -fx-font-family: "Abril Fatface";
+    -fx-font-size: 24;
+    -fx-font-weight: bolder;
+}
+
 #user-menu, #books-menu {
     -fx-background-color: #d6e6f2;
     -fx-background-radius: 5;
+}
+
+#user-info-label {
+    -fx-text-fill: #404969;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
 }
 
 #book-scroll-pane {
@@ -66,7 +96,7 @@
     -fx-background-color: #d6e6f2;
 }
 
-#input-text {
+#input-text, #login-text {
     -fx-font-size: 14;
     -fx-text-fill: #404969;
 }
