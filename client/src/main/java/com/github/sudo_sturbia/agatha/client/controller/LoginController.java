@@ -8,7 +8,6 @@ import com.github.sudo_sturbia.agatha.core.ExecutionState;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -24,7 +23,7 @@ public class LoginController
     @FXML
     private GridPane loginPane;
 
-    /** A choice box for either a sign up or a login. */
+    /** A choice box for either sign up or login. */
     @FXML
     private ChoiceBox<String> loginOrSignUp;
 
@@ -36,14 +35,17 @@ public class LoginController
     @FXML
     private PasswordField passwordField;
 
-    /** Button used for sign up or login. */
-    @FXML
-    private Button loginButton;
-
     /** A label to write an error message in if sign up/login fails. */
     @FXML
     private Label errorContainer;
 
+    /**
+     * A handler for the start button. Based on the choice box,
+     * either attempts to login as a client or creates a new account,
+     * then logs in as that account.
+     *
+     * @param actionEvent The event causing this method to be called.
+     */
     @FXML
     private void loginOrSignUp(ActionEvent actionEvent)
     {
