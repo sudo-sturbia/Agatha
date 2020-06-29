@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<!-- A label tab contains the search results for a label (contains a list of books.) -->
+<Tab xmlns="http://javafx.com/javafx"
+     xmlns:fx="http://javafx.com/fxml">
+    <StackPane alignment="TOP_LEFT">
+        <padding><Insets topRightBottomLeft="30"/></padding>
+
+        <ScrollPane fitToWidth="true"
+                    fitToHeight="true">
+            <VBox fx:id="labelSearchResult"
+                  id="book-scroll-pane"
+                  spacing="5">
+            </VBox>
+        </ScrollPane>
+    </StackPane>
+</Tab>

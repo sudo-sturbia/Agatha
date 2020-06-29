@@ -124,6 +124,8 @@
                 </columnConstraints>
                 <rowConstraints>
                     <RowConstraints percentHeight="5"/>
+                    <RowConstraints percentHeight="90"/>
+                    <RowConstraints percentHeight="5"/>
                 </rowConstraints>
 
                 <TextField fx:id="searchField"
@@ -133,6 +135,13 @@
                            maxWidth="Infinity"
                            alignment="CENTER"
                            text="search for a label or a book"/>
+
+                <Label fx:id="searchError"
+                       GridPane.rowIndex="2"
+                       GridPane.columnIndex="1"
+                       maxWidth="Infinity"
+                       alignment="CENTER"/>
+
             </GridPane>
         </Tab>
 
@@ -156,6 +165,8 @@
                     <RowConstraints percentHeight="5"/>
                     <RowConstraints percentHeight="5"/>
                     <RowConstraints percentHeight="5"/>
+                    <RowConstraints percentHeight="5"/>
+                    <RowConstraints percentHeight="65"/>
                     <RowConstraints percentHeight="5"/>
                 </rowConstraints>
 
@@ -288,6 +299,14 @@
                         GridPane.columnSpan="2"
                         text="Add"
                         maxWidth="Infinity"/>
+
+
+                <Label fx:id="newBookError"
+                       GridPane.rowIndex="7"
+                       GridPane.columnIndex="0"
+                       GridPane.columnSpan="5"
+                       maxWidth="Infinity"
+                       alignment="CENTER"/>
             </GridPane>
         </Tab>
     </TabPane>
