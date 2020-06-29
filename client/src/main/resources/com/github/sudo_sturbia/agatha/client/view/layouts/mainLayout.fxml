@@ -3,9 +3,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.geometry.Insets?>
-
 <?import javafx.collections.FXCollections?>
 
 <!-- Main display. Contains all of user's useful information. -->
