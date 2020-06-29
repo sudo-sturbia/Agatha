@@ -1,19 +1,23 @@
 package com.github.sudo_sturbia.agatha.client.controller;
 
 import com.github.sudo_sturbia.agatha.client.model.Library;
+import com.github.sudo_sturbia.agatha.client.view.View;
 import com.github.sudo_sturbia.agatha.core.Book;
 import com.github.sudo_sturbia.agatha.core.BookBuilder;
 import com.github.sudo_sturbia.agatha.core.BookState;
 import com.github.sudo_sturbia.agatha.core.ExecutionState;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
+import java.io.IOException;
 import java.util.List;
 
 /** Controller of the main layout. */
@@ -104,6 +108,7 @@ public class MainController
         this.bookList();
 
         this.newBookButton.setOnAction(event -> MainController.this.newBook());
+        this.searchField.setOnAction(event -> MainController.this.search());
     }
 
     /** Set user information (username and user's vector.) */
@@ -164,5 +169,91 @@ public class MainController
         {
             this.newBookError.setText(e.getMessage());
         }
+    }
+
+    /**
+     * Search for a book or a label with the name specified in the search
+     * field. If either a book or label (or both) is found a new tab is
+     * created. The tab is either a bookTab or a labelTab.
+     */
+    private void search()
+    {
+        if (!(this.searchForBook(this.searchField.getText()) ||
+                this.searchForLabel(this.searchField.getText())))
+        {
+            this.searchError.setText("No search result found.");
+        }
+    }
+
+    /**
+     * Search for a book with the specified name. If book is found
+     * creates a new bookTab and fills it with the needed information.
+     *
+     * @return true if a book is found, false otherwise.
+     */
+    private boolean searchForBook(String name)
+    {
+        Book book = this.library.getBookWithName(name);
+        if (book == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            BookController controller = new BookController(this.library, book);
+            FXMLLoader loader = new FXMLLoader(View.class.getResource("layouts/bookTab.fxml"));
+            loader.setController(controller);
+
+            // Load tab and add a name
+            Tab tab = loader.load();
+            tab.setText("book:" + book.getName());
+
+            this.appTabs.getTabs().add(tab);
+
+            controller.initComponents();
+        }
+        catch (IOException e)
+        {
+            // Ignore
+        }
+
+        return true;
+    }
+
+    /**
+     * Search for a label with specified name. If the label is found
+     * create a new labelTab and fill it with the needed information.
+     *
+     * @return true if a label is found, false otherwise.
+     */
+    private boolean searchForLabel(String name)
+    {
+        List<String> bookList = this.library.getNamesOfBooksWithLabel(name);
+        if (bookList.size() == 0)
+        {
+            return false;
+        }
+
+        try
+        {
+            LabelController controller = new LabelController(this.library, bookList);
+            FXMLLoader loader = new FXMLLoader(View.class.getResource("layouts/labelTab.fxml"));
+            loader.setController(controller);
+
+            // Load tab and add a name
+            Tab tab = loader.load();
+            tab.setText("label:" + name);
+
+            this.appTabs.getTabs().add(tab);
+
+            controller.initComponents();
+        }
+        catch (IOException e)
+        {
+            // Ignore
+        }
+
+        return true;
     }
 }
