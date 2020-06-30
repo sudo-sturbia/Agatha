@@ -3,13 +3,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
 
 <!-- A tab used to display books that are read from user's library.
      Each read book has a separate tap. -->
 <Tab xmlns="http://javafx.com/javafx"
-     xmlns:fx="http://javafx.com/fxml"
-     fx:controller="com.github.sudo_sturbia.agatha.client.controller.BookController">
-
+     xmlns:fx="http://javafx.com/fxml">
     <GridPane hgap="10"
               vgap="10"
               alignment="TOP_CENTER">
@@ -30,11 +29,63 @@
             <RowConstraints percentHeight="5"/>
             <RowConstraints percentHeight="5"/>
             <RowConstraints percentHeight="5"/>
+            <RowConstraints percentHeight="5"/>
+            <RowConstraints percentHeight="5"/>
+            <RowConstraints percentHeight="5"/>
+            <RowConstraints percentHeight="5"/>
+            <RowConstraints percentHeight="30"/>
+            <RowConstraints percentHeight="5"/>
         </rowConstraints>
+
+        <!-- Delete or add a label. -->
+        <GridPane GridPane.rowIndex="0"
+                  GridPane.columnIndex="2"
+                  GridPane.rowSpan="2"
+                  alignment="CENTER"
+                  vgap="10"
+                  hgap="10">
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="50"/>
+                <RowConstraints percentHeight="50"/>
+            </rowConstraints>
+
+            <!-- Add a label. -->
+            <Button fx:id="addLabelButton"
+                    id="book-control"
+                    GridPane.rowIndex="0"
+                    GridPane.columnIndex="0"
+                    maxHeight="Infinity"
+                    maxWidth="Infinity"
+                    text="Add Label"/>
+
+            <!-- Delete a label. -->
+            <Button fx:id="removeLabelButton"
+                    id="book-control"
+                    GridPane.rowIndex="0"
+                    GridPane.columnIndex="1"
+                    maxHeight="Infinity"
+                    maxWidth="Infinity"
+                    text="Remove Label"/>
+
+            <!-- Delete the book. -->
+            <Button fx:id="deleteButton"
+                    id="book-control"
+                    GridPane.rowIndex="1"
+                    GridPane.columnIndex="0"
+                    GridPane.columnSpan="2"
+                    maxHeight="Infinity"
+                    maxWidth="Infinity"
+                    text="Delete Book"/>
+        </GridPane>
 
         <!-- Name field. -->
         <GridPane id="book-field"
-                  GridPane.rowIndex="1"
+                  GridPane.rowIndex="2"
                   GridPane.columnIndex="0"
                   alignment="CENTER"
                   vgap="10"
@@ -62,7 +113,7 @@
 
         <!-- Author field. -->
         <GridPane id="book-field"
-                  GridPane.rowIndex="2"
+                  GridPane.rowIndex="3"
                   GridPane.columnIndex="0"
                   alignment="CENTER"
                   vgap="10"
@@ -90,7 +141,7 @@
 
         <!-- State field. -->
         <GridPane id="book-field"
-                  GridPane.rowIndex="3"
+                  GridPane.rowIndex="4"
                   GridPane.columnIndex="0"
                   alignment="CENTER"
                   vgap="10"
@@ -118,7 +169,7 @@
 
         <!-- Number of Pages field. -->
         <GridPane id="book-field"
-                  GridPane.rowIndex="4"
+                  GridPane.rowIndex="5"
                   GridPane.columnIndex="0"
                   alignment="CENTER"
                   vgap="10"
@@ -146,7 +197,7 @@
 
         <!-- Number of Read Pages field. -->
         <GridPane id="book-field"
-                  GridPane.rowIndex="5"
+                  GridPane.rowIndex="6"
                   GridPane.columnIndex="0"
                   alignment="CENTER"
                   vgap="10"
@@ -173,16 +224,37 @@
         </GridPane>
 
         <!-- Cover image. -->
-        <ScrollPane GridPane.rowIndex="0"
+        <ScrollPane GridPane.rowIndex="2"
                     GridPane.columnIndex="2"
                     GridPane.rowSpan="7"
                     fitToHeight="true"
                     fitToWidth="true">
+            <ImageView fx:id="coverImage"/>
         </ScrollPane>
 
+        <!-- Search for notes. -->
+        <StackPane GridPane.rowIndex="10"
+                   GridPane.columnIndex="0"
+                   GridPane.columnSpan="3">
+            <TextField id="note-search-box"
+                       fx:id="noteSearch"
+                       maxWidth="400"
+                       maxHeight="Infinity"
+                       alignment="CENTER" text="find note by page number - 'all' to find all notes"/>
+        </StackPane>
+
         <!-- Note. -->
-        <Label GridPane.rowIndex="8"
+        <Label GridPane.rowIndex="12"
                GridPane.columnIndex="0"
                text="^^ Click on any field to update it's value."/>
+
+        <!-- Label to display error messages. -->
+        <Label fx:id="errorBox"
+               GridPane.rowIndex="14"
+               GridPane.columnIndex="0"
+               GridPane.columnSpan="3"
+               maxWidth="Infinity"
+               maxHeight="Infinity"
+               alignment="CENTER"/>
     </GridPane>
 </Tab>
