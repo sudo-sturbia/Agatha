@@ -2,6 +2,7 @@ package com.github.sudo_sturbia.agatha.client.controller;
 
 import com.github.sudo_sturbia.agatha.client.model.Library;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
@@ -27,5 +28,9 @@ public class LabelController
     /** Initialize components of the tab. */
     public void initComponents()
     {
+        for (String book : this.bookList)
+        {
+            this.labelSearchResult.getChildren().add(new Label(book));
+        }
     }
 }
