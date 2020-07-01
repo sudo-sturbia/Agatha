@@ -3,6 +3,7 @@ package com.github.sudo_sturbia.agatha.client.controller;
 import com.github.sudo_sturbia.agatha.client.model.Library;
 import com.github.sudo_sturbia.agatha.core.Book;
 import com.github.sudo_sturbia.agatha.core.BookState;
+import com.github.sudo_sturbia.agatha.core.ExecutionState;
 import com.github.sudo_sturbia.agatha.core.Note;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -161,15 +162,29 @@ public class BookController
     /** Add a label to the book. */
     private void addLabel()
     {
-        this.library.addLabelToBook(this.book.getName(), this.addLabelField.getText());
-        this.errorBox.setText("");
+        ExecutionState state = this.library.addLabelToBook(this.book.getName(), this.addLabelField.getText());
+        if (state == null || state.getCode() != 0)
+        {
+            this.errorBox.setText("Operation failed.");
+        }
+        else
+        {
+            this.errorBox.setText("");
+        }
     }
 
     /** Remove a label from the book. */
     private void removeLabel()
     {
-        this.library.deleteLabelFromBook(this.book.getName(), this.removeLabelField.getText());
-        this.errorBox.setText("");
+        ExecutionState state = this.library.deleteLabelFromBook(this.book.getName(), this.removeLabelField.getText());
+        if (state == null || state.getCode() != 0)
+        {
+            this.errorBox.setText("Operation failed.");
+        }
+        else
+        {
+            this.errorBox.setText("");
+        }
     }
 
     /** Search for a note and create a noteTab if found. */
