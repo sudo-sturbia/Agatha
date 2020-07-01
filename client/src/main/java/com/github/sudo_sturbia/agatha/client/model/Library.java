@@ -83,8 +83,8 @@ public class Library
      */
     public List<String> getNamesOfBooks()
     {
-        return new ArrayList<>(Arrays.asList(
-                this.communicator.request(String[].class, Communicator.FUNCTION.READ, "/b/*")));
+        String[] names = this.communicator.request(String[].class, Communicator.FUNCTION.READ, "/b/*");
+        return names != null ? new ArrayList<>(Arrays.asList(names)) : null;
     }
 
     /**
@@ -95,8 +95,8 @@ public class Library
      */
     public List<String> getNamesOfBooksWithLabel(String label)
     {
-        return new ArrayList<>(Arrays.asList(
-                this.communicator.request(String[].class, Communicator.FUNCTION.READ, String.format("/l/%s", label))));
+        String[] names = this.communicator.request(String[].class, Communicator.FUNCTION.READ, String.format("/l/%s", label));
+        return names != null ? new ArrayList<>(Arrays.asList(names)) : null;
     }
 
     /**

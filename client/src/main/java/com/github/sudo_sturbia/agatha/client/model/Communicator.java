@@ -8,6 +8,7 @@ import com.github.sudo_sturbia.agatha.core.NoteDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -131,7 +132,14 @@ public class Communicator
             System.err.println(e.getMessage());
         }
 
-        return response != null ? gson.fromJson(response, type) : null;
+        try
+        {
+            return response != null ? gson.fromJson(response, type) : null;
+        }
+        catch (JsonSyntaxException e)
+        {
+            return null;
+        }
     }
 
     /**
