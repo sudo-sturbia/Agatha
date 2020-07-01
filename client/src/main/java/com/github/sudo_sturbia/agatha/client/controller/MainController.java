@@ -28,7 +28,7 @@ public class MainController
 
     /** All tabs contained in main panel. */
     @FXML
-    private TabPane appTabs;
+    private TabPane tabs;
 
     /** Client's username label. */
     @FXML
@@ -111,15 +111,8 @@ public class MainController
         this.searchField.setOnAction(event -> MainController.this.search());
     }
 
-    /** Set user information (username and user's vector.) */
-    private void userInfo()
-    {
-        this.username.setText(library.getUsername());
-        this.userVector.setText(String.valueOf(Character.toUpperCase(library.getUsername().charAt(0))));
-    }
-
     /** Set user's book list and number of books. */
-    private void bookList()
+    public void bookList()
     {
         this.booksList.getChildren().clear();
 
@@ -130,6 +123,13 @@ public class MainController
         }
 
         this.numberOfBooks.setText(bookList.size() + " Books");
+    }
+
+    /** Set user information (username and user's vector.) */
+    private void userInfo()
+    {
+        this.username.setText(library.getUsername());
+        this.userVector.setText(String.valueOf(Character.toUpperCase(library.getUsername().charAt(0))));
     }
 
     /**
@@ -194,14 +194,14 @@ public class MainController
     private boolean searchForBook(String name)
     {
         Book book = this.library.getBookWithName(name);
-        if (book == null)
+        if (book == null || book.getName() == null)
         {
             return false;
         }
 
         try
         {
-            BookController controller = new BookController(this.library, book);
+            BookController controller = new BookController(this.library, book, this.tabs, this);
             FXMLLoader loader = new FXMLLoader(View.class.getResource("layouts/bookTab.fxml"));
             loader.setController(controller);
 
@@ -209,7 +209,7 @@ public class MainController
             Tab tab = loader.load();
             tab.setText("book:" + book.getName());
 
-            this.appTabs.getTabs().add(tab);
+            this.tabs.getTabs().add(tab);
 
             controller.initComponents();
         }
@@ -230,7 +230,7 @@ public class MainController
     private boolean searchForLabel(String name)
     {
         List<String> bookList = this.library.getNamesOfBooksWithLabel(name);
-        if (bookList.size() == 0)
+        if (bookList == null || bookList.size() == 0)
         {
             return false;
         }
@@ -245,7 +245,7 @@ public class MainController
             Tab tab = loader.load();
             tab.setText("label:" + name);
 
-            this.appTabs.getTabs().add(tab);
+            this.tabs.getTabs().add(tab);
 
             controller.initComponents();
         }

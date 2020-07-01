@@ -104,7 +104,7 @@
     </GridPane>
 
     <!-- Main panel. -->
-    <TabPane fx:id="appTabs"
+    <TabPane fx:id="tabs"
              id="main-panel"
              GridPane.columnIndex="1"
              GridPane.rowIndex="0"
@@ -307,5 +307,6 @@
                        alignment="CENTER"/>
             </GridPane>
         </Tab>
+
     </TabPane>
 </GridPane>
