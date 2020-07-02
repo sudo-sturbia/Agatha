@@ -1,6 +1,8 @@
 plugins {
     id 'java'
     id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
+    id 'com.github.johnrengelman.shadow' version '6.0.0'
 }
 
 java {
@@ -24,6 +26,11 @@ test {
     }
 }
 
+javafx {
+    version = "14"
+    modules = ['javafx.controls', 'javafx.graphics', 'javafx.fxml']
+}
+
 application {
-    mainClassName = ''
+    mainClassName = 'com.github.sudo_sturbia.agatha.client.view.Main'
 }

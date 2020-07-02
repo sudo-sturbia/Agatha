@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<!-- A tab used to display books that are read from user's library.
+     Each read book has a separate tap. -->
+<Tab xmlns="http://javafx.com/javafx"
+     xmlns:fx="http://javafx.com/fxml"
+     fx:id="tab">
+    <GridPane hgap="10"
+              vgap="10"
+              alignment="TOP_CENTER">
+
+        <padding><Insets topRightBottomLeft="40"/></padding>
+        <columnConstraints>
+            <ColumnConstraints percentWidth="40"/>
+            <ColumnConstraints percentWidth="5"/>
+            <ColumnConstraints percentWidth="35"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints percentHeight="5"/>
+            <RowConstraints percentHeight="5"/>
+            <RowConstraints percentHeight="5"/>
+            <RowConstraints percentHeight="5"/>
+            <RowConstraints percentHeight="5"/>
+            <RowConstraints percentHeight="5"/>
+            <RowConstraints percentHeight="5"/>
+            <RowConstraints percentHeight="5"/>
+            <RowConstraints percentHeight="5"/>
+            <RowConstraints percentHeight="5"/>
+            <RowConstraints percentHeight="5"/>
+            <RowConstraints percentHeight="40"/>
+            <RowConstraints percentHeight="5"/>
+        </rowConstraints>
+
+        <!-- Name field. -->
+        <GridPane id="book-field"
+                  GridPane.rowIndex="1"
+                  GridPane.columnIndex="0"
+                  alignment="CENTER"
+                  vgap="10"
+                  hgap="10">
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="100"/>
+            </rowConstraints>
+
+            <Button id="info-button"
+                    fx:id="updateName"
+                    GridPane.rowIndex="0"
+                    GridPane.columnIndex="0"
+                    text="Name"/>
+            <StackPane GridPane.rowIndex="0"
+                       GridPane.columnIndex="1"
+                       id="info-box">
+                <Label fx:id="nameField"/>
+            </StackPane>
+        </GridPane>
+
+        <!-- Author field. -->
+        <GridPane id="book-field"
+                  GridPane.rowIndex="2"
+                  GridPane.columnIndex="0"
+                  alignment="CENTER"
+                  vgap="10"
+                  hgap="10">
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="100"/>
+            </rowConstraints>
+
+            <Button id="info-button"
+                    fx:id="updateAuthor"
+                    GridPane.rowIndex="0"
+                    GridPane.columnIndex="0"
+                    text="Author"/>
+            <StackPane GridPane.rowIndex="0"
+                       GridPane.columnIndex="1"
+                       id="info-box">
+                <Label fx:id="authorField"/>
+            </StackPane>
+        </GridPane>
+
+        <!-- State field. -->
+        <GridPane id="book-field"
+                  GridPane.rowIndex="3"
+                  GridPane.columnIndex="0"
+                  alignment="CENTER"
+                  vgap="10"
+                  hgap="10">
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="100"/>
+            </rowConstraints>
+
+            <Button id="info-button"
+                    fx:id="updateState"
+                    GridPane.rowIndex="0"
+                    GridPane.columnIndex="0"
+                    text="State"/>
+            <StackPane GridPane.rowIndex="0"
+                       GridPane.columnIndex="1"
+                       id="info-box">
+                <Label fx:id="stateField"/>
+            </StackPane>
+        </GridPane>
+
+        <!-- Number of Pages field. -->
+        <GridPane id="book-field"
+                  GridPane.rowIndex="4"
+                  GridPane.columnIndex="0"
+                  alignment="CENTER"
+                  vgap="10"
+                  hgap="10">
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="100"/>
+            </rowConstraints>
+
+            <Button id="info-button"
+                    fx:id="updatePages"
+                    GridPane.rowIndex="0"
+                    GridPane.columnIndex="0"
+                    text="Number of Pages"/>
+            <StackPane GridPane.rowIndex="0"
+                       GridPane.columnIndex="1"
+                       id="info-box">
+                <Label fx:id="pagesField"/>
+            </StackPane>
+        </GridPane>
+
+        <!-- Number of Read Pages field. -->
+        <GridPane id="book-field"
+                  GridPane.rowIndex="5"
+                  GridPane.columnIndex="0"
+                  alignment="CENTER"
+                  vgap="10"
+                  hgap="10">
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="100"/>
+            </rowConstraints>
+
+            <Button id="info-button"
+                    fx:id="updateReadPages"
+                    GridPane.rowIndex="0"
+                    GridPane.columnIndex="0"
+                    text="Read Pages"/>
+            <StackPane GridPane.rowIndex="0"
+                       GridPane.columnIndex="1"
+                       id="info-box">
+                <Label fx:id="readPagesField"/>
+            </StackPane>
+        </GridPane>
+
+        <!-- Add a label field. -->
+        <GridPane id="book-field"
+                  GridPane.rowIndex="6"
+                  GridPane.columnIndex="0"
+                  alignment="CENTER"
+                  vgap="10">
+
+            <padding><Insets left="10"/></padding>
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="100"/>
+            </rowConstraints>
+
+            <Label id="info-button"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="0"
+                   text="Add Label"/>
+            <StackPane GridPane.rowIndex="0"
+                       GridPane.columnIndex="1"
+                       id="info-box">
+                <TextField fx:id="addLabelField"
+                           id="info-box"/>
+            </StackPane>
+        </GridPane>
+
+        <!-- Delete a label field. -->
+        <GridPane id="book-field"
+                  GridPane.rowIndex="7"
+                  GridPane.columnIndex="0"
+                  alignment="CENTER"
+                  vgap="10">
+
+            <padding><Insets left="10"/></padding>
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="100"/>
+            </rowConstraints>
+
+            <Label id="info-button"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="0"
+                   text="Delete Label"/>
+            <StackPane GridPane.rowIndex="0"
+                       GridPane.columnIndex="1"
+                       id="info-box">
+                <TextField fx:id="removeLabelField"
+                           id="info-box"/>
+            </StackPane>
+        </GridPane>
+
+        <!-- Delete the book. -->
+        <GridPane id="book-field"
+                  GridPane.rowIndex="8"
+                  GridPane.columnIndex="0"
+                  alignment="CENTER"
+                  vgap="10"
+                  hgap="10">
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="100"/>
+            </rowConstraints>
+
+            <StackPane GridPane.rowIndex="0"
+                       GridPane.columnIndex="1"
+                       id="info-box">
+                <Button fx:id="deleteButton"
+                        maxHeight="Infinity"
+                        maxWidth="Infinity"
+                        text="Delete Book"/>
+            </StackPane>
+        </GridPane>
+
+        <!-- Cover image. -->
+        <ScrollPane fx:id="coverNotePane"
+                    id="cover-pane"
+                    GridPane.rowIndex="0"
+                    GridPane.columnIndex="2"
+                    GridPane.rowSpan="9"
+                    fitToWidth="true">
+        </ScrollPane>
+
+        <!-- Note selection. -->
+        <GridPane id="book-field"
+                  GridPane.rowIndex="9"
+                  GridPane.columnIndex="2"
+                  alignment="CENTER"
+                  vgap="10"
+                  hgap="10">
+
+            <columnConstraints>
+                <ColumnConstraints percentWidth="30"/>
+                <ColumnConstraints percentWidth="70"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="100"/>
+            </rowConstraints>
+
+            <Label id="info-button"
+                   GridPane.rowIndex="0"
+                   GridPane.columnIndex="0"
+                   text="Page"/>
+
+            <ChoiceBox fx:id="notePage"
+                       id="note-choice"
+                       GridPane.rowIndex="0"
+                       GridPane.columnIndex="1"
+                       maxHeight="Infinity"
+                       maxWidth="Infinity"/>
+        </GridPane>
+
+        <!-- Note. -->
+        <Label GridPane.rowIndex="10"
+               GridPane.columnIndex="0"
+               text="^^ Click on any field to update it's value."/>
+
+        <!-- Label to display error messages. -->
+        <Label fx:id="errorBox"
+               GridPane.rowIndex="14"
+               GridPane.columnIndex="0"
+               GridPane.columnSpan="3"
+               maxWidth="Infinity"
+               maxHeight="Infinity"
+               alignment="CENTER"/>
+    </GridPane>
+</Tab>
