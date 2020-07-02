@@ -336,8 +336,9 @@ public class Create implements Request
                         "SELECT * FROM " + this.dbName + "." + Sanitizer.sanitize(username) + " WHERE bookName = ?;"
                 );
                 PreparedStatement addBook = connection.prepareStatement(
-                        "INSERT INTO " + this.dbName + "." + Sanitizer.sanitize(username) + " VALUES" +
-                                "(?, ?, ?, ?, ?, ?, ?);"
+                        "INSERT INTO " + this.dbName + "." + Sanitizer.sanitize(username) +
+                                "(bookName, author, state, pages, readPages, coverPath, hasNotes) " +
+                                "VALUES (?, ?, ?, ?, ?, ?, ?);"
                 );
                 PreparedStatement createNotesTable = connection.prepareStatement(
                         "CREATE TABLE IF NOT EXISTS " + this.dbName + "." + Sanitizer.sanitize(username + book.getName()) + " (" +
