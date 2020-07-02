@@ -43,7 +43,7 @@ public class UpdateTest
     void updateBooksField()
     {
         final String dbName = "testDB";
-        String response = Protocol.handle("UPDATE username:password/b/My Book/pages=150", dbName);
+        String response = Protocol.handle("UPDATE username:password/b/My Book/readPages=50", dbName);
         assertEquals(0, new Gson().fromJson(response, ExecutionState.class).getCode(),
                 "UPDATE book's field failed.");
     }

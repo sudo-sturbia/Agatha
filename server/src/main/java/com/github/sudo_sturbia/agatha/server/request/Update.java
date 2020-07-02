@@ -410,11 +410,11 @@ public class Update implements Request
     {
         // Verify field's name, and Add '' around fieldValue
         // if field is a varchar.
-        if (Arrays.asList("bookName", "author", "state", "coverPath").contains(fieldName))
+        if (Arrays.asList("author", "state", "coverPath").contains(fieldName))
         {
             fieldValue = "'" + fieldValue + "'";
         }
-        else if (!Arrays.asList("pages", "readPages").contains(fieldName))
+        else if (!fieldName.equals("readPages"))
         {
             return false;
         }
