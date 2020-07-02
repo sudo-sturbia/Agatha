@@ -113,12 +113,15 @@
         <!-- Search tab. -->
         <Tab closable="false"
              text="Search">
-            <GridPane alignment="TOP_CENTER">
+            <GridPane vgap="10"
+                      hgap="10"
+                      alignment="CENTER">
                 <padding><Insets topRightBottomLeft="40"/></padding>
                 <columnConstraints>
-                    <ColumnConstraints percentWidth="20"/>
+                    <ColumnConstraints percentWidth="10"/>
                     <ColumnConstraints percentWidth="60"/>
                     <ColumnConstraints percentWidth="20"/>
+                    <ColumnConstraints percentWidth="10"/>
                 </columnConstraints>
                 <rowConstraints>
                     <RowConstraints percentHeight="5"/>
@@ -132,7 +135,21 @@
                            GridPane.columnIndex="1"
                            maxWidth="Infinity"
                            alignment="CENTER"
-                           text="search for a label or a book"/>
+                           text="search for label/book OR create label"/>
+
+                <ChoiceBox fx:id="searchOrCreate"
+                           id="search-create-box"
+                           GridPane.rowIndex="0"
+                           GridPane.columnIndex="2"
+                           maxWidth="Infinity"
+                           value="search">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="search"/>
+                            <String fx:value="create"/>
+                        </FXCollections>
+                    </items>
+                </ChoiceBox>
 
                 <Label fx:id="searchError"
                        GridPane.rowIndex="2"
@@ -307,6 +324,5 @@
                        alignment="CENTER"/>
             </GridPane>
         </Tab>
-
     </TabPane>
 </GridPane>

@@ -6,6 +6,7 @@ import com.github.sudo_sturbia.agatha.core.Book;
 import com.github.sudo_sturbia.agatha.core.BookBuilder;
 import com.github.sudo_sturbia.agatha.core.BookState;
 import com.github.sudo_sturbia.agatha.core.ExecutionState;
+import com.google.gson.Gson;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -49,6 +50,10 @@ public class MainController
     /** Search for a label or a book field. */
     @FXML
     private TextField searchField;
+
+    /** Search or create choice box. */
+    @FXML
+    private ChoiceBox<String> searchOrCreate;
 
     /** Label used to display search errors. */
     @FXML
@@ -178,10 +183,20 @@ public class MainController
      */
     private void search()
     {
-        if (!(this.searchForBook(this.searchField.getText()) ||
-                this.searchForLabel(this.searchField.getText())))
+        if (this.searchOrCreate.getValue().equals("create"))
         {
-            this.searchError.setText("No search result found.");
+            this.createLabel(this.searchField.getText());
+        }
+        else
+        {
+            if (!(this.searchForBook(this.searchField.getText()) || this.searchForLabel(this.searchField.getText())))
+            {
+                this.searchError.setText("No search result found.");
+            }
+            else
+            {
+                this.searchError.setText("");
+            }
         }
     }
 
@@ -189,6 +204,7 @@ public class MainController
      * Search for a book with the specified name. If book is found
      * creates a new bookTab and fills it with the needed information.
      *
+     * @param name name of the book to search for.
      * @return true if a book is found, false otherwise.
      */
     private boolean searchForBook(String name)
@@ -225,6 +241,7 @@ public class MainController
      * Search for a label with specified name. If the label is found
      * create a new labelTab and fill it with the needed information.
      *
+     * @param name name of the label to search for.
      * @return true if a label is found, false otherwise.
      */
     private boolean searchForLabel(String name)
@@ -255,5 +272,21 @@ public class MainController
         }
 
         return true;
+    }
+
+    /**
+     * Create a new label.
+     * @param name name of the label to create.
+     */
+    private void createLabel(String name)
+    {
+        if (this.library.addLabel(name).getCode() == 0)
+        {
+            this.searchError.setText("Label created successfully.");
+        }
+        else
+        {
+            this.searchError.setText("Failed to create label.");
+        }
     }
 }
