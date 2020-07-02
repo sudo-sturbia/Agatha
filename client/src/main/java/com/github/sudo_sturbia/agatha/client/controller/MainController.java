@@ -230,14 +230,14 @@ public class MainController
     private boolean searchForLabel(String name)
     {
         List<String> bookList = this.library.getNamesOfBooksWithLabel(name);
-        if (bookList == null || bookList.size() == 0)
+        if (bookList == null)
         {
             return false;
         }
 
         try
         {
-            LabelController controller = new LabelController(this.library, bookList);
+            LabelController controller = new LabelController(this.library, name, bookList, this);
             FXMLLoader loader = new FXMLLoader(View.class.getResource("layouts/labelTab.fxml"));
             loader.setController(controller);
 

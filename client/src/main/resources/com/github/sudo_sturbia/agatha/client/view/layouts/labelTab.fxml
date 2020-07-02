@@ -7,15 +7,62 @@
 <!-- A label tab contains the search results for a label (contains a list of books.) -->
 <Tab xmlns="http://javafx.com/javafx"
      xmlns:fx="http://javafx.com/fxml">
-    <StackPane alignment="TOP_LEFT">
-        <padding><Insets topRightBottomLeft="30"/></padding>
 
-        <ScrollPane fitToWidth="true"
-                    fitToHeight="true">
+    <GridPane vgap="10"
+              hgap="10"
+              alignment="CENTER">
+        <padding><Insets topRightBottomLeft="10"/></padding>
+        <columnConstraints>
+            <ColumnConstraints percentWidth="20.0"/>
+            <ColumnConstraints percentWidth="20.0"/>
+            <ColumnConstraints percentWidth="20.0"/>
+            <ColumnConstraints percentWidth="20.0"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints percentHeight="5.0"/>
+            <RowConstraints percentHeight="60.0"/>
+            <RowConstraints percentHeight="4.0"/>
+        </rowConstraints>
+
+        <!-- Title label. -->
+        <Label fx:id="titleLabel"
+               id="label-title"
+               GridPane.rowIndex="0"
+               GridPane.columnIndex="1"
+               GridPane.columnSpan="2"
+               maxWidth="Infinity"
+               maxHeight="Infinity"
+               alignment="CENTER"
+               text="place holder"/>
+
+        <!-- Book list label. -->
+        <ScrollPane GridPane.rowIndex="1"
+                    GridPane.columnIndex="1"
+                    GridPane.columnSpan="2">
             <VBox fx:id="labelSearchResult"
                   id="book-scroll-pane"
                   spacing="5">
             </VBox>
         </ScrollPane>
-    </StackPane>
+
+        <!-- Delete books button. -->
+        <Button fx:id="deleteBooks"
+                id="label-button"
+                GridPane.rowIndex="2"
+                GridPane.columnIndex="1"
+                maxHeight="Infinity"
+                maxWidth="Infinity"
+                alignment="CENTER"
+                text="delete books"/>
+
+        <!-- Delete label button. -->
+        <Button fx:id="deleteLabel"
+                id="label-button"
+                GridPane.rowIndex="2"
+                GridPane.columnIndex="2"
+                maxHeight="Infinity"
+                maxWidth="Infinity"
+                alignment="CENTER"
+                text="delete label"/>
+    </GridPane>
 </Tab>
