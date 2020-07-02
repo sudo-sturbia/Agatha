@@ -198,7 +198,9 @@ public class MainController
         }
         else
         {
-            if (!(this.searchForBook(this.searchField.getText()) || this.searchForLabel(this.searchField.getText())))
+            boolean bookSearch = this.searchForBook(this.searchField.getText());
+            boolean labelSearch = this.searchForLabel(this.searchField.getText());
+            if (!(bookSearch || labelSearch))
             {
                 this.searchError.setText("No search result found.");
             }
@@ -338,7 +340,7 @@ public class MainController
         {
             File copyTo;
             do {
-                copyTo = new File(System.getProperty("user.home") + "/.config/Agatha/" + this.library.getUsername() + "/" + this.randomName());
+                copyTo = new File(System.getProperty("user.home") + "/.config/agatha/" + this.library.getUsername() + "/" + this.randomName());
             } while (copyTo.exists());
 
             Files.copy(new FileInputStream(coverImage), copyTo.toPath(),
