@@ -98,9 +98,6 @@ public class BookController
     @FXML
     private ScrollPane coverNotePane;
 
-    /** Path to cover image. */
-    private String coverPath;
-
     /** Page number to display a note. */
     @FXML
     private ChoiceBox<String> notePage;
@@ -365,7 +362,7 @@ public class BookController
     {
         try
         {
-            this.coverNotePane.setContent(new ImageView(new Image(new FileInputStream(this.coverPath))));
+            this.coverNotePane.setContent(new ImageView(new Image(new FileInputStream(this.book.getCoverImagePath()))));
         }
         catch (FileNotFoundException | NullPointerException e)
         {

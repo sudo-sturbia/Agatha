@@ -6,7 +6,6 @@ import com.github.sudo_sturbia.agatha.core.Book;
 import com.github.sudo_sturbia.agatha.core.BookBuilder;
 import com.github.sudo_sturbia.agatha.core.BookState;
 import com.github.sudo_sturbia.agatha.core.ExecutionState;
-import com.google.gson.Gson;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -16,10 +15,19 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Random;
 
 /** Controller of the main layout. */
 public class MainController
@@ -114,6 +122,7 @@ public class MainController
 
         this.newBookButton.setOnAction(event -> MainController.this.newBook());
         this.searchField.setOnAction(event -> MainController.this.search());
+        this.coverPathButton.setOnAction(event -> MainController.this.findCover());
     }
 
     /** Set user's book list and number of books. */
@@ -288,5 +297,70 @@ public class MainController
         {
             this.searchError.setText("Failed to create label.");
         }
+    }
+
+    /** Handle finding of the cover image. */
+    private void findCover()
+    {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Select Cover Image");
+        chooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg")
+        );
+
+        File cover = chooser.showOpenDialog(null);
+        if (cover != null)
+        {
+            try
+            {
+                this.coverScrollPane.setContent(
+                        new ImageView(new Image(new FileInputStream(cover)))
+                );
+
+                this.handleImage(cover);
+            }
+            catch (FileNotFoundException e)
+            {
+                this.coverPath = null;
+            }
+        }
+    }
+
+    /**
+     * Copy the cover image to a file in user's home directory,
+     * and set the cover path to the new path.
+     */
+    private void handleImage(File coverImage)
+    {
+        new File(System.getProperty("user.home") + "/.config/agatha/" + this.library.getUsername()).mkdirs();
+
+        try
+        {
+            File copyTo;
+            do {
+                copyTo = new File(System.getProperty("user.home") + "/.config/Agatha/" + this.library.getUsername() + "/" + this.randomName());
+            } while (copyTo.exists());
+
+            Files.copy(new FileInputStream(coverImage), copyTo.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING);
+            this.coverPath = copyTo.getAbsolutePath();
+        }
+        catch (IOException e)
+        {
+            this.coverPath = null;
+        }
+    }
+
+    /** Generate a random 8 char string to use as a name for cover images. */
+    private String randomName()
+    {
+        Random random = new Random();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < 8; i++)
+        {
+            builder.append(random.nextInt(10));
+        }
+
+        return builder.toString();
     }
 }
