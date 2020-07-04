@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- Base layout. Loaded at the beginning, other layouts are added
+     to it dynamically. -->
+<GridPane prefHeight="750" prefWidth="1000"
+          xmlns="http://javafx.com/javafx/10.0.2-internal">
+
+    <!-- Row and Column constraints. -->
+    <columnConstraints>
+        <ColumnConstraints percentWidth="100"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="96.0"/>
+        <RowConstraints percentHeight="4.0"/>
+    </rowConstraints>
+
+    <!-- Layout panes. -->
+    <!-- Title panel. -->
+    <GridPane id="static-panel" GridPane.rowIndex="1">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="15"/>
+            <ColumnConstraints percentWidth="85"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints percentHeight="100"/>
+        </rowConstraints>
+
+        <StackPane GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <Label id="title"
+                   text="Agatha"/>
+        </StackPane>
+        <Label id="description"
+               GridPane.columnIndex="1"
+               text="github.com/sudo-sturbia/Agatha"/>
+    </GridPane>
+</GridPane>
